@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MapThisExtension", "MapThisExtension", "{79B268A9-FA10-4895-AECB-BA3C5F8F0B58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapThis", "src\MapThis\MapThis.csproj", "{53E8FD59-CB4B-4707-9B45-DC3CAACB8A35}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapThis.Vsix", "src\MapThis.Vsix\MapThis.Vsix.csproj", "{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53E8FD59-CB4B-4707-9B45-DC3CAACB8A35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E8FD59-CB4B-4707-9B45-DC3CAACB8A35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E8FD59-CB4B-4707-9B45-DC3CAACB8A35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E8FD59-CB4B-4707-9B45-DC3CAACB8A35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{53E8FD59-CB4B-4707-9B45-DC3CAACB8A35} = {79B268A9-FA10-4895-AECB-BA3C5F8F0B58}
+		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E} = {79B268A9-FA10-4895-AECB-BA3C5F8F0B58}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8B51D2AA-FB2C-471E-84BA-74BF3381BA65}
+	EndGlobalSection
+EndGlobal
