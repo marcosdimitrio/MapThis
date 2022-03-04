@@ -1,0 +1,222 @@
+﻿using MapThis.Dto;
+using MapThis.Helpers;
+using MapThis.Services.MethodGenerators.Interfaces;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
+using System.Composition;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
+namespace MapThis.Services.MethodGenerators
+{
+    [Export(typeof(IMethodGeneratorService))]
+    public class MethodGeneratorService : IMethodGeneratorService
+    {
+        public MethodDeclarationSyntax Generate(MapInformationDto mapInformation)
+        {
+            var mappedObjectStatement = GetMappedObjectStatement(mapInformation);
+
+            var firstBlockSyntax =
+                MethodDeclaration(
+                    IdentifierName(mapInformation.TargetType.Name),
+                    Identifier("Map")
+                )
+                .WithModifiers(
+                    TokenList(mapInformation.AccessModifiers)
+                )
+                .WithParameterList(
+                    ParameterList(
+                        SingletonSeparatedList(
+                            Parameter(Identifier("item"))
+                                .WithType(IdentifierName(mapInformation.SourceType.Name))
+                        )
+                    )
+                )
+                .WithBody(
+                    Block(
+                        mappedObjectStatement,
+                        ReturnStatement(IdentifierName("newItem"))
+                    )
+                );
+
+            return firstBlockSyntax;
+        }
+
+        public MethodDeclarationSyntax Generate(MapCollectionInformationDto childMapCollectionInformation)
+        {
+            var mapListStatement = GetMappedListBody(childMapCollectionInformation);
+
+            var blockSyntax =
+                MethodDeclaration(
+                    GenericName(
+                        Identifier("IList")
+                    )
+                    .WithTypeArgumentList(
+                        TypeArgumentList(
+                            SingletonSeparatedList<TypeSyntax>(
+                                IdentifierName(childMapCollectionInformation.TargetType.GetElementType().Name))
+                        )
+                    ),
+                    Identifier("Map")
+                )
+                .WithModifiers(
+                    TokenList(childMapCollectionInformation.AccessModifiers)
+                )
+                .WithParameterList(
+                    ParameterList(
+                        SingletonSeparatedList(
+                            Parameter(Identifier("source"))
+                                .WithType(
+                                    GenericName(Identifier("IList"))
+                                    .WithTypeArgumentList(
+                                        TypeArgumentList(
+                                            SingletonSeparatedList<TypeSyntax>(
+                                                IdentifierName(childMapCollectionInformation.SourceType.GetElementType().Name)
+                                            )
+                                        )
+                                    )
+                                )
+                        )
+                    )
+                )
+                .WithBody(mapListStatement);
+
+            return blockSyntax;
+        }
+
+        private StatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto)
+        {
+            var syntaxNodeOrTokenList = new List<SyntaxNodeOrToken>();
+
+            foreach (var propertyToMap in mapInformationDto.PropertiesToMap)
+            {
+                syntaxNodeOrTokenList.Add(propertyToMap.NewExpression);
+                syntaxNodeOrTokenList.Add(Token(SyntaxKind.CommaToken));
+            }
+
+            var statement =
+                LocalDeclarationStatement(
+                    VariableDeclaration(
+                        IdentifierName(
+                            Identifier(
+                                TriviaList(),
+                                SyntaxKind.VarKeyword,
+                                "var",
+                                "var",
+                                TriviaList()
+                            )
+                        )
+                    )
+                    .WithVariables(
+                        SingletonSeparatedList(
+                            VariableDeclarator(
+                                Identifier("newItem"))
+                            .WithInitializer(
+                                EqualsValueClause(
+                                    ObjectCreationExpression(
+                                        IdentifierName(mapInformationDto.TargetType.Name))
+                                    .WithArgumentList(
+                                        ArgumentList())
+                                    .WithInitializer(
+                                        InitializerExpression(
+                                            SyntaxKind.ObjectInitializerExpression,
+                                            SeparatedList<ExpressionSyntax>(
+                                                syntaxNodeOrTokenList
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+
+            return statement;
+        }
+
+        private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto)
+        {
+            var statement =
+                Block(
+                    LocalDeclarationStatement(
+                        VariableDeclaration(
+                            IdentifierName(
+                                Identifier(
+                                    TriviaList(),
+                                    SyntaxKind.VarKeyword,
+                                    "var",
+                                    "var",
+                                    TriviaList())))
+                        .WithVariables(
+                            SingletonSeparatedList(
+                                VariableDeclarator(
+                                    Identifier("destination"))
+                                .WithInitializer(
+                                    EqualsValueClause(
+                                        ObjectCreationExpression(
+                                            GenericName(
+                                                Identifier("List"))
+                                            .WithTypeArgumentList(
+                                                TypeArgumentList(
+                                                    SingletonSeparatedList<TypeSyntax>(
+                                                        IdentifierName(mapCollectionInformationDto.TargetType.GetElementType().Name)))))
+                                        .WithArgumentList(
+                                            ArgumentList()
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    ForEachStatement(
+                        IdentifierName(
+                            Identifier(
+                                TriviaList(),
+                                SyntaxKind.VarKeyword,
+                                "var",
+                                "var",
+                                TriviaList())),
+                        Identifier("item"),
+                        IdentifierName("source"),
+                        Block(
+                            SingletonList<StatementSyntax>(
+                                ExpressionStatement(
+                                    InvocationExpression(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("destination"),
+                                            IdentifierName("Add")))
+                                    .WithArgumentList(
+                                        ArgumentList(
+                                            SingletonSeparatedList<ArgumentSyntax>(
+                                                Argument(
+                                                    InvocationExpression(
+                                                        IdentifierName("Map"))
+                                                    .WithArgumentList(
+                                                        ArgumentList(
+                                                            SingletonSeparatedList<ArgumentSyntax>(
+                                                                Argument(
+                                                                    IdentifierName("item")
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    ReturnStatement(
+                        IdentifierName("destination")
+                    )
+                );
+
+            return statement;
+        }
+
+    }
+}
