@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace MapThis.Dto
 {
@@ -6,12 +7,12 @@ namespace MapThis.Dto
     {
         public string SourceName => Source?.Name ?? Target.Name;
         public string TargetName => Target.Name;
-        public SyntaxNode NewExpression { get; private set; }
+        public AssignmentExpressionSyntax NewExpression { get; }
         public bool IsTargetValueType => Target.Type.IsValueType;
-        public IPropertySymbol Source { get; private set; }
-        public IPropertySymbol Target { get; private set; } // TODO: This can be null, but is freely accessible
+        public IPropertySymbol Source { get; }
+        public IPropertySymbol Target { get; } // TODO: This can be null, but is freely accessible
 
-        public PropertyToMapDto(IPropertySymbol source, IPropertySymbol target, SyntaxNode newExpression)
+        public PropertyToMapDto(IPropertySymbol source, IPropertySymbol target, AssignmentExpressionSyntax newExpression)
         {
             Source = source;
             Target = target;
