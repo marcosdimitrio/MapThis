@@ -1,5 +1,4 @@
-﻿using MapThis.DependencyInjection;
-using MapThis.Dto;
+﻿using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Services.MethodGenerators.Interfaces;
 using Microsoft.CodeAnalysis;
@@ -25,12 +24,8 @@ namespace MapThis
     {
         private readonly IMethodGeneratorService MethodGeneratorService;
 
-        public MapThisCodeRefactoringProvider()
-            : this(DI.GetMethodGeneratorService())
-        {
-        }
-
-        public MapThisCodeRefactoringProvider(IMethodGeneratorService methodGeneratorService)
+        [ImportingConstructor]
+        public MapThisCodeRefactoringProvider([Import] IMethodGeneratorService methodGeneratorService)
         {
             MethodGeneratorService = methodGeneratorService;
         }
