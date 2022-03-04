@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Rename;
 using System;
 using System.Collections.Generic;
@@ -63,8 +62,8 @@ namespace MapThis
                         .WithSemicolonToken(
                             MissingToken(TriviaList(), SyntaxKind.SemicolonToken, TriviaList(CarriageReturnLineFeed, CarriageReturnLineFeed, Whitespace(new string(' ', methodSyntax.GetLeadingTrivia().FullSpan.Length + 4))))
                         ),
-                    ReturnStatement(IdentifierName("newItem")
-                )))
+                    ReturnStatement(IdentifierName("newItem"))
+                ))
             //    .WithTriviaF‌​rom(methodSyntax)
             //    .W‌​ithAdditionalAnnotat‌​ions(Formatter.Annot‌​ation)
             ;
@@ -76,11 +75,9 @@ namespace MapThis
 
         private static async Task<MapInformationDto> GetMapInformation(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
-            //var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-
             var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
-            var generator = SyntaxGenerator.GetGenerator(context.Document);
+            //var generator = SyntaxGenerator.GetGenerator(context.Document);
 
             var firstParameterSymbol = methodSymbol.Parameters[0];
             var targetType = methodSymbol.ReturnType;
