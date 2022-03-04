@@ -15,9 +15,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-//TODO: Get VS tab size or replace whitespace with formatting
 //TODO: Add usings (using System.Collections.Generic)
 //TODO: Add private methods after all public methods
+//TODO: Fix formatting
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
