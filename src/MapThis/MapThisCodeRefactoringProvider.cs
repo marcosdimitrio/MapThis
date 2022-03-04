@@ -13,6 +13,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
+//TODO: Get VS tab size or replace whitespace with formatting
+//TODO: Add usings (using System.Collections.Generic)
+//TODO: Add private methods after all public methods
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
@@ -52,6 +55,9 @@ namespace MapThis
 
         private async Task<Document> ReplaceAsync(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
+            //var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            //var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
+
             var mapInformation = await GetMapInformation(context, methodSyntax, cancellationToken).ConfigureAwait(false);
 
             var blocks = GetBlocks(methodSyntax, mapInformation);
@@ -121,8 +127,7 @@ namespace MapThis
                             SingletonSeparatedList(
                                 Parameter(Identifier("source"))
                                     .WithType(
-                                        GenericName(
-                                            Identifier("IList"))
+                                        GenericName(Identifier("IList"))
                                         .WithTypeArgumentList(
                                             TypeArgumentList(
                                                 SingletonSeparatedList<TypeSyntax>(
@@ -138,7 +143,10 @@ namespace MapThis
 
                 blocks.Add(blockSyntax);
 
-                blocks.AddRange(GetBlocks(blockSyntax, childMapCollectionInformation.ChildMapInformation));
+                if (childMapCollectionInformation.ChildMapInformation != null)
+                {
+                    blocks.AddRange(GetBlocks(blockSyntax, childMapCollectionInformation.ChildMapInformation));
+                }
             }
 
             foreach (var childMapInformation in mapInformation.ChildrenMapInformation)
@@ -181,6 +189,7 @@ namespace MapThis
 
         private static async Task<MapInformationDto> GetMapInformation(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
+            var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
             //var generator = SyntaxGenerator.GetGenerator(context.Document);
@@ -193,12 +202,18 @@ namespace MapThis
             var sourceMembers = firstParameterSymbol.Type.GetPublicProperties();
             var targetMembers = targetType.GetPublicProperties();
 
-            var mapInformation = GetMap(accessModifiers, firstParameterSymbol.Type, targetType, firstParameterSymbol.Name, sourceMembers, targetMembers);
+            var existingMethods = root
+                .DescendantNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .Select(x => semanticModel.GetDeclaredSymbol(x, cancellationToken))
+                .ToList();
+
+            var mapInformation = GetMap(accessModifiers, firstParameterSymbol.Type, targetType, firstParameterSymbol.Name, sourceMembers, targetMembers, existingMethods);
 
             return mapInformation;
         }
 
-        private static MapInformationDto GetMap(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IPropertySymbol> sourceMembers, IList<IPropertySymbol> targetMembers)
+        private static MapInformationDto GetMap(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IPropertySymbol> sourceMembers, IList<IPropertySymbol> targetMembers, IList<IMethodSymbol> existingMethods)
         {
             var childrenMapInformation = new List<MapInformationDto>();
             var childrenMapCollectionInformation = new List<MapCollectionInformationDto>();
@@ -222,21 +237,24 @@ namespace MapThis
                     sourceProperty?.Type is INamedTypeSymbol sourceNamedType && sourceNamedType.IsCollection()
                 )
                 {
-                    targetListType = (INamedTypeSymbol)targetNamedType.GetElementType();
-                    sourceListType = (INamedTypeSymbol)sourceNamedType.GetElementType();
+                    var childMapCollectionAlreadyExists = existingMethods.Where(x =>
+                        SymbolEqualityComparer.Default.Equals(x.ReturnType, targetNamedType) &&
+                        SymbolEqualityComparer.Default.Equals(x.Parameters.FirstOrDefault()?.Type, sourceNamedType)
+                    ).ToList();
 
-                    var sourceListMembers = sourceListType.GetPublicProperties();
-                    var targetListMembers = targetListType.GetPublicProperties();
+                    if (childMapCollectionAlreadyExists.Count == 0)
+                    {
+                        targetListType = (INamedTypeSymbol)targetNamedType.GetElementType();
+                        sourceListType = (INamedTypeSymbol)sourceNamedType.GetElementType();
 
-                    //TODO: Map lists
-                    //TODO: Check if map already exists
-                    //TODO: Get VS tab size or replace whitespace with formatting
-                    //TODO: Add usings (using System.Collections.Generic)
+                        var sourceListMembers = sourceListType.GetPublicProperties();
+                        var targetListMembers = targetListType.GetPublicProperties();
 
-                    var privateAccessModifiers = GetNonPublicAccessModifiers(accessModifiers);
+                        var privateAccessModifiers = GetNonPublicAccessModifiers(accessModifiers);
 
-                    var childMapCollection = GetMapsForCollection(privateAccessModifiers, sourceProperty.Type, targetProperty.Type, "source");
-                    childrenMapCollectionInformation.AddRange(childMapCollection);
+                        var childMapCollection = GetMapsForCollection(privateAccessModifiers, sourceProperty.Type, targetProperty.Type, "source", existingMethods);
+                        childrenMapCollectionInformation.AddRange(childMapCollection);
+                    }
 
                     newExpression = GetConversionWithMap(firstParameterName, targetProperty.Name);
                 }
@@ -255,7 +273,7 @@ namespace MapThis
             return mapInformation;
         }
 
-        private static IList<MapCollectionInformationDto> GetMapsForCollection(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName)
+        private static IList<MapCollectionInformationDto> GetMapsForCollection(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
         {
             var newExpression = GetCollectionMapExpression(sourceType, targetType, firstParameterName);
 
@@ -265,7 +283,17 @@ namespace MapThis
             var sourceListMembers = sourceListType.GetPublicProperties();
             var targetListMembers = targetListType.GetPublicProperties();
 
-            var childMapInformation = GetMap(accessModifiers, sourceListType, targetListType, "item", sourceListMembers, targetListMembers);
+            var childMapInformationAlreadyExists = existingMethods.Where(x =>
+                SymbolEqualityComparer.Default.Equals(x.ReturnType, targetListType) &&
+                SymbolEqualityComparer.Default.Equals(x.Parameters.FirstOrDefault()?.Type, sourceListType)
+            ).ToList();
+
+            MapInformationDto childMapInformation = null;
+
+            if (childMapInformationAlreadyExists.Count == 0)
+            {
+                childMapInformation = GetMap(accessModifiers, sourceListType, targetListType, "item", sourceListMembers, targetListMembers, existingMethods);
+            }
 
             var mapCollectionInformationDto = new MapCollectionInformationDto(accessModifiers, firstParameterName, sourceType, targetType, newExpression, childMapInformation);
 
@@ -292,18 +320,17 @@ namespace MapThis
                 .WithParameterList(
                     ParameterList(
                         SingletonSeparatedList(
-                            Parameter(
-                                Identifier(firstParameterName))
-                            .WithType(
-                                GenericName(Identifier("IList"))
-                                .WithTypeArgumentList(
-                                    TypeArgumentList(
-                                        SingletonSeparatedList<TypeSyntax>(
-                                            IdentifierName(sourceType.Name)
+                            Parameter(Identifier(firstParameterName))
+                                .WithType(
+                                    GenericName(Identifier("IList"))
+                                    .WithTypeArgumentList(
+                                        TypeArgumentList(
+                                            SingletonSeparatedList<TypeSyntax>(
+                                                IdentifierName(sourceType.Name)
+                                            )
                                         )
                                     )
                                 )
-                            )
                         )
                     )
                 )
