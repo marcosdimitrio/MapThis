@@ -586,18 +586,26 @@ namespace MapThis
             //.NormalizeWhitespace();
         }
 
-        private static IList<SyntaxToken> GetNonPublicAccessModifiers(IList<SyntaxToken> accessModifiers)
+        private static IList<SyntaxToken> GetNonPublicAccessModifiers(IList<SyntaxToken> originalModifiers)
         {
-            if (!accessModifiers.Any(x => x.Kind() == SyntaxKind.PublicKeyword))
+            var listToRemove = new List<SyntaxKind>();
+            var listToAdd = new List<SyntaxToken>();
+
+            if (originalModifiers.Any(x => x.Kind() == SyntaxKind.PublicKeyword))
             {
-                return accessModifiers;
+                listToRemove.Add(SyntaxKind.PublicKeyword);
+                listToAdd.Add(Token(SyntaxKind.PrivateKeyword));
             }
 
-            var destination = accessModifiers.Where(x => x.Kind() != SyntaxKind.PublicKeyword).ToList();
+            if (originalModifiers.Any(x => x.Kind() == SyntaxKind.VirtualKeyword))
+            {
+                listToRemove.Add(SyntaxKind.VirtualKeyword);
+            }
 
-            destination.Add(Token(SyntaxKind.PrivateKeyword));
+            var newList = originalModifiers.Where(x => !listToRemove.Contains(x.Kind())).ToList();
+            newList.AddRange(listToAdd);
 
-            return destination;
+            return newList;
         }
 
     }
