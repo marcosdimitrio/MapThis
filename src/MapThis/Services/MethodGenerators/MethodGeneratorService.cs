@@ -91,7 +91,7 @@ namespace MapThis.Services.MethodGenerators
 
             foreach (var propertyToMap in mapInformationDto.PropertiesToMap)
             {
-                syntaxNodeOrTokenList.Add(propertyToMap.NewExpression);
+                syntaxNodeOrTokenList.Add(GetPropertyExpression(propertyToMap));
                 syntaxNodeOrTokenList.Add(Token(SyntaxKind.CommaToken));
             }
 
@@ -133,6 +133,56 @@ namespace MapThis.Services.MethodGenerators
                 );
 
             return statement;
+        }
+
+        private SyntaxNodeOrToken GetPropertyExpression(PropertyToMapDto propertyToMap)
+        {
+            if (propertyToMap.Target.Type.IsSimpleType())
+            {
+                return GetNewDirectConversion(propertyToMap.ParameterName, propertyToMap.Target.Name);
+            }
+
+            return GetConversionWithMap(propertyToMap.ParameterName, propertyToMap.Target.Name);
+        }
+
+        private static AssignmentExpressionSyntax GetNewDirectConversion(string identifierName, string propertyName)
+        {
+            // This will return an expression like "Id = item.Id"
+            return
+                AssignmentExpression(
+                    SyntaxKind.SimpleAssignmentExpression,
+                    IdentifierName(propertyName),
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName(identifierName),
+                        IdentifierName(propertyName)))
+                .WithLeadingTrivia(ElasticCarriageReturnLineFeed);
+        }
+
+        private static AssignmentExpressionSyntax GetConversionWithMap(string identifierName, string propertyName)
+        {
+            // This will return an expression like "Children = Map(item.Children)"
+            return
+                AssignmentExpression(
+                    SyntaxKind.SimpleAssignmentExpression,
+                    IdentifierName(propertyName),
+                    InvocationExpression(
+                        IdentifierName("Map"))
+                    .WithArgumentList(
+                        ArgumentList(
+                            SingletonSeparatedList(
+                                Argument(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName(identifierName),
+                                        IdentifierName(propertyName)
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+                .WithLeadingTrivia(ElasticCarriageReturnLineFeed);
         }
 
         private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto)

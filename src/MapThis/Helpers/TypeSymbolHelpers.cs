@@ -42,7 +42,11 @@ namespace MapThis.Helpers
 
         public static bool IsCollection(this ITypeSymbol typeSymbol)
         {
-            return typeSymbol.Kind == SymbolKind.ArrayType || typeSymbol.OriginalDefinition.AllInterfaces.Any(x => x.Name == "IEnumerable" && x.ToDisplayString() == "System.Collections.IEnumerable");
+            return
+                !typeSymbol.IsSimpleType() &&
+                (
+                    typeSymbol.Kind == SymbolKind.ArrayType || typeSymbol.OriginalDefinition.AllInterfaces.Any(x => x.Name == "IEnumerable" && x.ToDisplayString() == "System.Collections.IEnumerable")
+                );
         }
 
         public static bool IsSimpleType(this ITypeSymbol type)

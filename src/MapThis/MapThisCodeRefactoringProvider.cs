@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
@@ -17,6 +16,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 //TODO: Add usings (using System.Collections.Generic)
 //TODO: Add private methods after all public methods
 //TODO: Fix formatting
+//TODO: Check for repeated mappings
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
@@ -110,15 +110,10 @@ namespace MapThis
             {
                 var sourceProperty = FindPropertyInSource(targetProperty, sourceMembers);
 
-                AssignmentExpressionSyntax newExpression = null;
                 INamedTypeSymbol targetListType = null;
                 INamedTypeSymbol sourceListType = null;
 
-                if (targetProperty.Type.IsSimpleType())
-                {
-                    newExpression = GetNewDirectConversion(firstParameterName, targetProperty.Name);
-                }
-                else if (
+                if (
                     targetProperty.Type is INamedTypeSymbol targetNamedType && targetNamedType.IsCollection() &&
                     sourceProperty?.Type is INamedTypeSymbol sourceNamedType && sourceNamedType.IsCollection()
                 )
@@ -141,15 +136,13 @@ namespace MapThis
                         var childMapCollection = GetMapsForCollection(privateAccessModifiers, sourceProperty.Type, targetProperty.Type, existingMethods);
                         childrenMapCollectionInformation.AddRange(childMapCollection);
                     }
-
-                    newExpression = GetConversionWithMap(firstParameterName, targetProperty.Name);
                 }
-                else
-                {
-                    throw new NotSupportedException("Cannot determine target property type");
-                }
+                //else
+                //{
+                //    throw new NotSupportedException("Cannot determine target property type");
+                //}
 
-                var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, newExpression);
+                var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, firstParameterName);
 
                 propertiesToMap.Add(propertyToMap);
             }
@@ -217,48 +210,6 @@ namespace MapThis
             var sourceProperty = sourceMembers.FirstOrDefault(x => x.Name == targetProperty.Name);
 
             return sourceProperty;
-        }
-
-        private static AssignmentExpressionSyntax GetNewDirectConversion(string identifierName, string propertyName)
-        {
-            // This will return an expression like "Id = item.Id"
-            return
-                AssignmentExpression(
-                    SyntaxKind.SimpleAssignmentExpression,
-                    IdentifierName(propertyName),
-                    MemberAccessExpression(
-                        SyntaxKind.SimpleMemberAccessExpression,
-                        IdentifierName(identifierName),
-                        IdentifierName(propertyName)))
-                .WithLeadingTrivia(ElasticCarriageReturnLineFeed);
-            //.NormalizeWhitespace();
-        }
-
-        private static AssignmentExpressionSyntax GetConversionWithMap(string identifierName, string propertyName)
-        {
-            // This will return an expression like "Children = Map(item.Children)"
-            return
-                AssignmentExpression(
-                    SyntaxKind.SimpleAssignmentExpression,
-                    IdentifierName(propertyName),
-                    InvocationExpression(
-                        IdentifierName("Map"))
-                    .WithArgumentList(
-                        ArgumentList(
-                            SingletonSeparatedList(
-                                Argument(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName(identifierName),
-                                        IdentifierName(propertyName)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-                .WithLeadingTrivia(ElasticCarriageReturnLineFeed);
-            //.NormalizeWhitespace();
         }
 
         private static IList<SyntaxToken> GetNonPublicAccessModifiers(IList<SyntaxToken> originalModifiers)
