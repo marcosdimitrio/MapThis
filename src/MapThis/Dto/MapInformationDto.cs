@@ -5,15 +5,17 @@ namespace MapThis.Dto
 {
     public class MapInformationDto
     {
-        public IParameterSymbol FirstParameter { get; private set; }
+        public string FirstParameterName { get; private set; }
         public IList<PropertyToMapDto> PropertiesToMap { get; private set; }
-        public ITypeSymbol ReturnType { get; private set; }
+        public ITypeSymbol SourceType { get; private set; }
+        public ITypeSymbol TargetType { get; private set; }
 
-        public MapInformationDto(IParameterSymbol firstParameter, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol returnType)
+        public MapInformationDto(string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType)
         {
-            FirstParameter = firstParameter;
+            FirstParameterName = firstParameterName;
             PropertiesToMap = propertiesToMap;
-            ReturnType = returnType;
+            SourceType = sourceType;
+            TargetType = targetType;
         }
     }
 }

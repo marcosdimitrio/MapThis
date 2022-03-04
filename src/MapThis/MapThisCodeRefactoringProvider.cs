@@ -1,4 +1,5 @@
 ﻿using MapThis.Dto;
+using MapThis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -51,29 +52,67 @@ namespace MapThis
 
         private async Task<Document> ReplaceAsync(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
-            var mapInformation = await GetMapInformation(context, methodSyntax, cancellationToken).ConfigureAwait(false);
+            var mapInformations = await GetMapInformations(context, methodSyntax, cancellationToken).ConfigureAwait(false);
 
-            var test = MyTest(mapInformation);
+            var blocks = new List<MethodDeclarationSyntax>();
 
-            var blockSyntax = methodSyntax
+            var firstStatement = GetMappedObjectStatement(mapInformations.First());
+
+            // first
+            var firstBlockSyntax = methodSyntax
                 .WithBody(Block(
-                    test,
+                    firstStatement,
                     EmptyStatement()
                         .WithSemicolonToken(
                             MissingToken(TriviaList(), SyntaxKind.SemicolonToken, TriviaList(CarriageReturnLineFeed, CarriageReturnLineFeed, Whitespace(new string(' ', methodSyntax.GetLeadingTrivia().FullSpan.Length + 4))))
                         ),
                     ReturnStatement(IdentifierName("newItem"))
-                ))
+                ));
             //    .WithTriviaF‌​rom(methodSyntax)
-            //    .W‌​ithAdditionalAnnotat‌​ions(Formatter.Annot‌​ation)
-            ;
+            //    .W‌​ithAdditionalAnnotat‌​ions(Formatter.Annot‌​ation);
+
+            blocks.Add(firstBlockSyntax);
+
+            foreach (var mapInformation in mapInformations.Skip(1))
+            {
+                var statement = GetMappedObjectStatement(mapInformation);
+
+                var blockSyntax =
+                    MethodDeclaration(
+                        IdentifierName(mapInformation.TargetType.Name),
+                        Identifier("Map")
+                    )
+                    .WithModifiers(
+                        TokenList(Token(SyntaxKind.PrivateKeyword))
+                    )
+                    .WithParameterList(
+                        ParameterList(
+                            SingletonSeparatedList<ParameterSyntax>(
+                                Parameter(Identifier("item"))
+                                    .WithType(IdentifierName(mapInformation.SourceType.Name))
+                            )
+                        )
+                    )
+                    .WithBody(
+                        Block(
+                            statement,
+                            EmptyStatement()
+                                .WithSemicolonToken(
+                                    MissingToken(TriviaList(), SyntaxKind.SemicolonToken, TriviaList(CarriageReturnLineFeed, CarriageReturnLineFeed, Whitespace(new string(' ', methodSyntax.GetLeadingTrivia().FullSpan.Length + 4))))
+                                ),
+                            ReturnStatement(IdentifierName("newItem"))
+                        )
+                    );
+
+                blocks.Add(blockSyntax);
+            }
 
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            var newRoot = root.ReplaceNode(methodSyntax, blockSyntax);
+            var newRoot = root.ReplaceNode(methodSyntax, blocks);
             return context.Document.WithSyntaxRoot(newRoot);
         }
 
-        private static async Task<MapInformationDto> GetMapInformation(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
+        private static async Task<IList<MapInformationDto>> GetMapInformations(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
             var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
@@ -91,58 +130,100 @@ namespace MapThis
                 .Cast<IPropertySymbol>()
                 .ToList();
 
+            var mapInformations = GetMaps(firstParameterSymbol.Type, targetType, firstParameterSymbol.Name, sourceMembers, targetMembers);
+
+            return mapInformations;
+        }
+
+        private static IList<MapInformationDto> GetMaps(ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, List<IPropertySymbol> sourceMembers, List<IPropertySymbol> targetMembers)
+        {
+            var mapInformations = new List<MapInformationDto>();
+
             var propertiesToMap = new List<PropertyToMapDto>();
 
             foreach (var targetProperty in targetMembers)
             {
-                var typeString = targetProperty.Type.ToDisplayString();
+                var sourceProperty = FindPropertyInSource(targetProperty, sourceMembers);
 
                 SyntaxNode newExpression = null;
+                INamedTypeSymbol targetListType = null;
+                INamedTypeSymbol sourceListType = null;
 
-                if (targetProperty.Type.IsValueType)
+                if (targetProperty.Type.IsSimpleType())
                 {
-                    newExpression = GetNewDirectConversion(firstParameterSymbol.Name, targetProperty.Name);
+                    newExpression = GetNewDirectConversion(firstParameterName, targetProperty.Name);
                 }
                 else
                 {
-                    newExpression = GetConversionWithMap(firstParameterSymbol.Name, targetProperty.Name);
+                    if (
+                        targetProperty.Type is INamedTypeSymbol targetNamedType && targetNamedType.IsGenericType &&
+                        sourceProperty?.Type is INamedTypeSymbol sourceNamedType && sourceNamedType.IsGenericType
+                    )
+                    {
+                        // use namedType.TypeArguments if type is bound generic or namedType.TypeParameters if isn't
+                        targetListType = (INamedTypeSymbol)targetNamedType.TypeArguments[0];
+                        sourceListType = (INamedTypeSymbol)sourceNamedType.TypeArguments[0];
+
+                        var sourceListMembers = sourceListType.GetMembers()
+                            .Where(x => x.Kind == SymbolKind.Property && x.DeclaredAccessibility == Accessibility.Public)
+                            .Cast<IPropertySymbol>()
+                            .ToList();
+                        var targetListMembers = targetListType.GetMembers()
+                            .Where(x => x.Kind == SymbolKind.Property && x.DeclaredAccessibility == Accessibility.Public)
+                            .Cast<IPropertySymbol>()
+                            .ToList();
+
+                        var childMapInformation = GetMaps(sourceListType, targetListType, "item", sourceListMembers, targetListMembers);
+                        mapInformations.AddRange(childMapInformation);
+                    }
+                    else if (
+                        targetProperty.Type is IArrayTypeSymbol targetArrayType &&
+                        sourceProperty?.Type is IArrayTypeSymbol sourceArrayType
+                    )
+                    {
+                        targetListType = (INamedTypeSymbol)targetArrayType.ElementType;
+                        sourceListType = (INamedTypeSymbol)sourceArrayType.ElementType;
+
+                        throw new NotImplementedException();
+                    }
+
+                    newExpression = GetConversionWithMap(firstParameterName, targetProperty.Name);
                 }
 
-                var source = FindPropertyInSource(targetProperty, sourceMembers);
-
-                var propertyToMap = new PropertyToMapDto(source, targetProperty, newExpression);
+                var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, newExpression);
 
                 propertiesToMap.Add(propertyToMap);
             }
 
-            var mapInformation = new MapInformationDto(firstParameterSymbol, propertiesToMap, methodSymbol.ReturnType);
+            mapInformations.Add(new MapInformationDto(firstParameterName, propertiesToMap, sourceType, targetType));
 
-            return mapInformation;
+            mapInformations.Reverse();
+
+            return mapInformations;
         }
 
-        private StatementSyntax MyTest(MapInformationDto mapInformationDto)
+        private StatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto)
         {
             var syntaxNodeOrTokenList = new List<SyntaxNodeOrToken>();
-            var commaToken = Token(SyntaxKind.CommaToken);
 
             foreach (var propertyToMap in mapInformationDto.PropertiesToMap)
             {
                 AssignmentExpressionSyntax assignment;
 
-                if (propertyToMap.IsTargetValueType)
+                if (propertyToMap.Target.Type.IsSimpleType())
                 {
-                    assignment = GetDirectAssignment(propertyToMap.TargetName, mapInformationDto.FirstParameter.Name, propertyToMap.SourceName);
+                    assignment = GetDirectAssignment(propertyToMap.TargetName, mapInformationDto.FirstParameterName, propertyToMap.SourceName);
                 }
                 else
                 {
-                    assignment = GetAssignmentWithMap(propertyToMap.TargetName, mapInformationDto.FirstParameter.Name, propertyToMap.SourceName);
+                    assignment = GetAssignmentWithMap(propertyToMap.TargetName, mapInformationDto.FirstParameterName, propertyToMap.SourceName);
                 }
 
                 syntaxNodeOrTokenList.Add(assignment);
-                syntaxNodeOrTokenList.Add(commaToken);
+                syntaxNodeOrTokenList.Add(Token(SyntaxKind.CommaToken));
             }
 
-            return
+            var statement =
                 LocalDeclarationStatement(
                     VariableDeclaration(
                         IdentifierName(
@@ -151,7 +232,10 @@ namespace MapThis
                                 SyntaxKind.VarKeyword,
                                 "var",
                                 "var",
-                                TriviaList())))
+                                TriviaList()
+                            )
+                        )
+                    )
                     .WithVariables(
                         SingletonSeparatedList(
                             VariableDeclarator(
@@ -159,7 +243,7 @@ namespace MapThis
                             .WithInitializer(
                                 EqualsValueClause(
                                     ObjectCreationExpression(
-                                        IdentifierName(mapInformationDto.ReturnType.Name))
+                                        IdentifierName(mapInformationDto.TargetType.Name))
                                     .WithArgumentList(
                                         ArgumentList())
                                     .WithInitializer(
@@ -175,6 +259,8 @@ namespace MapThis
                         )
                     )
                 );
+
+            return statement;
         }
 
         private static AssignmentExpressionSyntax GetDirectAssignment(string leftIdentifierName, string parameterName, string rightIdentifierName)
