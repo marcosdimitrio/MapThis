@@ -1,12 +1,10 @@
 ﻿using MapThis.Dto;
-using MapThis.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
-using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Rename;
 using System;
 using System.Collections.Generic;
@@ -58,11 +56,22 @@ namespace MapThis
 
             var test = MyTest(mapInformation);
 
-            var blockSyntax = methodSyntax.WithBody(Block(test, ReturnStatement(IdentifierName("newItem"))))
-                .WithTriviaF‌​rom(methodSyntax)
-                .W‌​ithAdditionalAnnotat‌​ions(Formatter.Annot‌​ation);
+            var blockSyntax = methodSyntax
+                .WithBody(Block(
+                    test,
+                    EmptyStatement()
+                        .WithSemicolonToken(
+                            MissingToken(TriviaList(), SyntaxKind.SemicolonToken, TriviaList(CarriageReturnLineFeed, CarriageReturnLineFeed, Whitespace(new string(' ', methodSyntax.GetLeadingTrivia().FullSpan.Length + 4))))
+                        ),
+                    ReturnStatement(IdentifierName("newItem")
+                )))
+            //    .WithTriviaF‌​rom(methodSyntax)
+            //    .W‌​ithAdditionalAnnotat‌​ions(Formatter.Annot‌​ation)
+            ;
 
-            return await context.Document.ReplaceNodesAsync(methodSyntax, blockSyntax, cancellationToken).ConfigureAwait(false);
+            var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            var newRoot = root.ReplaceNode(methodSyntax, blockSyntax);
+            return context.Document.WithSyntaxRoot(newRoot);
         }
 
         private static async Task<MapInformationDto> GetMapInformation(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
