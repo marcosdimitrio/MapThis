@@ -73,25 +73,33 @@ namespace MapThis
 
             compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, blocks);
 
+            compilationUnitSyntax = await AddUsings(context, methodSyntax, compilationUnitSyntax, mapInformation, cancellationToken).ConfigureAwait(false);
+
+            return context.Document.WithSyntaxRoot(compilationUnitSyntax);
+        }
+
+        private async Task<CompilationUnitSyntax> AddUsings(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CompilationUnitSyntax compilationUnitSyntax, MapInformationDto mapInformation, CancellationToken cancellationToken)
+        {
             var namespaces = GetNamespaces(mapInformation);
 
             var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
+            var currentNamespace = methodSymbol.ContainingNamespace;
 
-            foreach (var theNamespace in namespaces)
+            foreach (var namespaceToInclude in namespaces)
             {
-                var currentNamespace = methodSymbol.ContainingNamespace.ToDisplayString();
+                var usingAlreadyExists = compilationUnitSyntax.Usings.Any(x => x.Name.ToFullString() == namespaceToInclude.ToDisplayString());
 
-                var directive = UsingDirective(IdentifierName(theNamespace.ToDisplayString()));
+                var namespaceIsTheSameAsTheMethod = SymbolEqualityComparer.Default.Equals(currentNamespace, namespaceToInclude);
 
-                if (!compilationUnitSyntax.Usings.Contains(directive) &&
-                    theNamespace.ToDisplayString() != currentNamespace)
+                if (!usingAlreadyExists && !namespaceIsTheSameAsTheMethod)
                 {
-                    compilationUnitSyntax = compilationUnitSyntax.AddUsings(directive);
+                    compilationUnitSyntax = compilationUnitSyntax
+                        .AddUsings(UsingDirective(IdentifierName(namespaceToInclude.ToDisplayString())));
                 }
             }
 
-            return context.Document.WithSyntaxRoot(compilationUnitSyntax);
+            return compilationUnitSyntax;
         }
 
         private static async Task<MapInformationDto> GetMapInformation(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)

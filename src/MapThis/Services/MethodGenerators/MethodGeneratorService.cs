@@ -28,7 +28,7 @@ namespace MapThis.Services.MethodGenerators
                 .WithParameterList(
                     ParameterList(
                         SingletonSeparatedList(
-                            Parameter(Identifier("item"))
+                            Parameter(Identifier(mapInformation.FirstParameterName))
                                 .WithType(IdentifierName(mapInformation.SourceType.Name))
                         )
                     )
