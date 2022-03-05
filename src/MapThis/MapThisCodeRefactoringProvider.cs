@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 //TODO: Add usings (using System.Collections.Generic)
+//TODO: Check for repeated mappings
 //TODO: Add private methods after all public methods
 //TODO: Fix formatting
-//TODO: Check for repeated mappings
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
@@ -64,13 +64,34 @@ namespace MapThis
 
         private async Task<Document> ReplaceAsync(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
+            var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            var compilationUnitSyntax = (CompilationUnitSyntax)root;
+
             var mapInformation = await GetMapInformation(context, methodSyntax, cancellationToken).ConfigureAwait(false);
 
             var blocks = GetBlocks(mapInformation);
 
-            var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            var newRoot = root.ReplaceNode(methodSyntax, blocks);
-            return context.Document.WithSyntaxRoot(newRoot);
+            compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, blocks);
+
+            var namespaces = GetNamespaces(mapInformation);
+
+            var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
+
+            foreach (var theNamespace in namespaces)
+            {
+                var currentNamespace = methodSymbol.ContainingNamespace.ToDisplayString();
+
+                var directive = UsingDirective(IdentifierName(theNamespace.ToDisplayString()));
+
+                if (!compilationUnitSyntax.Usings.Contains(directive) &&
+                    theNamespace.ToDisplayString() != currentNamespace)
+                {
+                    compilationUnitSyntax = compilationUnitSyntax.AddUsings(directive);
+                }
+            }
+
+            return context.Document.WithSyntaxRoot(compilationUnitSyntax);
         }
 
         private static async Task<MapInformationDto> GetMapInformation(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
@@ -110,13 +131,8 @@ namespace MapThis
             {
                 var sourceProperty = FindPropertyInSource(targetProperty, sourceMembers);
 
-                INamedTypeSymbol targetListType = null;
-                INamedTypeSymbol sourceListType = null;
-
-                if (
-                    targetProperty.Type is INamedTypeSymbol targetNamedType && targetNamedType.IsCollection() &&
-                    sourceProperty?.Type is INamedTypeSymbol sourceNamedType && sourceNamedType.IsCollection()
-                )
+                if (targetProperty.Type is INamedTypeSymbol targetNamedType && targetNamedType.IsCollection() &&
+                    sourceProperty?.Type is INamedTypeSymbol sourceNamedType && sourceNamedType.IsCollection())
                 {
                     var childMapCollectionAlreadyExists = existingMethods.Any(x =>
                         SymbolEqualityComparer.Default.Equals(x.ReturnType, targetNamedType) &&
@@ -125,8 +141,8 @@ namespace MapThis
 
                     if (!childMapCollectionAlreadyExists)
                     {
-                        targetListType = (INamedTypeSymbol)targetNamedType.GetElementType();
-                        sourceListType = (INamedTypeSymbol)sourceNamedType.GetElementType();
+                        var targetListType = (INamedTypeSymbol)targetNamedType.GetElementType();
+                        var sourceListType = (INamedTypeSymbol)sourceNamedType.GetElementType();
 
                         var sourceListMembers = sourceListType.GetPublicProperties();
                         var targetListMembers = targetListType.GetPublicProperties();
@@ -137,10 +153,6 @@ namespace MapThis
                         childrenMapCollectionInformation.AddRange(childMapCollection);
                     }
                 }
-                //else
-                //{
-                //    throw new NotSupportedException("Cannot determine target property type");
-                //}
 
                 var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, firstParameterName);
 
@@ -175,6 +187,40 @@ namespace MapThis
             var mapCollectionInformationDto = new MapCollectionInformationDto(accessModifiers, sourceType, targetType, childMapInformation);
 
             return new List<MapCollectionInformationDto>() { mapCollectionInformationDto };
+        }
+
+        private IList<INamespaceSymbol> GetNamespaces(MapInformationDto mapInformation)
+        {
+            var namespaces = new List<INamespaceSymbol>()
+            {
+                mapInformation.SourceType.ContainingNamespace,
+                mapInformation.TargetType.ContainingNamespace,
+            };
+
+            foreach (var childMapCollectionInformation in mapInformation.ChildrenMapCollectionInformation)
+            {
+                namespaces.Add(childMapCollectionInformation.SourceType.ContainingNamespace);
+                namespaces.Add(childMapCollectionInformation.TargetType.ContainingNamespace);
+
+                if (childMapCollectionInformation.ChildMapInformation != null)
+                {
+                    namespaces.AddRange(GetNamespaces(childMapCollectionInformation.ChildMapInformation));
+                }
+            }
+
+            foreach (var childMapInformation in mapInformation.ChildrenMapInformation)
+            {
+                namespaces.AddRange(GetNamespaces(childMapInformation));
+            }
+
+            namespaces = namespaces
+                .Where(x => !x.IsGlobalNamespace)
+                .GroupBy(x => x)
+                .Select(x => x.Key)
+                .OrderBy(x => x.ToDisplayString())
+                .ToList();
+
+            return namespaces;
         }
 
         private IList<MethodDeclarationSyntax> GetBlocks(MapInformationDto mapInformation)
