@@ -13,7 +13,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-//TODO: Add usings (using System.Collections.Generic)
 //TODO: Check for repeated mappings
 //TODO: Add private methods after all public methods
 //TODO: Fix formatting
