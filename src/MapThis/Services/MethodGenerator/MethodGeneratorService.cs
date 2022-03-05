@@ -1,6 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Services.MethodGenerators.Interfaces;
+using MapThis.Services.MethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Composition;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace MapThis.Services.MethodGenerators
+namespace MapThis.Services.MethodGenerator
 {
     [Export(typeof(IMethodGeneratorService))]
     public class MethodGeneratorService : IMethodGeneratorService

@@ -1,7 +1,7 @@
 ﻿using MapThis.Dto;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace MapThis.Services.MethodGenerators.Interfaces
+namespace MapThis.Services.MethodGenerator.Interfaces
 {
     public interface IMethodGeneratorService
     {
