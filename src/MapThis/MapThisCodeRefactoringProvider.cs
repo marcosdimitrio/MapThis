@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
@@ -14,7 +15,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-//TODO: Add private methods after all public methods
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
@@ -64,12 +64,36 @@ namespace MapThis
         {
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var compilationUnitSyntax = (CompilationUnitSyntax)root;
+            DocumentEditor documentEditor = await DocumentEditor.CreateAsync(context.Document, cancellationToken).ConfigureAwait(false);
 
             var mapInformation = await GetMapInformation(context, methodSyntax, cancellationToken).ConfigureAwait(false);
 
             var blocks = GetBlocks(mapInformation);
 
-            compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, blocks);
+            var firstBlock = blocks.First();
+            var allOtherBlocks = blocks.Skip(1).ToList();
+
+            compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, firstBlock);
+
+            if (allOtherBlocks.Count > 0)
+            {
+                var listOfModifiers = new List<SyntaxKind>()
+                {
+                    SyntaxKind.PublicKeyword,
+                    SyntaxKind.ProtectedKeyword,
+                    SyntaxKind.InternalKeyword,
+                };
+
+                var methodToInsertAfter = compilationUnitSyntax
+                    .DescendantNodes()
+                    .OfType<MethodDeclarationSyntax>()
+                    .Where(x => x.Modifiers.Any(y => listOfModifiers.Contains(y.Kind())))
+                    .LastOrDefault();
+
+                methodToInsertAfter = methodToInsertAfter ?? (MethodDeclarationSyntax)compilationUnitSyntax.FindNode(context.Span);
+
+                compilationUnitSyntax = compilationUnitSyntax.InsertNodesAfter(methodToInsertAfter, allOtherBlocks);
+            }
 
             compilationUnitSyntax = await AddUsings(context, methodSyntax, compilationUnitSyntax, mapInformation, cancellationToken).ConfigureAwait(false);
 
