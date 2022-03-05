@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Editing;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
@@ -64,7 +63,6 @@ namespace MapThis
         {
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var compilationUnitSyntax = (CompilationUnitSyntax)root;
-            DocumentEditor documentEditor = await DocumentEditor.CreateAsync(context.Document, cancellationToken).ConfigureAwait(false);
 
             var mapInformation = await GetMapInformation(context, methodSyntax, cancellationToken).ConfigureAwait(false);
 
@@ -114,7 +112,9 @@ namespace MapThis
 
                 var namespaceIsTheSameAsTheMethod = SymbolEqualityComparer.Default.Equals(currentNamespace, namespaceToInclude);
 
-                if (!usingAlreadyExists && !namespaceIsTheSameAsTheMethod)
+                var currentNamespaceIsDeeperThanBeingMapped = currentNamespace.ToDisplayString().StartsWith(namespaceToInclude.ToDisplayString());
+
+                if (!usingAlreadyExists && !namespaceIsTheSameAsTheMethod && !currentNamespaceIsDeeperThanBeingMapped)
                 {
                     compilationUnitSyntax = compilationUnitSyntax
                         .AddUsings(UsingDirective(IdentifierName(namespaceToInclude.ToDisplayString())));
