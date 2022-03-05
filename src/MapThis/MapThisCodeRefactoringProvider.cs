@@ -14,9 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-//TODO: Check for repeated mappings
-//TODO: Add private methods after all public methods
 //TODO: Fix formatting
+//TODO: Add private methods after all public methods
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
