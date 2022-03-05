@@ -14,7 +14,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-//TODO: Fix formatting
 //TODO: Add private methods after all public methods
 namespace MapThis
 {
@@ -56,10 +55,8 @@ namespace MapThis
 
         private void Register(CodeRefactoringContext context, MethodDeclarationSyntax methodDeclaration)
         {
-            // For any type declaration node, create a code action to reverse the identifier text.
             var action = CodeAction.Create("Map this", c => ReplaceAsync(context, methodDeclaration, c));
 
-            // Register this code action.
             context.RegisterRefactoring(action);
         }
 

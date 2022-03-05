@@ -37,6 +37,7 @@ namespace MapThis.Services.MethodGenerator
                     Block(
                         mappedObjectStatement,
                         ReturnStatement(IdentifierName("newItem"))
+                            .WithLeadingTrivia(TriviaList(LineFeed))
                     )
                 );
 
@@ -85,7 +86,7 @@ namespace MapThis.Services.MethodGenerator
             return blockSyntax;
         }
 
-        private StatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto)
+        private LocalDeclarationStatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto)
         {
             var syntaxNodeOrTokenList = new List<SyntaxNodeOrToken>();
 
@@ -130,7 +131,13 @@ namespace MapThis.Services.MethodGenerator
                             )
                         )
                     )
-                );
+                )
+                .WithSemicolonToken(
+                    Token(
+                        TriviaList(),
+                        SyntaxKind.SemicolonToken,
+                        TriviaList(
+                            LineFeed)));
 
             return statement;
         }
@@ -218,7 +225,13 @@ namespace MapThis.Services.MethodGenerator
                                 )
                             )
                         )
-                    ),
+                    )
+                    .WithSemicolonToken(
+                        Token(
+                            TriviaList(),
+                            SyntaxKind.SemicolonToken,
+                            TriviaList(
+                                LineFeed))),
                     ForEachStatement(
                         IdentifierName(
                             Identifier(
@@ -259,7 +272,8 @@ namespace MapThis.Services.MethodGenerator
                                 )
                             )
                         )
-                    ),
+                    )
+                    .WithLeadingTrivia(TriviaList(LineFeed)),
                     ReturnStatement(
                         IdentifierName("destination")
                     )
