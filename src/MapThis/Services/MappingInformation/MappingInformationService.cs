@@ -2,10 +2,14 @@
 using MapThis.Helpers;
 using MapThis.Services.MappingInformation.Interfaces;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace MapThis.Services.MappingInformation
@@ -14,7 +18,33 @@ namespace MapThis.Services.MappingInformation
     public class MappingInformationService : IMappingInformationService
     {
 
-        public MapInformationDto GetMap(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IPropertySymbol> sourceMembers, IList<IPropertySymbol> targetMembers, IList<IMethodSymbol> existingMethods)
+        public async Task<MapInformationDto> GetMapInformation(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
+        {
+            var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
+            //var generator = SyntaxGenerator.GetGenerator(context.Document);
+
+            var accessModifiers = methodSyntax.Modifiers.ToList();
+
+            var firstParameterSymbol = methodSymbol.Parameters[0];
+            var targetType = methodSymbol.ReturnType;
+
+            var sourceMembers = firstParameterSymbol.Type.GetPublicProperties();
+            var targetMembers = targetType.GetPublicProperties();
+
+            var existingMethods = root
+                .DescendantNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .Select(x => semanticModel.GetDeclaredSymbol(x, cancellationToken))
+                .ToList();
+
+            var mapInformation = GetMapForSimpleType(accessModifiers, firstParameterSymbol.Type, targetType, firstParameterSymbol.Name, sourceMembers, targetMembers, existingMethods);
+
+            return mapInformation;
+        }
+
+        private MapInformationDto GetMapForSimpleType(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IPropertySymbol> sourceMembers, IList<IPropertySymbol> targetMembers, IList<IMethodSymbol> existingMethods)
         {
             var childrenMapInformation = new List<MapInformationDto>();
             var childrenMapCollectionInformation = new List<MapCollectionInformationDto>();
@@ -23,7 +53,7 @@ namespace MapThis.Services.MappingInformation
 
             foreach (var targetProperty in targetMembers)
             {
-                var sourceProperty = FindPropertyInSource(targetProperty, sourceMembers);
+                var sourceProperty = FindCorrespondingPropertyInSourceMembers(targetProperty, sourceMembers);
 
                 if (targetProperty.Type is INamedTypeSymbol targetNamedType && targetNamedType.IsCollection() &&
                     sourceProperty?.Type is INamedTypeSymbol sourceNamedType && sourceNamedType.IsCollection())
@@ -75,7 +105,7 @@ namespace MapThis.Services.MappingInformation
                 var sourceListMembers = sourceListType.GetPublicProperties();
                 var targetListMembers = targetListType.GetPublicProperties();
 
-                childMapInformation = GetMap(accessModifiers, sourceListType, targetListType, "item", sourceListMembers, targetListMembers, existingMethods);
+                childMapInformation = GetMapForSimpleType(accessModifiers, sourceListType, targetListType, "item", sourceListMembers, targetListMembers, existingMethods);
             }
 
             var mapCollectionInformationDto = new MapCollectionInformationDto(accessModifiers, sourceType, targetType, childMapInformation);
@@ -83,7 +113,7 @@ namespace MapThis.Services.MappingInformation
             return new List<MapCollectionInformationDto>() { mapCollectionInformationDto };
         }
 
-        private static IPropertySymbol FindPropertyInSource(IPropertySymbol targetProperty, IList<IPropertySymbol> sourceMembers)
+        private static IPropertySymbol FindCorrespondingPropertyInSourceMembers(IPropertySymbol targetProperty, IList<IPropertySymbol> sourceMembers)
         {
             var sourceProperty = sourceMembers.FirstOrDefault(x => x.Name == targetProperty.Name);
 

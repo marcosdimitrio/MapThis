@@ -1,11 +1,13 @@
 ﻿using MapThis.Dto;
-using Microsoft.CodeAnalysis;
-using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CodeRefactorings;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MapThis.Services.MappingInformation.Interfaces
 {
     public interface IMappingInformationService
     {
-        MapInformationDto GetMap(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IPropertySymbol> sourceMembers, IList<IPropertySymbol> targetMembers, IList<IMethodSymbol> existingMethods);
+        Task<MapInformationDto> GetMapInformation(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken);
     }
 }
