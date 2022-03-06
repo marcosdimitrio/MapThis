@@ -46,7 +46,6 @@ namespace MapThis.Services.MappingInformation
 
         private MapInformationDto GetMapForSimpleType(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IPropertySymbol> sourceMembers, IList<IPropertySymbol> targetMembers, IList<IMethodSymbol> existingMethods)
         {
-            var childrenMapInformation = new List<MapInformationDto>();
             var childrenMapCollectionInformation = new List<MapCollectionInformationDto>();
 
             var propertiesToMap = new List<PropertyToMapDto>();
@@ -83,7 +82,7 @@ namespace MapThis.Services.MappingInformation
                 propertiesToMap.Add(propertyToMap);
             }
 
-            var mapInformation = new MapInformationDto(accessModifiers, firstParameterName, propertiesToMap, sourceType, targetType, childrenMapInformation, childrenMapCollectionInformation);
+            var mapInformation = new MapInformationDto(accessModifiers, firstParameterName, propertiesToMap, sourceType, targetType, childrenMapCollectionInformation);
 
             return mapInformation;
         }

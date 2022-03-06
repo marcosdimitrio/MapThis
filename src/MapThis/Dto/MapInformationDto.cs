@@ -10,17 +10,15 @@ namespace MapThis.Dto
         public IList<PropertyToMapDto> PropertiesToMap { get; }
         public ITypeSymbol SourceType { get; }
         public ITypeSymbol TargetType { get; }
-        public IList<MapInformationDto> ChildrenMapInformation { get; }
         public IList<MapCollectionInformationDto> ChildrenMapCollectionInformation { get; }
 
-        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<MapInformationDto> childrenMapInformation, IList<MapCollectionInformationDto> childrenMapCollectionInformation)
+        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<MapCollectionInformationDto> childrenMapCollectionInformation)
         {
             AccessModifiers = accessModifiers;
             FirstParameterName = firstParameterName;
             PropertiesToMap = propertiesToMap;
             SourceType = sourceType;
             TargetType = targetType;
-            ChildrenMapInformation = childrenMapInformation;
             ChildrenMapCollectionInformation = childrenMapCollectionInformation;
         }
     }

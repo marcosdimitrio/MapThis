@@ -87,11 +87,6 @@ namespace MapThis.Refactorings.MappingGenerator
                 }
             }
 
-            foreach (var childMapInformation in mapInformation.ChildrenMapInformation)
-            {
-                blocks.AddRange(GetBlocks(childMapInformation));
-            }
-
             return blocks;
         }
 
@@ -138,11 +133,6 @@ namespace MapThis.Refactorings.MappingGenerator
                 {
                     namespaces.AddRange(GetNamespaces(childMapCollectionInformation.ChildMapInformation));
                 }
-            }
-
-            foreach (var childMapInformation in mapInformation.ChildrenMapInformation)
-            {
-                namespaces.AddRange(GetNamespaces(childMapInformation));
             }
 
             namespaces = namespaces
