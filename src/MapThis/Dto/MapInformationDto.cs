@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using MapThis.Services.CompoundGenerator.Interfaces;
+using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 
 namespace MapThis.Dto
@@ -10,16 +11,16 @@ namespace MapThis.Dto
         public IList<PropertyToMapDto> PropertiesToMap { get; }
         public ITypeSymbol SourceType { get; }
         public ITypeSymbol TargetType { get; }
-        public IList<MapCollectionInformationDto> ChildrenMapCollectionInformation { get; }
+        public IList<ICompoundGenerator> ChildrenCompoundGenerator { get; }
 
-        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<MapCollectionInformationDto> childrenMapCollectionInformation)
+        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<ICompoundGenerator> childrenCompoundGenerator)
         {
             AccessModifiers = accessModifiers;
             FirstParameterName = firstParameterName;
             PropertiesToMap = propertiesToMap;
             SourceType = sourceType;
             TargetType = targetType;
-            ChildrenMapCollectionInformation = childrenMapCollectionInformation;
+            ChildrenCompoundGenerator = childrenCompoundGenerator;
         }
     }
 }

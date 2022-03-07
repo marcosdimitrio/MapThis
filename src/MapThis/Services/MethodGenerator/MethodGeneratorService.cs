@@ -194,6 +194,8 @@ namespace MapThis.Services.MethodGenerator
 
         private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto)
         {
+            var forEachVariableName = GetForEachVariableName(mapCollectionInformationDto);
+
             var statement =
                 Block(
                     LocalDeclarationStatement(
@@ -240,8 +242,8 @@ namespace MapThis.Services.MethodGenerator
                                 "var",
                                 "var",
                                 TriviaList())),
-                        Identifier("item"),
-                        IdentifierName("source"),
+                        Identifier(forEachVariableName),
+                        IdentifierName(mapCollectionInformationDto.FirstParameterName),
                         Block(
                             SingletonList<StatementSyntax>(
                                 ExpressionStatement(
@@ -252,15 +254,15 @@ namespace MapThis.Services.MethodGenerator
                                             IdentifierName("Add")))
                                     .WithArgumentList(
                                         ArgumentList(
-                                            SingletonSeparatedList<ArgumentSyntax>(
+                                            SingletonSeparatedList(
                                                 Argument(
                                                     InvocationExpression(
                                                         IdentifierName("Map"))
                                                     .WithArgumentList(
                                                         ArgumentList(
-                                                            SingletonSeparatedList<ArgumentSyntax>(
+                                                            SingletonSeparatedList(
                                                                 Argument(
-                                                                    IdentifierName("item")
+                                                                    IdentifierName(forEachVariableName)
                                                                 )
                                                             )
                                                         )
@@ -282,5 +284,18 @@ namespace MapThis.Services.MethodGenerator
             return statement;
         }
 
+        private static string GetForEachVariableName(MapCollectionInformationDto mapCollectionInformationDto)
+        {
+            if ("item" != mapCollectionInformationDto.FirstParameterName)
+            {
+                return "item";
+            }
+
+            var className = mapCollectionInformationDto.TargetType.GetElementType().Name;
+
+            var classNameCamelCase = char.ToLowerInvariant(className[0]) + className.Substring(1);
+
+            return $"{classNameCamelCase}Item";
+        }
     }
 }

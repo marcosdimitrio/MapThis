@@ -7,11 +7,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Composition;
 using System.Threading.Tasks;
 
-//TODO: Map collections as the first item being mapped
 //TODO: Mapping methods without brackets {} should fix the spacing between created methods
 //TODO: Refactor
 //TODO: Test with IEnumerable, ICollection
 //TODO: Add option to check for null (if (item == null) return null;)
+//TODO: Don't map Classes To Lists
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]

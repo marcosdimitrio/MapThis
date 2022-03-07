@@ -1,7 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Refactorings.MappingGenerator.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
-using MapThis.Services.MethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
@@ -11,6 +10,7 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace MapThis.Refactorings.MappingGenerator
@@ -18,13 +18,11 @@ namespace MapThis.Refactorings.MappingGenerator
     [Export(typeof(IMappingGeneratorService))]
     public class MappingGeneratorService : IMappingGeneratorService
     {
-        private readonly IMethodGeneratorService MethodGeneratorService;
         private readonly IMappingInformationService MappingInformationService;
 
         [ImportingConstructor]
-        public MappingGeneratorService(IMethodGeneratorService methodGeneratorService, IMappingInformationService mappingInformationService)
+        public MappingGeneratorService(IMappingInformationService mappingInformationService)
         {
-            MethodGeneratorService = methodGeneratorService;
             MappingInformationService = mappingInformationService;
         }
 
@@ -33,9 +31,11 @@ namespace MapThis.Refactorings.MappingGenerator
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var compilationUnitSyntax = (CompilationUnitSyntax)root;
 
-            var mapInformation = await MappingInformationService.GetMapInformation(context, methodSyntax, cancellationToken).ConfigureAwait(false);
+            var compoundGenerator = await MappingInformationService.GetCompoundGenerators(context, methodSyntax, cancellationToken).ConfigureAwait(false);
 
-            var blocks = GetBlocks(mapInformation);
+            var namespaces = compoundGenerator.GetNamespaces();
+
+            var blocks = compoundGenerator.Generate();
 
             var firstBlock = blocks.First();
             var allOtherBlocks = blocks.Skip(1).ToList();
@@ -62,38 +62,13 @@ namespace MapThis.Refactorings.MappingGenerator
                 compilationUnitSyntax = compilationUnitSyntax.InsertNodesAfter(methodToInsertAfter, allOtherBlocks);
             }
 
-            compilationUnitSyntax = await AddUsings(context, methodSyntax, compilationUnitSyntax, mapInformation, cancellationToken).ConfigureAwait(false);
+            compilationUnitSyntax = await AddUsings(context, methodSyntax, compilationUnitSyntax, namespaces, cancellationToken).ConfigureAwait(false);
 
             return context.Document.WithSyntaxRoot(compilationUnitSyntax);
-        }
+}
 
-        private IList<MethodDeclarationSyntax> GetBlocks(MapInformationDto mapInformation)
+        private async Task<CompilationUnitSyntax> AddUsings(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CompilationUnitSyntax compilationUnitSyntax, IList<INamespaceSymbol> namespaces, CancellationToken cancellationToken)
         {
-            var blocks = new List<MethodDeclarationSyntax>();
-
-            var firstBlockSyntax = MethodGeneratorService.Generate(mapInformation);
-
-            blocks.Add(firstBlockSyntax);
-
-            foreach (var childMapCollectionInformation in mapInformation.ChildrenMapCollectionInformation)
-            {
-                var blockSyntax = MethodGeneratorService.Generate(childMapCollectionInformation);
-
-                blocks.Add(blockSyntax);
-
-                if (childMapCollectionInformation.ChildMapInformation != null)
-                {
-                    blocks.AddRange(GetBlocks(childMapCollectionInformation.ChildMapInformation));
-                }
-            }
-
-            return blocks;
-        }
-
-        private async Task<CompilationUnitSyntax> AddUsings(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CompilationUnitSyntax compilationUnitSyntax, MapInformationDto mapInformation, CancellationToken cancellationToken)
-        {
-            var namespaces = GetNamespaces(mapInformation);
-
             var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
             var currentNamespace = methodSymbol.ContainingNamespace;
@@ -114,35 +89,6 @@ namespace MapThis.Refactorings.MappingGenerator
             }
 
             return compilationUnitSyntax;
-        }
-
-        private IList<INamespaceSymbol> GetNamespaces(MapInformationDto mapInformation)
-        {
-            var namespaces = new List<INamespaceSymbol>()
-            {
-                mapInformation.SourceType.ContainingNamespace,
-                mapInformation.TargetType.ContainingNamespace,
-            };
-
-            foreach (var childMapCollectionInformation in mapInformation.ChildrenMapCollectionInformation)
-            {
-                namespaces.Add(childMapCollectionInformation.SourceType.ContainingNamespace);
-                namespaces.Add(childMapCollectionInformation.TargetType.ContainingNamespace);
-
-                if (childMapCollectionInformation.ChildMapInformation != null)
-                {
-                    namespaces.AddRange(GetNamespaces(childMapCollectionInformation.ChildMapInformation));
-                }
-            }
-
-            namespaces = namespaces
-                .Where(x => !x.IsGlobalNamespace)
-                .GroupBy(x => x)
-                .Select(x => x.Key)
-                .OrderBy(x => x.ToDisplayString())
-                .ToList();
-
-            return namespaces;
         }
 
     }
