@@ -28,10 +28,8 @@ namespace MapThis.Services.MappingInformation
             var accessModifiers = methodSyntax.Modifiers.ToList();
 
             var firstParameterSymbol = methodSymbol.Parameters[0];
+            var sourceType = firstParameterSymbol.Type;
             var targetType = methodSymbol.ReturnType;
-
-            var sourceMembers = firstParameterSymbol.Type.GetPublicProperties();
-            var targetMembers = targetType.GetPublicProperties();
 
             var existingMethods = root
                 .DescendantNodes()
@@ -39,16 +37,19 @@ namespace MapThis.Services.MappingInformation
                 .Select(x => semanticModel.GetDeclaredSymbol(x, cancellationToken))
                 .ToList();
 
-            var mapInformation = GetMapForSimpleType(accessModifiers, firstParameterSymbol.Type, targetType, firstParameterSymbol.Name, sourceMembers, targetMembers, existingMethods);
+            var mapInformation = GetMapForSimpleType(accessModifiers, sourceType, targetType, firstParameterSymbol.Name, existingMethods);
 
             return mapInformation;
         }
 
-        private MapInformationDto GetMapForSimpleType(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IPropertySymbol> sourceMembers, IList<IPropertySymbol> targetMembers, IList<IMethodSymbol> existingMethods)
+        private MapInformationDto GetMapForSimpleType(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
         {
             var childrenMapCollectionInformation = new List<MapCollectionInformationDto>();
 
             var propertiesToMap = new List<PropertyToMapDto>();
+
+            var sourceMembers = sourceType.GetPublicProperties();
+            var targetMembers = targetType.GetPublicProperties();
 
             foreach (var targetProperty in targetMembers)
             {
@@ -72,8 +73,8 @@ namespace MapThis.Services.MappingInformation
 
                         var privateAccessModifiers = GetNonPublicAccessModifiers(accessModifiers);
 
-                        var childMapCollection = GetMapsForCollection(privateAccessModifiers, sourceProperty.Type, targetProperty.Type, existingMethods);
-                        childrenMapCollectionInformation.AddRange(childMapCollection);
+                        var childMapCollection = GetMapForCollection(privateAccessModifiers, sourceProperty.Type, targetProperty.Type, "source", existingMethods);
+                        childrenMapCollectionInformation.Add(childMapCollection);
                     }
                 }
 
@@ -87,7 +88,7 @@ namespace MapThis.Services.MappingInformation
             return mapInformation;
         }
 
-        private IList<MapCollectionInformationDto> GetMapsForCollection(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, IList<IMethodSymbol> existingMethods)
+        private MapCollectionInformationDto GetMapForCollection(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
         {
             var sourceListType = (INamedTypeSymbol)sourceType.GetElementType();
             var targetListType = (INamedTypeSymbol)targetType.GetElementType();
@@ -101,15 +102,12 @@ namespace MapThis.Services.MappingInformation
 
             if (!childMapInformationAlreadyExists)
             {
-                var sourceListMembers = sourceListType.GetPublicProperties();
-                var targetListMembers = targetListType.GetPublicProperties();
-
-                childMapInformation = GetMapForSimpleType(accessModifiers, sourceListType, targetListType, "item", sourceListMembers, targetListMembers, existingMethods);
+                childMapInformation = GetMapForSimpleType(accessModifiers, sourceListType, targetListType, "item", existingMethods);
             }
 
-            var mapCollectionInformationDto = new MapCollectionInformationDto(accessModifiers, sourceType, targetType, childMapInformation);
+            var mapCollectionInformationDto = new MapCollectionInformationDto(accessModifiers, firstParameterName, sourceType, targetType, childMapInformation);
 
-            return new List<MapCollectionInformationDto>() { mapCollectionInformationDto };
+            return mapCollectionInformationDto;
         }
 
         private static IPropertySymbol FindCorrespondingPropertyInSourceMembers(IPropertySymbol targetProperty, IList<IPropertySymbol> sourceMembers)

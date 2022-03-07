@@ -6,13 +6,15 @@ namespace MapThis.Dto
     public class MapCollectionInformationDto
     {
         public IList<SyntaxToken> AccessModifiers { get; }
+        public string FirstParameterName { get; }
         public ITypeSymbol SourceType { get; }
         public ITypeSymbol TargetType { get; }
         public MapInformationDto ChildMapInformation { get; }
 
-        public MapCollectionInformationDto(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, MapInformationDto childMapInformation)
+        public MapCollectionInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, ITypeSymbol sourceType, ITypeSymbol targetType, MapInformationDto childMapInformation)
         {
             AccessModifiers = accessModifiers;
+            FirstParameterName = firstParameterName;
             SourceType = sourceType;
             TargetType = targetType;
             ChildMapInformation = childMapInformation;

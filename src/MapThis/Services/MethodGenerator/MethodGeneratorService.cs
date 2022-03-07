@@ -67,7 +67,7 @@ namespace MapThis.Services.MethodGenerator
                 .WithParameterList(
                     ParameterList(
                         SingletonSeparatedList(
-                            Parameter(Identifier("source"))
+                            Parameter(Identifier(childMapCollectionInformation.FirstParameterName))
                                 .WithType(
                                     GenericName(Identifier("IList"))
                                     .WithTypeArgumentList(
