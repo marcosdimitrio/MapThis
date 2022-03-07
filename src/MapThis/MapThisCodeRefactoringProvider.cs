@@ -1,17 +1,18 @@
-﻿using MapThis.Refactorings.MappingGenerator.Interfaces;
+﻿using MapThis.Helpers;
+using MapThis.Refactorings.MappingGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Composition;
+using System.Linq;
 using System.Threading.Tasks;
 
 //TODO: Mapping methods without brackets {} should fix the spacing between created methods
 //TODO: Refactor
 //TODO: Test with IEnumerable, ICollection
 //TODO: Add option to check for null (if (item == null) return null;)
-//TODO: Don't map Classes To Lists
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
@@ -27,9 +28,9 @@ namespace MapThis
 
         public sealed override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
+            //root = Microsoft.CodeAnalysis.Formatting.Formatter.Format(root, new AdhocWorkspace());
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
             var node = root.FindNode(context.Span);
-            //root = Microsoft.CodeAnalysis.Formatting.Formatter.Format(root, new AdhocWorkspace());
 
             var methodDeclaration = node as MethodDeclarationSyntax;
             if (methodDeclaration == null)
@@ -41,6 +42,15 @@ namespace MapThis
                 return;
             }
             if (methodDeclaration.ParameterList.Parameters.Count == 0)
+            {
+                return;
+            }
+
+            var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+            var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration, context.CancellationToken);
+
+            if (methodSymbol.ReturnType.IsCollection() && !methodSymbol.Parameters.First().Type.IsCollection() ||
+                !methodSymbol.ReturnType.IsCollection() && methodSymbol.Parameters.First().Type.IsCollection())
             {
                 return;
             }
