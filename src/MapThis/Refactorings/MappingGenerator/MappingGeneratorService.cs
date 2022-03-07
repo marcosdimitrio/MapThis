@@ -37,7 +37,7 @@ namespace MapThis.Refactorings.MappingGenerator
             var firstBlock = blocks.First();
             var allOtherBlocks = blocks.Skip(1).ToList();
 
-            var firstBlockMethodSyntaxFixed = GetFirstBlockMethodSyntaxFixed(methodSyntax, firstBlock.Body);
+            var firstBlockMethodSyntaxFixed = GetFirstBlockWithOriginalSignature(methodSyntax, firstBlock.Body);
 
             compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, firstBlockMethodSyntaxFixed);
 
@@ -78,9 +78,10 @@ namespace MapThis.Refactorings.MappingGenerator
             return methodToInsertAfter;
         }
 
-        private MethodDeclarationSyntax GetFirstBlockMethodSyntaxFixed(MethodDeclarationSyntax methodSyntax, BlockSyntax newBodyBlock)
+        private MethodDeclarationSyntax GetFirstBlockWithOriginalSignature(MethodDeclarationSyntax methodSyntax, BlockSyntax newBodyBlock)
         {
-            // this method is necessary when the method's body is null, i.e., when it doesn't have opening/closing braces "{}".
+            // Recreating the MethodDeclaration will fix when the method's body is null,
+            // i.e., when it doesn't have opening/closing braces "{}".
             var methodDeclarationSyntax =
                 MethodDeclaration(
                     methodSyntax.AttributeLists,
