@@ -11,9 +11,9 @@ namespace MapThis.Dto
         public IList<PropertyToMapDto> PropertiesToMap { get; }
         public ITypeSymbol SourceType { get; }
         public ITypeSymbol TargetType { get; }
-        public IList<ICompoundGenerator> ChildrenCompoundGenerator { get; }
+        public IList<ICompoundMethodGenerator> ChildrenCompoundGenerator { get; }
 
-        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<ICompoundGenerator> childrenCompoundGenerator)
+        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<ICompoundMethodGenerator> childrenCompoundGenerator)
         {
             AccessModifiers = accessModifiers;
             FirstParameterName = firstParameterName;

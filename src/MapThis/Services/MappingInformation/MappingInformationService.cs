@@ -1,8 +1,8 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Services.CompoundGenerator.Factories.Interfaces;
 using MapThis.Services.CompoundGenerator.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
+using MapThis.Services.MethodGenerator.Factories.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
@@ -19,15 +19,15 @@ namespace MapThis.Services.MappingInformation
     [Export(typeof(IMappingInformationService))]
     public class MappingInformationService : IMappingInformationService
     {
-        private readonly ICompoundGeneratorFactory CompoundGeneratorFactory;
+        private readonly ICompoundMethodGeneratorFactory CompoundMethodGeneratorFactory;
 
         [ImportingConstructor]
-        public MappingInformationService(ICompoundGeneratorFactory compoundGeneratorFactory)
+        public MappingInformationService(ICompoundMethodGeneratorFactory compoundMethodGeneratorFactory)
         {
-            CompoundGeneratorFactory = compoundGeneratorFactory;
+            CompoundMethodGeneratorFactory = compoundMethodGeneratorFactory;
         }
 
-        public async Task<ICompoundGenerator> GetCompoundGenerators(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
+        public async Task<ICompoundMethodGenerator> GetCompoundGenerators(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
@@ -54,9 +54,9 @@ namespace MapThis.Services.MappingInformation
             return GetMapForSimpleType(accessModifiers, sourceType, targetType, firstParameterSymbol.Name, existingMethods);
         }
 
-        private ICompoundGenerator GetMapForSimpleType(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
+        private ICompoundMethodGenerator GetMapForSimpleType(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
         {
-            var childrenMapCollectionInformation = new List<ICompoundGenerator>();
+            var childrenMethodGenerators = new List<ICompoundMethodGenerator>();
 
             var propertiesToMap = new List<PropertyToMapDto>();
 
@@ -85,8 +85,8 @@ namespace MapThis.Services.MappingInformation
 
                         var privateAccessModifiers = GetNewMethodAccessModifiers(accessModifiers);
 
-                        var childMapCollection = GetMapForCollection(privateAccessModifiers, sourceProperty.Type, targetProperty.Type, "source", existingMethods);
-                        childrenMapCollectionInformation.Add(childMapCollection);
+                        var childMethodGenerator = GetMapForCollection(privateAccessModifiers, sourceProperty.Type, targetProperty.Type, "source", existingMethods);
+                        childrenMethodGenerators.Add(childMethodGenerator);
                     }
                 }
 
@@ -95,14 +95,14 @@ namespace MapThis.Services.MappingInformation
                 propertiesToMap.Add(propertyToMap);
             }
 
-            var mapInformation = new MapInformationDto(accessModifiers, firstParameterName, propertiesToMap, sourceType, targetType, childrenMapCollectionInformation);
+            var mapInformation = new MapInformationDto(accessModifiers, firstParameterName, propertiesToMap, sourceType, targetType, childrenMethodGenerators);
 
-            var compoundGenerator = CompoundGeneratorFactory.Get(mapInformation);
+            var methodGenerator = CompoundMethodGeneratorFactory.Get(mapInformation);
 
-            return compoundGenerator;
+            return methodGenerator;
         }
 
-        private ICompoundGenerator GetMapForCollection(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
+        private ICompoundMethodGenerator GetMapForCollection(IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
         {
             var sourceListType = (INamedTypeSymbol)sourceType.GetElementType();
             var targetListType = (INamedTypeSymbol)targetType.GetElementType();
@@ -112,20 +112,20 @@ namespace MapThis.Services.MappingInformation
                 SymbolEqualityComparer.Default.Equals(x.Parameters.FirstOrDefault()?.Type, sourceListType)
             );
 
-            ICompoundGenerator childCompoundGenerator = null;
+            ICompoundMethodGenerator childMethodGenerator = null;
 
             if (!childMapInformationAlreadyExists)
             {
                 var privateAccessModifiers = GetNewMethodAccessModifiers(accessModifiers);
 
-                childCompoundGenerator = GetMapForSimpleType(privateAccessModifiers, sourceListType, targetListType, "item", existingMethods);
+                childMethodGenerator = GetMapForSimpleType(privateAccessModifiers, sourceListType, targetListType, "item", existingMethods);
             }
 
-            var mapCollectionInformationDto = new MapCollectionInformationDto(accessModifiers, firstParameterName, sourceType, targetType, childCompoundGenerator);
+            var mapCollectionInformationDto = new MapCollectionInformationDto(accessModifiers, firstParameterName, sourceType, targetType, childMethodGenerator);
 
-            var compoundGenerator = CompoundGeneratorFactory.Get(mapCollectionInformationDto);
+            var methodGenerator = CompoundMethodGeneratorFactory.Get(mapCollectionInformationDto);
 
-            return compoundGenerator;
+            return methodGenerator;
         }
 
         private static IPropertySymbol FindCorrespondingPropertyInSourceMembers(IPropertySymbol targetProperty, IList<IPropertySymbol> sourceMembers)
@@ -142,8 +142,8 @@ namespace MapThis.Services.MappingInformation
 
             if (originalModifiers.Any(x => x.Kind() == SyntaxKind.PublicKeyword))
             {
-                listToRemove.Add(SyntaxKind.PublicKeyword);
                 listToAdd.Add(Token(SyntaxKind.PrivateKeyword));
+                listToRemove.Add(SyntaxKind.PublicKeyword);
             }
 
             if (originalModifiers.Any(x => x.Kind() == SyntaxKind.VirtualKeyword))

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MapThis.Services.CompoundGenerator.Interfaces
 {
-    public interface ICompoundGenerator
+    public interface ICompoundMethodGenerator
     {
         IList<MethodDeclarationSyntax> Generate();
         IList<INamespaceSymbol> GetNamespaces();

@@ -10,9 +10,9 @@ namespace MapThis.Dto
         public string FirstParameterName { get; }
         public ITypeSymbol SourceType { get; }
         public ITypeSymbol TargetType { get; }
-        public ICompoundGenerator ChildCompoundGenerator { get; }
+        public ICompoundMethodGenerator ChildCompoundGenerator { get; }
 
-        public MapCollectionInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, ITypeSymbol sourceType, ITypeSymbol targetType, ICompoundGenerator childCompoundGenerator)
+        public MapCollectionInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, ITypeSymbol sourceType, ITypeSymbol targetType, ICompoundMethodGenerator childCompoundGenerator)
         {
             AccessModifiers = accessModifiers;
             FirstParameterName = firstParameterName;

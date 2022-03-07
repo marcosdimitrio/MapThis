@@ -1,6 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Services.CompoundGenerator.Interfaces;
-using MapThis.Services.MethodGenerator.Interfaces;
+using MapThis.Services.SingleMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -8,22 +8,23 @@ using System.Linq;
 
 namespace MapThis.Services.CompoundGenerator
 {
-    public class ListMapGenerator : ICompoundGenerator
+    public class ListMapGenerator : ICompoundMethodGenerator
     {
         private readonly MapCollectionInformationDto MapCollectionInformationDto;
-        private readonly IMethodGeneratorService MethodGeneratorService;
+        private readonly ISingleMethodGeneratorService SingleMethodGeneratorService;
 
-        public ListMapGenerator(MapCollectionInformationDto mapCollectionInformationDto, IMethodGeneratorService methodGeneratorService)
+        public ListMapGenerator(MapCollectionInformationDto mapCollectionInformationDto, ISingleMethodGeneratorService singleMethodGeneratorService)
         {
             MapCollectionInformationDto = mapCollectionInformationDto;
-            MethodGeneratorService = methodGeneratorService;
+            SingleMethodGeneratorService = singleMethodGeneratorService;
         }
 
         public IList<MethodDeclarationSyntax> Generate()
         {
-            var destination = new List<MethodDeclarationSyntax>();
-
-            destination.Add(MethodGeneratorService.Generate(MapCollectionInformationDto));
+            var destination = new List<MethodDeclarationSyntax>()
+            {
+                SingleMethodGeneratorService.Generate(MapCollectionInformationDto)
+            };
 
             if (MapCollectionInformationDto.ChildCompoundGenerator != null)
             {
