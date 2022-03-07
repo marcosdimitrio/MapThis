@@ -48,7 +48,7 @@ namespace MapThis.Services.CompoundGenerator
             }
 
             namespaces = namespaces
-                .Where(x => !x.IsGlobalNamespace)
+                .Where(x => x != null && !x.IsGlobalNamespace)
                 .GroupBy(x => x)
                 .Select(x => x.Key)
                 .OrderBy(x => x.ToDisplayString())

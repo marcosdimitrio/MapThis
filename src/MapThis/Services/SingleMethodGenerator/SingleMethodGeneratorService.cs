@@ -48,11 +48,11 @@ namespace MapThis.Services.SingleMethodGenerator
         {
             var mapListStatement = GetMappedListBody(childMapCollectionInformation);
 
+            var sourceListTypeName = GetSourceTypeListNameAsInterface(childMapCollectionInformation.SourceType);
+
             var blockSyntax =
                 MethodDeclaration(
-                    GenericName(
-                        Identifier("IList")
-                    )
+                    GenericName(childMapCollectionInformation.TargetType.Name)
                     .WithTypeArgumentList(
                         TypeArgumentList(
                             SingletonSeparatedList<TypeSyntax>(
@@ -68,16 +68,16 @@ namespace MapThis.Services.SingleMethodGenerator
                     ParameterList(
                         SingletonSeparatedList(
                             Parameter(Identifier(childMapCollectionInformation.FirstParameterName))
-                                .WithType(
-                                    GenericName(Identifier("IList"))
-                                    .WithTypeArgumentList(
-                                        TypeArgumentList(
-                                            SingletonSeparatedList<TypeSyntax>(
-                                                IdentifierName(childMapCollectionInformation.SourceType.GetElementType().Name)
-                                            )
+                            .WithType(
+                                GenericName(sourceListTypeName)
+                                .WithTypeArgumentList(
+                                    TypeArgumentList(
+                                        SingletonSeparatedList<TypeSyntax>(
+                                            IdentifierName(childMapCollectionInformation.SourceType.GetElementType().Name)
                                         )
                                     )
                                 )
+                            )
                         )
                     )
                 )
@@ -297,5 +297,18 @@ namespace MapThis.Services.SingleMethodGenerator
 
             return $"{classNameCamelCase}Item";
         }
+
+        private static string GetSourceTypeListNameAsInterface(ITypeSymbol sourceType)
+        {
+            var name = sourceType.Name;
+
+            if (name == "List" || name == "Collection")
+            {
+                return $"I{name}";
+            }
+
+            return name;
+        }
+
     }
 }

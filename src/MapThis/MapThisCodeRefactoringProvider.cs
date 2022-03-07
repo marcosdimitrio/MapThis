@@ -9,9 +9,8 @@ using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 
-//TODO: Refactor
-//TODO: Test with IEnumerable, ICollection
 //TODO: Add option to check for null (if (item == null) return null;)
+//TODO: Map arrays
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
