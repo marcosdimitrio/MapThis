@@ -9,7 +9,6 @@ using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 
-//TODO: Mapping methods without brackets {} should fix the spacing between created methods
 //TODO: Refactor
 //TODO: Test with IEnumerable, ICollection
 //TODO: Add option to check for null (if (item == null) return null;)

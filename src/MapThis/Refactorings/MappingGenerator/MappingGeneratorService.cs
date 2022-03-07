@@ -1,5 +1,4 @@
-﻿using MapThis.Dto;
-using MapThis.Refactorings.MappingGenerator.Interfaces;
+﻿using MapThis.Refactorings.MappingGenerator.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -10,7 +9,6 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace MapThis.Refactorings.MappingGenerator
@@ -40,34 +38,69 @@ namespace MapThis.Refactorings.MappingGenerator
             var firstBlock = blocks.First();
             var allOtherBlocks = blocks.Skip(1).ToList();
 
-            compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, methodSyntax.WithBody(firstBlock.Body));
+            var firstBlockMethodSyntaxFixed = GetFirstBlockMethodSyntaxFixed(methodSyntax, firstBlock.Body);
+
+            compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, firstBlockMethodSyntaxFixed);
 
             if (allOtherBlocks.Count > 0)
             {
-                var listOfModifiers = new List<SyntaxKind>()
-                {
-                    SyntaxKind.PublicKeyword,
-                    SyntaxKind.ProtectedKeyword,
-                    SyntaxKind.InternalKeyword,
-                };
-
-                var methodToInsertAfter = compilationUnitSyntax
-                    .DescendantNodes()
-                    .OfType<MethodDeclarationSyntax>()
-                    .Where(x => x.Modifiers.Any(y => listOfModifiers.Contains(y.Kind())))
-                    .LastOrDefault();
-
-                methodToInsertAfter = methodToInsertAfter ?? (MethodDeclarationSyntax)compilationUnitSyntax.FindNode(context.Span);
+                var methodToInsertAfter = GetMethodToInsertAfter(context, compilationUnitSyntax);
 
                 compilationUnitSyntax = compilationUnitSyntax.InsertNodesAfter(methodToInsertAfter, allOtherBlocks);
             }
 
-            compilationUnitSyntax = await AddUsings(context, methodSyntax, compilationUnitSyntax, namespaces, cancellationToken).ConfigureAwait(false);
+            compilationUnitSyntax = await AddMissingUsings(context, methodSyntax, compilationUnitSyntax, namespaces, cancellationToken).ConfigureAwait(false);
 
             return context.Document.WithSyntaxRoot(compilationUnitSyntax);
-}
+        }
 
-        private async Task<CompilationUnitSyntax> AddUsings(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CompilationUnitSyntax compilationUnitSyntax, IList<INamespaceSymbol> namespaces, CancellationToken cancellationToken)
+        private static MethodDeclarationSyntax GetMethodToInsertAfter(CodeRefactoringContext context, CompilationUnitSyntax compilationUnitSyntax)
+        {
+            var listOfModifiers = new List<SyntaxKind>()
+            {
+                SyntaxKind.PublicKeyword,
+                SyntaxKind.ProtectedKeyword,
+                SyntaxKind.InternalKeyword,
+            };
+
+            var lastNonPrivateMethod = compilationUnitSyntax
+                .DescendantNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .Where(x => x.Modifiers.Any(y => listOfModifiers.Contains(y.Kind())))
+                .LastOrDefault();
+
+            var methodToInsertAfter = (MethodDeclarationSyntax)compilationUnitSyntax.FindNode(context.Span);
+
+            if (lastNonPrivateMethod != null && lastNonPrivateMethod.Span.End > methodToInsertAfter.Span.End)
+            {
+                methodToInsertAfter = lastNonPrivateMethod;
+            }
+
+            return methodToInsertAfter;
+        }
+
+        private MethodDeclarationSyntax GetFirstBlockMethodSyntaxFixed(MethodDeclarationSyntax methodSyntax, BlockSyntax newBodyBlock)
+        {
+            // this method is necessary when the method's body is null, i.e., when it doesn't have opening/closing braces "{}".
+            var methodDeclarationSyntax =
+                MethodDeclaration(
+                    methodSyntax.AttributeLists,
+                    methodSyntax.Modifiers,
+                    methodSyntax.ReturnType,
+                    methodSyntax.ExplicitInterfaceSpecifier,
+                    methodSyntax.Identifier,
+                    methodSyntax.TypeParameterList,
+                    methodSyntax.ParameterList,
+                    methodSyntax.ConstraintClauses,
+                    newBodyBlock,
+                    methodSyntax.SemicolonToken
+                )
+                .WithTrailingTrivia(LineFeed);
+
+            return methodDeclarationSyntax;
+        }
+
+        private async Task<CompilationUnitSyntax> AddMissingUsings(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CompilationUnitSyntax compilationUnitSyntax, IList<INamespaceSymbol> namespaces, CancellationToken cancellationToken)
         {
             var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
