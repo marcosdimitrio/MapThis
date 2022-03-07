@@ -40,7 +40,7 @@ namespace MapThis.Refactorings.MappingGenerator
             var firstBlock = blocks.First();
             var allOtherBlocks = blocks.Skip(1).ToList();
 
-            compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, firstBlock);
+            compilationUnitSyntax = compilationUnitSyntax.ReplaceNode(methodSyntax, methodSyntax.WithBody(firstBlock.Body));
 
             if (allOtherBlocks.Count > 0)
             {
