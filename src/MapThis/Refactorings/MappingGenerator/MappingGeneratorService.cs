@@ -29,11 +29,10 @@ namespace MapThis.Refactorings.MappingGenerator
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var compilationUnitSyntax = (CompilationUnitSyntax)root;
 
-            var compoundGenerator = await MappingInformationService.GetCompoundGenerators(context, methodSyntax, cancellationToken).ConfigureAwait(false);
+            var compoundMethodsGenerator = await MappingInformationService.GetCompoundMethodsGenerator(context, methodSyntax, cancellationToken).ConfigureAwait(false);
 
-            var namespaces = compoundGenerator.GetNamespaces();
-
-            var blocks = compoundGenerator.Generate();
+            var blocks = compoundMethodsGenerator.Generate();
+            var namespaces = compoundMethodsGenerator.GetNamespaces();
 
             var firstBlock = blocks.First();
             var allOtherBlocks = blocks.Skip(1).ToList();

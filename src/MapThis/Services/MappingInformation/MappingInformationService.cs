@@ -27,7 +27,7 @@ namespace MapThis.Services.MappingInformation
             CompoundMethodGeneratorFactory = compoundMethodGeneratorFactory;
         }
 
-        public async Task<ICompoundMethodGenerator> GetCompoundGenerators(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
+        public async Task<ICompoundMethodGenerator> GetCompoundMethodsGenerator(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
