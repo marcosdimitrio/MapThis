@@ -1,4 +1,5 @@
-﻿using MapThis.Refactorings.MappingGenerator.Interfaces;
+﻿using MapThis.Dto;
+using MapThis.Refactorings.MappingGenerator.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -24,18 +25,17 @@ namespace MapThis.Refactorings.MappingGenerator
             MappingInformationService = mappingInformationService;
         }
 
-        public async Task<Document> ReplaceAsync(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
+        public async Task<Document> ReplaceAsync(OptionsDto optionsDto, CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
         {
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var compilationUnitSyntax = (CompilationUnitSyntax)root;
 
-            var compoundMethodsGenerator = await MappingInformationService.GetCompoundMethodsGenerator(context, methodSyntax, cancellationToken).ConfigureAwait(false);
+            var compoundMethodsGenerator = await MappingInformationService.GetCompoundMethodsGenerator(optionsDto, context, methodSyntax, cancellationToken).ConfigureAwait(false);
 
-            var blocks = compoundMethodsGenerator.Generate();
-            var namespaces = compoundMethodsGenerator.GetNamespaces();
+            var generatedMethodsDto = compoundMethodsGenerator.Generate();
 
-            var firstBlock = blocks.First();
-            var allOtherBlocks = blocks.Skip(1).ToList();
+            var firstBlock = generatedMethodsDto.Blocks.First();
+            var allOtherBlocks = generatedMethodsDto.Blocks.Skip(1).ToList();
 
             var firstBlockMethodSyntaxFixed = GetFirstBlockWithOriginalSignature(methodSyntax, firstBlock.Body);
 
@@ -48,7 +48,7 @@ namespace MapThis.Refactorings.MappingGenerator
                 compilationUnitSyntax = compilationUnitSyntax.InsertNodesAfter(methodToInsertAfter, allOtherBlocks);
             }
 
-            compilationUnitSyntax = await AddMissingUsings(context, methodSyntax, compilationUnitSyntax, namespaces, cancellationToken).ConfigureAwait(false);
+            compilationUnitSyntax = await AddMissingUsings(context, methodSyntax, compilationUnitSyntax, generatedMethodsDto.Namespaces, cancellationToken).ConfigureAwait(false);
 
             return context.Document.WithSyntaxRoot(compilationUnitSyntax);
         }

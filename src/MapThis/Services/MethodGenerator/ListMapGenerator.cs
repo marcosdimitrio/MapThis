@@ -1,4 +1,5 @@
 ﻿using MapThis.Dto;
+using MapThis.Refactorings.MappingGenerator.Dto;
 using MapThis.Services.CompoundGenerator.Interfaces;
 using MapThis.Services.SingleMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
@@ -19,7 +20,18 @@ namespace MapThis.Services.CompoundGenerator
             SingleMethodGeneratorService = singleMethodGeneratorService;
         }
 
-        public IList<MethodDeclarationSyntax> Generate()
+        public GeneratedMethodsDto Generate()
+        {
+            var generatedMethodsDto = new GeneratedMethodsDto()
+            {
+                Blocks = GenerateBlocks(),
+                Namespaces = GetNamespaces(),
+            };
+
+            return generatedMethodsDto;
+        }
+
+        private IList<MethodDeclarationSyntax> GenerateBlocks()
         {
             var destination = new List<MethodDeclarationSyntax>()
             {
@@ -28,13 +40,13 @@ namespace MapThis.Services.CompoundGenerator
 
             if (MapCollectionInformationDto.ChildCompoundGenerator != null)
             {
-                destination.AddRange(MapCollectionInformationDto.ChildCompoundGenerator.Generate());
+                destination.AddRange(MapCollectionInformationDto.ChildCompoundGenerator.Generate().Blocks);
             }
 
             return destination;
         }
 
-        public IList<INamespaceSymbol> GetNamespaces()
+        private IList<INamespaceSymbol> GetNamespaces()
         {
             var namespaces = new List<INamespaceSymbol>()
             {
@@ -44,7 +56,7 @@ namespace MapThis.Services.CompoundGenerator
 
             if (MapCollectionInformationDto.ChildCompoundGenerator != null)
             {
-                namespaces.AddRange(MapCollectionInformationDto.ChildCompoundGenerator.GetNamespaces());
+                namespaces.AddRange(MapCollectionInformationDto.ChildCompoundGenerator.Generate().Namespaces);
             }
 
             namespaces = namespaces

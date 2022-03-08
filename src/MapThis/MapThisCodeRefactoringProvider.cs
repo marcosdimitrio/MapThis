@@ -1,4 +1,5 @@
-﻿using MapThis.Helpers;
+﻿using MapThis.Dto;
+using MapThis.Helpers;
 using MapThis.Refactorings.MappingGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -9,7 +10,6 @@ using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 
-//TODO: Add option to check for null (if (item == null) return null;)
 //TODO: Map arrays
 namespace MapThis
 {
@@ -58,9 +58,14 @@ namespace MapThis
 
         private void Register(CodeRefactoringContext context, MethodDeclarationSyntax methodDeclaration)
         {
-            var action = CodeAction.Create("Map this", c => MappingGeneratorService.ReplaceAsync(context, methodDeclaration, c));
+            var options1 = new OptionsDto() { NullChecking = false };
+            var options2 = new OptionsDto() { NullChecking = true };
 
-            context.RegisterRefactoring(action);
+            var action1 = CodeAction.Create("Map this", c => MappingGeneratorService.ReplaceAsync(options1, context, methodDeclaration, c));
+            var action2 = CodeAction.Create("Map this with null check", c => MappingGeneratorService.ReplaceAsync(options2, context, methodDeclaration, c));
+
+            context.RegisterRefactoring(action1);
+            context.RegisterRefactoring(action2);
         }
 
     }

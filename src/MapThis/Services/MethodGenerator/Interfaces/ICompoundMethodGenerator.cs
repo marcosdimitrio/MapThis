@@ -1,12 +1,9 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
+﻿using MapThis.Refactorings.MappingGenerator.Dto;
 
 namespace MapThis.Services.CompoundGenerator.Interfaces
 {
     public interface ICompoundMethodGenerator
     {
-        IList<MethodDeclarationSyntax> Generate();
-        IList<INamespaceSymbol> GetNamespaces();
+        GeneratedMethodsDto Generate();
     }
 }

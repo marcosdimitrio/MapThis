@@ -17,7 +17,19 @@ namespace MapThis.Services.SingleMethodGenerator
         {
             var mappedObjectStatement = GetMappedObjectStatement(mapInformation);
 
-            var firstBlockSyntax =
+            var nullCheckStatement = GetNullCheckStatementForClass(mapInformation);
+
+            var returnStatement =
+                ReturnStatement(IdentifierName("newItem"))
+                    .WithLeadingTrivia(TriviaList(LineFeed));
+
+            var statements = new List<StatementSyntax>();
+
+            if (nullCheckStatement != null) statements.Add(nullCheckStatement);
+            statements.Add(mappedObjectStatement);
+            statements.Add(returnStatement);
+
+            var methodDeclaration =
                 MethodDeclaration(
                     IdentifierName(mapInformation.TargetType.Name),
                     Identifier("Map")
@@ -35,13 +47,11 @@ namespace MapThis.Services.SingleMethodGenerator
                 )
                 .WithBody(
                     Block(
-                        mappedObjectStatement,
-                        ReturnStatement(IdentifierName("newItem"))
-                            .WithLeadingTrivia(TriviaList(LineFeed))
+                        statements
                     )
                 );
 
-            return firstBlockSyntax;
+            return methodDeclaration;
         }
 
         public MethodDeclarationSyntax Generate(MapCollectionInformationDto childMapCollectionInformation)
@@ -50,7 +60,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
             var sourceListTypeName = GetSourceTypeListNameAsInterface(childMapCollectionInformation.SourceType);
 
-            var blockSyntax =
+            var methodDeclaration =
                 MethodDeclaration(
                     GenericName(childMapCollectionInformation.TargetType.Name)
                     .WithTypeArgumentList(
@@ -83,7 +93,7 @@ namespace MapThis.Services.SingleMethodGenerator
                 )
                 .WithBody(mapListStatement);
 
-            return blockSyntax;
+            return methodDeclaration;
         }
 
         private LocalDeclarationStatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto)
@@ -96,7 +106,7 @@ namespace MapThis.Services.SingleMethodGenerator
                 syntaxNodeOrTokenList.Add(Token(SyntaxKind.CommaToken));
             }
 
-            var statement =
+            var localDeclarationStatement =
                 LocalDeclarationStatement(
                     VariableDeclaration(
                         IdentifierName(
@@ -139,7 +149,178 @@ namespace MapThis.Services.SingleMethodGenerator
                         TriviaList(
                             LineFeed)));
 
-            return statement;
+            return localDeclarationStatement;
+        }
+
+        private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto)
+        {
+            var returnVariableName = "destination";
+
+            var variableDeclaration =
+                LocalDeclarationStatement(
+                        VariableDeclaration(
+                            IdentifierName(
+                                Identifier(
+                                    TriviaList(),
+                                    SyntaxKind.VarKeyword,
+                                    "var",
+                                    "var",
+                                    TriviaList())))
+                        .WithVariables(
+                            SingletonSeparatedList(
+                                VariableDeclarator(
+                                    Identifier(returnVariableName))
+                                .WithInitializer(
+                                    EqualsValueClause(
+                                        ObjectCreationExpression(
+                                            GenericName(
+                                                Identifier("List"))
+                                            .WithTypeArgumentList(
+                                                TypeArgumentList(
+                                                    SingletonSeparatedList<TypeSyntax>(
+                                                        IdentifierName(mapCollectionInformationDto.TargetType.GetElementType().Name)))))
+                                        .WithArgumentList(
+                                            ArgumentList()
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                    .WithSemicolonToken(
+                        Token(
+                            TriviaList(),
+                            SyntaxKind.SemicolonToken,
+                            TriviaList(
+                                LineFeed)));
+
+            var nullCheckStatement = GetNullCheckStatementForCollection(mapCollectionInformationDto);
+
+            var forEachVariableName = GetForEachVariableName(mapCollectionInformationDto);
+
+            var forEachStatement =
+                ForEachStatement(
+                    IdentifierName(
+                        Identifier(
+                            TriviaList(),
+                            SyntaxKind.VarKeyword,
+                            "var",
+                            "var",
+                            TriviaList())),
+                    Identifier(forEachVariableName),
+                    IdentifierName(mapCollectionInformationDto.FirstParameterName),
+                    Block(
+                        SingletonList<StatementSyntax>(
+                            ExpressionStatement(
+                                InvocationExpression(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("destination"),
+                                        IdentifierName("Add")))
+                                .WithArgumentList(
+                                    ArgumentList(
+                                        SingletonSeparatedList(
+                                            Argument(
+                                                InvocationExpression(
+                                                    IdentifierName("Map"))
+                                                .WithArgumentList(
+                                                    ArgumentList(
+                                                        SingletonSeparatedList(
+                                                            Argument(
+                                                                IdentifierName(forEachVariableName)
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+                .WithLeadingTrivia(TriviaList(LineFeed));
+
+            var returnStatement =
+                ReturnStatement(
+                    IdentifierName("destination")
+                );
+
+            var statements = new List<StatementSyntax>();
+
+            statements.Add(variableDeclaration);
+            if (nullCheckStatement != null) statements.Add(nullCheckStatement);
+            statements.Add(forEachStatement);
+            statements.Add(returnStatement);
+
+            var blockSyntax =
+                Block(
+                    statements
+                );
+
+            return blockSyntax;
+        }
+
+        private IfStatementSyntax GetNullCheckStatementForClass(MapInformationDto mapInformationDto)
+        {
+            if (!mapInformationDto.Options.NullChecking) return null;
+
+            return
+                IfStatement(
+                    BinaryExpression(
+                        SyntaxKind.EqualsExpression,
+                        IdentifierName(mapInformationDto.FirstParameterName),
+                        LiteralExpression(
+                            SyntaxKind.NullLiteralExpression)),
+                    ReturnStatement(
+                        LiteralExpression(
+                            SyntaxKind.NullLiteralExpression))
+                    .WithReturnKeyword(
+                        Token(
+                            TriviaList(),
+                            SyntaxKind.ReturnKeyword,
+                            TriviaList(
+                                Space)))
+                )
+                .WithCloseParenToken(
+                    Token(
+                        TriviaList(),
+                        SyntaxKind.CloseParenToken,
+                        TriviaList(
+                            Space)))
+                .WithTrailingTrivia(TriviaList(LineFeed, LineFeed));
+        }
+
+        private IfStatementSyntax GetNullCheckStatementForCollection(MapCollectionInformationDto mapCollectionInformationDto)
+        {
+            if (!mapCollectionInformationDto.Options.NullChecking) return null;
+
+            return
+                IfStatement(
+                    BinaryExpression(
+                        SyntaxKind.EqualsExpression,
+                        IdentifierName(mapCollectionInformationDto.FirstParameterName),
+                        LiteralExpression(
+                            SyntaxKind.NullLiteralExpression)),
+                    ReturnStatement(
+                        LiteralExpression(
+                            SyntaxKind.NullLiteralExpression))
+                    .WithReturnKeyword(
+                        Token(
+                            TriviaList(),
+                            SyntaxKind.ReturnKeyword,
+                            TriviaList(
+                                Space)))
+                )
+                .WithCloseParenToken(
+                    Token(
+                        TriviaList(),
+                        SyntaxKind.CloseParenToken,
+                        TriviaList(
+                            Space)))
+                .WithTrailingTrivia(TriviaList(LineFeed))
+                .WithLeadingTrivia(TriviaList(LineFeed));
         }
 
         private SyntaxNodeOrToken GetPropertyExpression(PropertyToMapDto propertyToMap)
@@ -190,98 +371,6 @@ namespace MapThis.Services.SingleMethodGenerator
                     )
                 )
                 .WithLeadingTrivia(ElasticCarriageReturnLineFeed);
-        }
-
-        private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto)
-        {
-            var forEachVariableName = GetForEachVariableName(mapCollectionInformationDto);
-
-            var statement =
-                Block(
-                    LocalDeclarationStatement(
-                        VariableDeclaration(
-                            IdentifierName(
-                                Identifier(
-                                    TriviaList(),
-                                    SyntaxKind.VarKeyword,
-                                    "var",
-                                    "var",
-                                    TriviaList())))
-                        .WithVariables(
-                            SingletonSeparatedList(
-                                VariableDeclarator(
-                                    Identifier("destination"))
-                                .WithInitializer(
-                                    EqualsValueClause(
-                                        ObjectCreationExpression(
-                                            GenericName(
-                                                Identifier("List"))
-                                            .WithTypeArgumentList(
-                                                TypeArgumentList(
-                                                    SingletonSeparatedList<TypeSyntax>(
-                                                        IdentifierName(mapCollectionInformationDto.TargetType.GetElementType().Name)))))
-                                        .WithArgumentList(
-                                            ArgumentList()
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                    .WithSemicolonToken(
-                        Token(
-                            TriviaList(),
-                            SyntaxKind.SemicolonToken,
-                            TriviaList(
-                                LineFeed))),
-                    ForEachStatement(
-                        IdentifierName(
-                            Identifier(
-                                TriviaList(),
-                                SyntaxKind.VarKeyword,
-                                "var",
-                                "var",
-                                TriviaList())),
-                        Identifier(forEachVariableName),
-                        IdentifierName(mapCollectionInformationDto.FirstParameterName),
-                        Block(
-                            SingletonList<StatementSyntax>(
-                                ExpressionStatement(
-                                    InvocationExpression(
-                                        MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
-                                            IdentifierName("destination"),
-                                            IdentifierName("Add")))
-                                    .WithArgumentList(
-                                        ArgumentList(
-                                            SingletonSeparatedList(
-                                                Argument(
-                                                    InvocationExpression(
-                                                        IdentifierName("Map"))
-                                                    .WithArgumentList(
-                                                        ArgumentList(
-                                                            SingletonSeparatedList(
-                                                                Argument(
-                                                                    IdentifierName(forEachVariableName)
-                                                                )
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                    .WithLeadingTrivia(TriviaList(LineFeed)),
-                    ReturnStatement(
-                        IdentifierName("destination")
-                    )
-                );
-
-            return statement;
         }
 
         private static string GetForEachVariableName(MapCollectionInformationDto mapCollectionInformationDto)

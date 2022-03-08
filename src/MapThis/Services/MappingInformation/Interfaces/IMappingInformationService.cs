@@ -8,6 +8,6 @@ namespace MapThis.Services.MappingInformation.Interfaces
 {
     public interface IMappingInformationService
     {
-        Task<ICompoundMethodGenerator> GetCompoundMethodsGenerator(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken);
+        Task<ICompoundMethodGenerator> GetCompoundMethodsGenerator(Dto.OptionsDto optionsDto, CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken);
     }
 }
