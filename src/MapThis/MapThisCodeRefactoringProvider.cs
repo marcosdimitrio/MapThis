@@ -10,6 +10,8 @@ using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 
+//TODO: Map non nullable to nullable and vice-versa
+//TODO: Fix mapping of classes that have type (DataTablesResponse<MyClass>)
 //TODO: Map arrays
 namespace MapThis
 {
