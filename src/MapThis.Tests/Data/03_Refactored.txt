@@ -1,0 +1,17 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        protected static Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public int Id { get; set; } }
+    public class ParentDto { public int Id { get; set; } }
+}

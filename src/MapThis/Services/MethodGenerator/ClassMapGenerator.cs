@@ -37,7 +37,7 @@ namespace MapThis.Services.CompoundGenerator
                 SingleMethodGeneratorService.Generate(MapInformationDto)
             };
 
-            foreach (var childCompoundGenerator in MapInformationDto.ChildrenCompoundGenerator)
+            foreach (var childCompoundGenerator in MapInformationDto.ChildrenMethodGenerators)
             {
                 destination.AddRange(childCompoundGenerator.Generate().Blocks);
             }
@@ -53,7 +53,7 @@ namespace MapThis.Services.CompoundGenerator
                 MapInformationDto.TargetType.ContainingNamespace,
             };
 
-            foreach (var childCompoundGenerator in MapInformationDto.ChildrenCompoundGenerator)
+            foreach (var childCompoundGenerator in MapInformationDto.ChildrenMethodGenerators)
             {
                 namespaces.AddRange(childCompoundGenerator.Generate().Namespaces);
             }

@@ -1,6 +1,9 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Services.CompoundGenerator.Interfaces;
+using MapThis.Services.ExistingMethodsControl.Dto;
+using MapThis.Services.ExistingMethodsControl.Factories.Interfaces;
+using MapThis.Services.ExistingMethodsControl.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
 using MapThis.Services.MethodGenerator.Factories.Interfaces;
 using Microsoft.CodeAnalysis;
@@ -20,11 +23,13 @@ namespace MapThis.Services.MappingInformation
     public class MappingInformationService : IMappingInformationService
     {
         private readonly ICompoundMethodGeneratorFactory CompoundMethodGeneratorFactory;
+        private readonly IExistingMethodControlFactory ExistingMethodControlFactory;
 
         [ImportingConstructor]
-        public MappingInformationService(ICompoundMethodGeneratorFactory compoundMethodGeneratorFactory)
+        public MappingInformationService(ICompoundMethodGeneratorFactory compoundMethodGeneratorFactory, IExistingMethodControlFactory existingMethodControlFactory)
         {
             CompoundMethodGeneratorFactory = compoundMethodGeneratorFactory;
+            ExistingMethodControlFactory = existingMethodControlFactory;
         }
 
         public async Task<ICompoundMethodGenerator> GetCompoundMethodsGenerator(OptionsDto optionsDto, CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken)
@@ -40,11 +45,18 @@ namespace MapThis.Services.MappingInformation
             var sourceType = firstParameterSymbol.Type;
             var targetType = methodSymbol.ReturnType;
 
-            var existingMethods = root
+            var existingMethodsList = root
                 .DescendantNodes()
                 .OfType<MethodDeclarationSyntax>()
                 .Select(x => semanticModel.GetDeclaredSymbol(x, cancellationToken))
+                .Select(x => new ExistingMethodDto()
+                {
+                    SourceType = x.Parameters.FirstOrDefault()?.Type as INamedTypeSymbol,
+                    TargetType = x.ReturnType as INamedTypeSymbol,
+                })
                 .ToList();
+
+            var existingMethods = ExistingMethodControlFactory.Create(existingMethodsList);
 
             if (targetType.IsCollection() && sourceType.IsCollection())
             {
@@ -54,7 +66,7 @@ namespace MapThis.Services.MappingInformation
             return GetMapForSimpleType(optionsDto, accessModifiers, sourceType, targetType, firstParameterSymbol.Name, existingMethods);
         }
 
-        private ICompoundMethodGenerator GetMapForSimpleType(OptionsDto optionsDto, IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
+        private ICompoundMethodGenerator GetMapForSimpleType(OptionsDto optionsDto, IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IExistingMethodsControlService existingMethodsControlService)
         {
             var childrenMethodGenerators = new List<ICompoundMethodGenerator>();
 
@@ -63,36 +75,40 @@ namespace MapThis.Services.MappingInformation
             var sourceMembers = sourceType.GetPublicProperties();
             var targetMembers = targetType.GetPublicProperties();
 
+            var privateAccessModifiers = GetNewMethodAccessModifiers(accessModifiers);
+
             foreach (var targetProperty in targetMembers)
             {
                 var sourceProperty = FindCorrespondingPropertyInSourceMembers(targetProperty, sourceMembers);
 
-                if (targetProperty.Type is INamedTypeSymbol targetNamedType && targetNamedType.IsCollection() &&
-                    sourceProperty?.Type is INamedTypeSymbol sourceNamedType && sourceNamedType.IsCollection())
+                var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, firstParameterName);
+
+                propertiesToMap.Add(propertyToMap);
+
+                var targetNamedType = targetProperty.Type as INamedTypeSymbol;
+                var sourceNamedType = sourceProperty?.Type as INamedTypeSymbol;
+
+                if (targetNamedType == null || sourceNamedType == null)
                 {
-                    var childMapCollectionAlreadyExists = existingMethods.Any(x =>
-                        SymbolEqualityComparer.Default.Equals(x.ReturnType, targetNamedType) &&
-                        SymbolEqualityComparer.Default.Equals(x.Parameters.FirstOrDefault()?.Type, sourceNamedType)
-                    );
+                    continue;
+                }
 
-                    if (!childMapCollectionAlreadyExists)
+                if (targetNamedType.IsCollection() && sourceNamedType.IsCollection())
+                {
+                    if (existingMethodsControlService.TryAddMethod(sourceNamedType, targetNamedType))
                     {
-                        var targetListType = targetNamedType.GetElementType();
-                        var sourceListType = sourceNamedType.GetElementType();
-
-                        var sourceListMembers = sourceListType.GetPublicProperties();
-                        var targetListMembers = targetListType.GetPublicProperties();
-
-                        var privateAccessModifiers = GetNewMethodAccessModifiers(accessModifiers);
-
-                        var childMethodGenerator = GetMapForCollection(optionsDto, privateAccessModifiers, sourceProperty.Type, targetProperty.Type, "source", existingMethods);
+                        var childMethodGenerator = GetMapForCollection(optionsDto, privateAccessModifiers, sourceProperty.Type, targetProperty.Type, "source", existingMethodsControlService);
                         childrenMethodGenerators.Add(childMethodGenerator);
                     }
                 }
 
-                var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, firstParameterName);
-
-                propertiesToMap.Add(propertyToMap);
+                if (targetNamedType.IsClass() && sourceNamedType.IsClass())
+                {
+                    if (existingMethodsControlService.TryAddMethod(sourceNamedType, targetNamedType))
+                    {
+                        childrenMethodGenerators.Add(GetMapForSimpleType(optionsDto, privateAccessModifiers, sourceNamedType, targetNamedType, "item", existingMethodsControlService));
+                    }
+                }
             }
 
             var mapInformation = new MapInformationDto(accessModifiers, firstParameterName, propertiesToMap, sourceType, targetType, childrenMethodGenerators, optionsDto);
@@ -102,23 +118,18 @@ namespace MapThis.Services.MappingInformation
             return methodGenerator;
         }
 
-        private ICompoundMethodGenerator GetMapForCollection(OptionsDto optionsDto, IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IList<IMethodSymbol> existingMethods)
+        private ICompoundMethodGenerator GetMapForCollection(OptionsDto optionsDto, IList<SyntaxToken> accessModifiers, ITypeSymbol sourceType, ITypeSymbol targetType, string firstParameterName, IExistingMethodsControlService existingMethodsControlService)
         {
             var sourceListType = (INamedTypeSymbol)sourceType.GetElementType();
             var targetListType = (INamedTypeSymbol)targetType.GetElementType();
 
-            var childMapInformationAlreadyExists = existingMethods.Any(x =>
-                SymbolEqualityComparer.Default.Equals(x.ReturnType, targetListType) &&
-                SymbolEqualityComparer.Default.Equals(x.Parameters.FirstOrDefault()?.Type, sourceListType)
-            );
-
             ICompoundMethodGenerator childMethodGenerator = null;
 
-            if (!childMapInformationAlreadyExists)
+            if (existingMethodsControlService.TryAddMethod(sourceListType, targetListType))
             {
                 var privateAccessModifiers = GetNewMethodAccessModifiers(accessModifiers);
 
-                childMethodGenerator = GetMapForSimpleType(optionsDto, privateAccessModifiers, sourceListType, targetListType, "item", existingMethods);
+                childMethodGenerator = GetMapForSimpleType(optionsDto, privateAccessModifiers, sourceListType, targetListType, "item", existingMethodsControlService);
             }
 
             var mapCollectionInformationDto = new MapCollectionInformationDto(accessModifiers, firstParameterName, sourceType, targetType, childMethodGenerator, optionsDto);

@@ -153,5 +153,108 @@ namespace MapThis.Tests {
                 return ResourceManager.GetString("_02_Refactored", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        protected static Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _03_Before {
+            get {
+                return ResourceManager.GetString("_03_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        protected static Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                Id = item.Id,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _03_Refactored {
+            get {
+                return ResourceManager.GetString("_03_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using MapThis.Tests.Parent;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///namespace MapThis.Tests.Parent
+        ///{
+        ///    using MapThis.Tests.Child;
+        ///
+        ///    public class Parent { public Child Child { get; set; } }
+        ///    public class ParentDto { public ChildDto ChildDto { get; set; } }
+        ///}
+        ///namespace MapThis.Tests.Child
+        ///{
+        ///    public class Child { public int Id { get;  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _04_Before {
+            get {
+                return ResourceManager.GetString("_04_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                Id = item.Id,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _04_Refactored {
+            get {
+                return ResourceManager.GetString("_04_Refactored", resourceCulture);
+            }
+        }
     }
 }

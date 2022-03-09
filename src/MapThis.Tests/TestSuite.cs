@@ -1,5 +1,6 @@
 using MapThis.Refactorings.MappingGenerator;
 using MapThis.Services.CompoundGenerator.Factories;
+using MapThis.Services.ExistingMethodsControl.Factories;
 using MapThis.Services.MappingInformation;
 using MapThis.Services.SingleMethodGenerator;
 using MapThis.Tests.Builder;
@@ -16,12 +17,18 @@ namespace MapThis.Tests
     {
         public static IEnumerable<object[]> GetClients()
         {
-            yield return new object[] { "Should map a simple class with one parameter", GetData(Resources._01_Before, Resources._01_Refactored) };
-            yield return new object[] { "Should not exclude additional parameters from first method", GetData(Resources._02_Before, Resources._02_Refactored) };
+            yield return new object[] { "01 Should map a simple class with one parameter", GetData(Resources._01_Before, Resources._01_Refactored) };
+            yield return new object[] { "02 Should not exclude additional parameters from first method", GetData(Resources._02_Before, Resources._02_Refactored) };
+            yield return new object[] { "03 Should keep accessibility of first method", GetData(Resources._03_Before, Resources._03_Refactored) };
+            yield return new object[] { "04 Should automatically add usings for collections", GetData(Resources._04_Before, Resources._04_Refactored) };
         }
 
         [Theory]
         [MemberData(nameof(GetClients))]
+        #region SupressMessage
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026", Justification = "The name is displayed in test explorer")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "IDE0060", Justification = "The name is displayed in test explorer")]
+        #endregion
         public void Test(string name, MemberDataSerializer<TestDataDto> dto)
         {
             TestCodeRefactoring(dto.Object.Before, dto.Object.Refactored);
@@ -33,7 +40,8 @@ namespace MapThis.Tests
         {
             var singleMethodGeneratorService = new SingleMethodGeneratorService();
             var compoundMethodGeneratorFactory = new CompoundMethodGeneratorFactory(singleMethodGeneratorService);
-            var mappingInformationService = new MappingInformationService(compoundMethodGeneratorFactory);
+            var existingMethodControlFactory = new ExistingMethodControlFactory();
+            var mappingInformationService = new MappingInformationService(compoundMethodGeneratorFactory, existingMethodControlFactory);
             var mappingGeneratorService = new MappingGeneratorService(mappingInformationService);
 
             return new MapThisCodeRefactoringProvider(mappingGeneratorService);

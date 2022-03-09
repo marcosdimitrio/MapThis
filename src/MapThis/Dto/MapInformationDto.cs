@@ -11,17 +11,17 @@ namespace MapThis.Dto
         public IList<PropertyToMapDto> PropertiesToMap { get; }
         public ITypeSymbol SourceType { get; }
         public ITypeSymbol TargetType { get; }
-        public IList<ICompoundMethodGenerator> ChildrenCompoundGenerator { get; }
+        public IList<ICompoundMethodGenerator> ChildrenMethodGenerators { get; }
         public OptionsDto Options { get; }
 
-        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<ICompoundMethodGenerator> childrenCompoundGenerator, OptionsDto options)
+        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<ICompoundMethodGenerator> childrenMethodGenerators, OptionsDto options)
         {
             AccessModifiers = accessModifiers;
             FirstParameterName = firstParameterName;
             PropertiesToMap = propertiesToMap;
             SourceType = sourceType;
             TargetType = targetType;
-            ChildrenCompoundGenerator = childrenCompoundGenerator;
+            ChildrenMethodGenerators = childrenMethodGenerators;
             Options = options;
         }
     }

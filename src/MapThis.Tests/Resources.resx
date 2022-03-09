@@ -130,4 +130,16 @@
   <data name="_02_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\02_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="_03_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\03_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_03_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\03_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_04_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\04_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_04_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\04_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>
