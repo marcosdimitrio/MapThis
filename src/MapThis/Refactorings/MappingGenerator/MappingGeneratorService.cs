@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
@@ -95,7 +96,7 @@ namespace MapThis.Refactorings.MappingGenerator
                     newBodyBlock,
                     methodSyntax.SemicolonToken
                 )
-                .WithTrailingTrivia(LineFeed);
+                .WithTrailingTrivia(EndOfLine(Environment.NewLine));
 
             return methodDeclarationSyntax;
         }

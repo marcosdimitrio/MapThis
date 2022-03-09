@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
-    internal class MapThisCodeRefactoringProvider : CodeRefactoringProvider
+    public class MapThisCodeRefactoringProvider : CodeRefactoringProvider
     {
         private readonly IMappingGeneratorService MappingGeneratorService;
 

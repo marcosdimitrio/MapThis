@@ -4,6 +4,7 @@ using MapThis.Services.SingleMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Composition;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -21,7 +22,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
             var returnStatement =
                 ReturnStatement(IdentifierName("newItem"))
-                    .WithLeadingTrivia(TriviaList(LineFeed));
+                    .WithLeadingTrivia(TriviaList(EndOfLine(Environment.NewLine)));
 
             var statements = new List<StatementSyntax>();
 
@@ -147,7 +148,7 @@ namespace MapThis.Services.SingleMethodGenerator
                         TriviaList(),
                         SyntaxKind.SemicolonToken,
                         TriviaList(
-                            LineFeed)));
+                            EndOfLine(Environment.NewLine))));
 
             return localDeclarationStatement;
         }
@@ -192,7 +193,7 @@ namespace MapThis.Services.SingleMethodGenerator
                             TriviaList(),
                             SyntaxKind.SemicolonToken,
                             TriviaList(
-                                LineFeed)));
+                                EndOfLine(Environment.NewLine))));
 
             var nullCheckStatement = GetNullCheckStatementForCollection(mapCollectionInformationDto);
 
@@ -240,7 +241,7 @@ namespace MapThis.Services.SingleMethodGenerator
                         )
                     )
                 )
-                .WithLeadingTrivia(TriviaList(LineFeed));
+                .WithLeadingTrivia(TriviaList(EndOfLine(Environment.NewLine)));
 
             var returnStatement =
                 ReturnStatement(
@@ -289,7 +290,7 @@ namespace MapThis.Services.SingleMethodGenerator
                         SyntaxKind.CloseParenToken,
                         TriviaList(
                             Space)))
-                .WithTrailingTrivia(TriviaList(LineFeed, LineFeed));
+                .WithTrailingTrivia(TriviaList(EndOfLine(Environment.NewLine), EndOfLine(Environment.NewLine)));
         }
 
         private IfStatementSyntax GetNullCheckStatementForCollection(MapCollectionInformationDto mapCollectionInformationDto)
@@ -319,8 +320,8 @@ namespace MapThis.Services.SingleMethodGenerator
                         SyntaxKind.CloseParenToken,
                         TriviaList(
                             Space)))
-                .WithTrailingTrivia(TriviaList(LineFeed))
-                .WithLeadingTrivia(TriviaList(LineFeed));
+                .WithTrailingTrivia(TriviaList(EndOfLine(Environment.NewLine)))
+                .WithLeadingTrivia(TriviaList(EndOfLine(Environment.NewLine)));
         }
 
         private SyntaxNodeOrToken GetPropertyExpression(PropertyToMapDto propertyToMap)
@@ -344,7 +345,7 @@ namespace MapThis.Services.SingleMethodGenerator
                         SyntaxKind.SimpleMemberAccessExpression,
                         IdentifierName(identifierName),
                         IdentifierName(propertyName)))
-                .WithLeadingTrivia(ElasticCarriageReturnLineFeed);
+                .WithLeadingTrivia(EndOfLine(Environment.NewLine));
         }
 
         private static AssignmentExpressionSyntax GetConversionWithMap(string identifierName, string propertyName)
@@ -370,7 +371,7 @@ namespace MapThis.Services.SingleMethodGenerator
                         )
                     )
                 )
-                .WithLeadingTrivia(ElasticCarriageReturnLineFeed);
+                .WithLeadingTrivia(EndOfLine(Environment.NewLine));
         }
 
         private static string GetForEachVariableName(MapCollectionInformationDto mapCollectionInformationDto)

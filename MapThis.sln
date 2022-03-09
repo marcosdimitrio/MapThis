@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapThis", "src\MapThis\MapT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapThis.Vsix", "src\MapThis.Vsix\MapThis.Vsix.csproj", "{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapThis.Tests", "src\MapThis.Tests\MapThis.Tests.csproj", "{BD868822-F4B1-421A-ADA2-66268A831A7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD868822-F4B1-421A-ADA2-66268A831A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD868822-F4B1-421A-ADA2-66268A831A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD868822-F4B1-421A-ADA2-66268A831A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD868822-F4B1-421A-ADA2-66268A831A7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{53E8FD59-CB4B-4707-9B45-DC3CAACB8A35} = {79B268A9-FA10-4895-AECB-BA3C5F8F0B58}
 		{A1526D03-4A5D-4B4A-A396-A6174F6AEE2E} = {79B268A9-FA10-4895-AECB-BA3C5F8F0B58}
+		{BD868822-F4B1-421A-ADA2-66268A831A7E} = {79B268A9-FA10-4895-AECB-BA3C5F8F0B58}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8B51D2AA-FB2C-471E-84BA-74BF3381BA65}
