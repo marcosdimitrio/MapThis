@@ -10,10 +10,6 @@ using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 
-//TODO: Map non nullable to nullable and vice-versa
-//TODO: Fix mapping of classes that have type (DataTablesResponse<MyClass>)
-//TODO: Keep namespaces in front of types (Children.Child Map(Children.ChildDto child))
-//TODO: Map arrays
 namespace MapThis
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]

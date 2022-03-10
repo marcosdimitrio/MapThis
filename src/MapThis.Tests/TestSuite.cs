@@ -35,11 +35,18 @@ namespace MapThis.Tests
             yield return new object[] { "16 Should use IList and ICollection for new list map methods with List and Collection", true, 0, GetData(Resources._16_Before, Resources._16_Refactored) };
             yield return new object[] { "17 Should map with null check for classes", true, 1, GetData(Resources._17_Before, Resources._17_Refactored) };
             yield return new object[] { "18 Should map with null check for collections", true, 1, GetData(Resources._18_Before, Resources._18_Refactored) };
-            yield return new object[] { "19 Should not create map method from list to class", true, 0, GetData(Resources._19_Before, null) };
-            yield return new object[] { "20 Should not create map method from class to list", true, 0, GetData(Resources._20_Before, null) };
+            yield return new object[] { "19 Should not create map method from list to class", false, 0, GetData(Resources._19_Before, null) };
+            yield return new object[] { "20 Should not create map method from class to list", false, 0, GetData(Resources._20_Before, null) };
             yield return new object[] { "21 Should not repeat mappings when Parent has GrandChild and List of Child that has GrandChild", true, 0, GetData(Resources._21_Before, Resources._21_Refactored) };
             yield return new object[] { "22 Should stop mapping at mapping that already exist on class", true, 0, GetData(Resources._22_Before, Resources._22_Refactored) };
             yield return new object[] { "23 Should keep \"namespace name\" like in Parents.Parent and not add namespace", true, 0, GetData(Resources._23_Before, Resources._23_Refactored) };
+            yield return new object[] { "24 Should map non nullable to nullable directly", true, 0, GetData(Resources._24_Before, Resources._24_Refactored) };
+            yield return new object[] { "25 Should map nullable to non nullable directly", true, 0, GetData(Resources._25_Before, Resources._25_Refactored) };
+            yield return new object[] { "26 Should show map options when cursor is at the return type", true, 0, GetData(Resources._26_Before, Resources._26_Refactored) };
+            yield return new object[] { "27 Should show map options when cursor is at opening parenthesis", true, 0, GetData(Resources._27_Before, Resources._27_Refactored) };
+            //Fix mapping of classes that have type (DataTablesResponse<MyClass>)
+            //Keep namespaces in front of types (Children.Child Map(Children.ChildDto child))
+            //Map arrays
         }
 
         [Theory]
@@ -48,7 +55,7 @@ namespace MapThis.Tests
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026", Justification = "The name is displayed in test explorer")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "IDE0060", Justification = "The name is displayed in test explorer")]
         #endregion
-        public void Test(string name, bool shouldRefactor, int refactoringIndex, MemberDataSerializer<TestDataDto> dto)
+        public void Test_Method(string name, bool shouldRefactor, int refactoringIndex, MemberDataSerializer<TestDataDto> dto)
         {
             if (shouldRefactor)
             {

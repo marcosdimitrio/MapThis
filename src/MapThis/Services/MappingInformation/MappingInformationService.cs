@@ -51,7 +51,7 @@ namespace MapThis.Services.MappingInformation
                 .Select(x => semanticModel.GetDeclaredSymbol(x, cancellationToken))
                 .Select(x => new ExistingMethodDto()
                 {
-                    SourceType = x.Parameters.FirstOrDefault()?.Type as INamedTypeSymbol,
+                    SourceType = x.Parameters.FirstOrDefault()?.Type as INamedTypeSymbol, //TODO: See if can be changed to First()
                     TargetType = x.ReturnType as INamedTypeSymbol,
                 })
                 .ToList();

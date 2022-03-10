@@ -250,4 +250,28 @@
   <data name="_23_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\23_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="_24_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\24_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_24_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\24_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_25_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\25_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_25_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\25_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_26_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\26_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_26_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\26_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_27_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\27_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_27_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\27_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>
