@@ -1,0 +1,34 @@
+﻿using P = MapThis.Tests.Parents;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public P.Parent Map(P.ParentDto item)
+        {
+            var newItem = new P.Parent()
+            {
+                Child = Map(item.Child),
+            };
+
+            return newItem;
+        }
+
+        private P.Child Map(P.ChildDto item)
+        {
+            var newItem = new P.Child()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
+        }
+    }
+}
+namespace MapThis.Tests.Parents
+{
+    public class Parent { public Child Child { get; set; } }
+    public class ParentDto { public ChildDto Child { get; set; } }
+    public class Child { public int Id { get; set; } }
+    public class ChildDto { public int Id { get; set; } }
+}

@@ -13,11 +13,13 @@ namespace MapThis.Services.CompoundGenerator
     {
         private readonly MapCollectionInformationDto MapCollectionInformationDto;
         private readonly ISingleMethodGeneratorService SingleMethodGeneratorService;
+        private readonly CodeAnalysisDependenciesDto CodeAnalisysDependenciesDto;
 
-        public ListMapGenerator(MapCollectionInformationDto mapCollectionInformationDto, ISingleMethodGeneratorService singleMethodGeneratorService)
+        public ListMapGenerator(MapCollectionInformationDto mapCollectionInformationDto, ISingleMethodGeneratorService singleMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
         {
             MapCollectionInformationDto = mapCollectionInformationDto;
             SingleMethodGeneratorService = singleMethodGeneratorService;
+            CodeAnalisysDependenciesDto = codeAnalisysDependenciesDto;
         }
 
         public GeneratedMethodsDto Generate()
@@ -35,7 +37,7 @@ namespace MapThis.Services.CompoundGenerator
         {
             var destination = new List<MethodDeclarationSyntax>()
             {
-                SingleMethodGeneratorService.Generate(MapCollectionInformationDto)
+                SingleMethodGeneratorService.Generate(MapCollectionInformationDto, CodeAnalisysDependenciesDto)
             };
 
             if (MapCollectionInformationDto.ChildCompoundGenerator != null)

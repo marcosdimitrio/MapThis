@@ -44,6 +44,8 @@ namespace MapThis.Tests
             yield return new object[] { "25 Should map nullable to non nullable directly", true, 0, GetData(Resources._25_Before, Resources._25_Refactored) };
             yield return new object[] { "26 Should show map options when cursor is at the return type", true, 0, GetData(Resources._26_Before, Resources._26_Refactored) };
             yield return new object[] { "27 Should show map options when cursor is at opening parenthesis", true, 0, GetData(Resources._27_Before, Resources._27_Refactored) };
+            yield return new object[] { "28 Should keep using namespace alias for classes", true, 0, GetData(Resources._28_Before, Resources._28_Refactored) };
+            yield return new object[] { "29 Should keep using namespace alias for collections", true, 0, GetData(Resources._29_Before, Resources._29_Refactored) };
             //Fix mapping of classes that have type (DataTablesResponse<MyClass>)
             //Keep namespaces in front of types (Children.Child Map(Children.ChildDto child))
             //Map arrays

@@ -274,4 +274,16 @@
   <data name="_27_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\27_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="_28_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\28_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_28_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\28_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_29_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\29_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_29_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\29_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

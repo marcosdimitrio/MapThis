@@ -17,14 +17,14 @@ namespace MapThis.Services.CompoundGenerator.Factories
             SingleMethodGeneratorService = singleMethodGeneratorService;
         }
 
-        public ICompoundMethodGenerator Get(MapInformationDto dto)
+        public ICompoundMethodGenerator Get(MapInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
         {
-            return new ClassMapGenerator(dto, SingleMethodGeneratorService);
+            return new ClassMapGenerator(dto, SingleMethodGeneratorService, codeAnalisysDependenciesDto);
         }
 
-        public ICompoundMethodGenerator Get(MapCollectionInformationDto dto)
+        public ICompoundMethodGenerator Get(MapCollectionInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
         {
-            return new ListMapGenerator(dto, SingleMethodGeneratorService);
+            return new ListMapGenerator(dto, SingleMethodGeneratorService, codeAnalisysDependenciesDto);
         }
 
     }
