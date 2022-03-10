@@ -329,7 +329,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
         private SyntaxNodeOrToken GetPropertyExpression(PropertyToMapDto propertyToMap)
         {
-            if (propertyToMap.Target.Type.IsSimpleType())
+            if (propertyToMap.Target.Type.IsSimpleType() || propertyToMap.Target.Type.IsNullableSimpleType())
             {
                 return GetNewDirectConversion(propertyToMap.ParameterName, propertyToMap.Target.Name);
             }

@@ -29,7 +29,8 @@ namespace MapThis
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
             var node = root.FindNode(context.Span);
 
-            var methodDeclaration = node as MethodDeclarationSyntax;
+            var methodDeclaration = FindMethodDeclaration(node);
+
             if (methodDeclaration == null)
             {
                 return;
@@ -53,6 +54,21 @@ namespace MapThis
             }
 
             Register(context, methodDeclaration);
+        }
+
+        private static MethodDeclarationSyntax FindMethodDeclaration(SyntaxNode node)
+        {
+            if (node is MethodDeclarationSyntax methodDeclaration)
+            {
+                return methodDeclaration;
+            }
+
+            if (node?.Parent is MethodDeclarationSyntax parent)
+            {
+                return parent;
+            }
+
+            return null;
         }
 
         private void Register(CodeRefactoringContext context, MethodDeclarationSyntax methodDeclaration)

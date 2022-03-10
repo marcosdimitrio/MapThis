@@ -39,7 +39,7 @@ namespace MapThis.Tests
             yield return new object[] { "20 Should not create map method from class to list", false, 0, GetData(Resources._20_Before, null) };
             yield return new object[] { "21 Should not repeat mappings when Parent has GrandChild and List of Child that has GrandChild", true, 0, GetData(Resources._21_Before, Resources._21_Refactored) };
             yield return new object[] { "22 Should stop mapping at mapping that already exist on class", true, 0, GetData(Resources._22_Before, Resources._22_Refactored) };
-            yield return new object[] { "23 Should keep \"namespace name\" like in Parents.Parent and not add namespace", true, 0, GetData(Resources._23_Before, Resources._23_Refactored) };
+            yield return new object[] { "23 Should keep \"namespace name\" like in Parents.Parent and not add to usings", true, 0, GetData(Resources._23_Before, Resources._23_Refactored) };
             yield return new object[] { "24 Should map non nullable to nullable directly", true, 0, GetData(Resources._24_Before, Resources._24_Refactored) };
             yield return new object[] { "25 Should map nullable to non nullable directly", true, 0, GetData(Resources._25_Before, Resources._25_Refactored) };
             yield return new object[] { "26 Should show map options when cursor is at the return type", true, 0, GetData(Resources._26_Before, Resources._26_Refactored) };

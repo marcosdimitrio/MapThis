@@ -54,6 +54,11 @@ namespace MapThis.Helpers
                 );
         }
 
+        public static bool IsNullableSimpleType(this ITypeSymbol type)
+        {
+            return type.Name == "Nullable" && type.GetElementType() != null && type.GetElementType().IsSimpleType();
+        }
+
         public static bool IsSimpleType(this ITypeSymbol type)
         {
             switch (type.SpecialType)
