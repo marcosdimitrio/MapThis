@@ -30,7 +30,7 @@ namespace MapThis.Tests
             yield return new object[] { "11 Should not create foreach variable with the same name as other method's properties", true, 0, GetData(Resources._11_Before, Resources._11_Refactored) };
             yield return new object[] { "12 Should not create foreach variable when defaults are taken by properties", true, 0, GetData(Resources._12_Before, Resources._12_Refactored) };
             yield return new object[] { "13 Should not create variable (newItem) with the same name as other method's properties", true, 0, GetData(Resources._13_Before, Resources._13_Refactored) };
-            yield return new object[] { "14 Should not create variable (newItem) when defaults are taken by properties", true, 0, GetData(Resources._14_Before, Resources._14_Refactored) };
+            yield return new object[] { "14 Should not create variable (destination) with the same name as other method's properties", true, 0, GetData(Resources._14_Before, Resources._14_Refactored) };
             yield return new object[] { "15 Should place new methods below public methods in between the first map method", true, 0, GetData(Resources._15_Before, Resources._15_Refactored) };
             yield return new object[] { "16 Should use IList and ICollection for new list map methods with List and Collection", true, 0, GetData(Resources._16_Before, Resources._16_Refactored) };
             yield return new object[] { "17 Should map with null check for classes", true, 1, GetData(Resources._17_Before, Resources._17_Refactored) };

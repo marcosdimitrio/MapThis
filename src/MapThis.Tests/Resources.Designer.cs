@@ -774,15 +774,13 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
-        ///        public Parent [|Map|](ParentDto parent, int newItem)
+        ///        public Parent [|Map|](ParentDto item, int newItem)
         ///        {
         ///            throw new System.NotImplementedException();
         ///        }
         ///    }
-        ///    public class Parent { public Child Child { get; set; } }
-        ///    public class ParentDto { public ChildDto Child { get; set; } }
-        ///    public class Child { public int Id { get; set; } }
-        ///    public class ChildDto { public int Id { get; set; } }
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
         ///}
         ///.
         /// </summary>
@@ -797,27 +795,20 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
-        ///        public Parent Map(ParentDto parent, int newItem)
+        ///        public Parent Map(ParentDto item, int newItem)
         ///        {
         ///            var newItem2 = new Parent()
-        ///            {
-        ///                Child = Map(parent.Child),
-        ///            };
-        ///
-        ///            return newItem2;
-        ///        }
-        ///
-        ///        private Child Map(ChildDto item)
-        ///        {
-        ///            var newItem = new Child()
         ///            {
         ///                Id = item.Id,
         ///            };
         ///
-        ///            return newItem;
+        ///            return newItem2;
         ///        }
         ///    }
-        ///    public class Pa [rest of string was truncated]&quot;;.
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
         /// </summary>
         internal static string _14_Refactored {
             get {

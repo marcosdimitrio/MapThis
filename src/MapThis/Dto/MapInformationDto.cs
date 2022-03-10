@@ -13,8 +13,9 @@ namespace MapThis.Dto
         public ITypeSymbol TargetType { get; }
         public IList<ICompoundMethodGenerator> ChildrenMethodGenerators { get; }
         public OptionsDto Options { get; }
+        public IList<IParameterSymbol> OtherParametersInMethod { get; }
 
-        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<ICompoundMethodGenerator> childrenMethodGenerators, OptionsDto options)
+        public MapInformationDto(IList<SyntaxToken> accessModifiers, string firstParameterName, IList<PropertyToMapDto> propertiesToMap, ITypeSymbol sourceType, ITypeSymbol targetType, IList<ICompoundMethodGenerator> childrenMethodGenerators, OptionsDto options, IList<IParameterSymbol> otherParametersInMethod)
         {
             AccessModifiers = accessModifiers;
             FirstParameterName = firstParameterName;
@@ -23,6 +24,7 @@ namespace MapThis.Dto
             TargetType = targetType;
             ChildrenMethodGenerators = childrenMethodGenerators;
             Options = options;
+            OtherParametersInMethod = otherParametersInMethod;
         }
     }
 }

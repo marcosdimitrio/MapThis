@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Composition;
+using System.Linq;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace MapThis.Services.SingleMethodGenerator
@@ -16,12 +17,14 @@ namespace MapThis.Services.SingleMethodGenerator
     {
         public MethodDeclarationSyntax Generate(MapInformationDto mapInformation)
         {
-            var mappedObjectStatement = GetMappedObjectStatement(mapInformation);
+            var returnVariableName = GetUniqueVariableName("newItem", mapInformation.OtherParametersInMethod);
+
+            var mappedObjectStatement = GetMappedObjectStatement(mapInformation, returnVariableName);
 
             var nullCheckStatement = GetNullCheckStatementForClass(mapInformation);
 
             var returnStatement =
-                ReturnStatement(IdentifierName("newItem"))
+                ReturnStatement(IdentifierName(returnVariableName))
                     .WithLeadingTrivia(TriviaList(EndOfLine(Environment.NewLine)));
 
             var statements = new List<StatementSyntax>();
@@ -97,7 +100,7 @@ namespace MapThis.Services.SingleMethodGenerator
             return methodDeclaration;
         }
 
-        private LocalDeclarationStatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto)
+        private LocalDeclarationStatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto, string returnVariableName)
         {
             var syntaxNodeOrTokenList = new List<SyntaxNodeOrToken>();
 
@@ -123,7 +126,7 @@ namespace MapThis.Services.SingleMethodGenerator
                     .WithVariables(
                         SingletonSeparatedList(
                             VariableDeclarator(
-                                Identifier("newItem"))
+                                Identifier(returnVariableName))
                             .WithInitializer(
                                 EqualsValueClause(
                                     ObjectCreationExpression(
@@ -155,7 +158,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
         private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto)
         {
-            var returnVariableName = "destination";
+            var destinationVariableName = GetUniqueVariableName("destination", mapCollectionInformationDto.OtherParametersInMethod);
 
             var variableDeclaration =
                 LocalDeclarationStatement(
@@ -170,7 +173,7 @@ namespace MapThis.Services.SingleMethodGenerator
                         .WithVariables(
                             SingletonSeparatedList(
                                 VariableDeclarator(
-                                    Identifier(returnVariableName))
+                                    Identifier(destinationVariableName))
                                 .WithInitializer(
                                     EqualsValueClause(
                                         ObjectCreationExpression(
@@ -197,7 +200,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
             var nullCheckStatement = GetNullCheckStatementForCollection(mapCollectionInformationDto);
 
-            var forEachVariableName = GetForEachVariableName(mapCollectionInformationDto);
+            var forEachVariableName = GetUniqueVariableName("item", mapCollectionInformationDto.OtherParametersInMethod);
 
             var forEachStatement =
                 ForEachStatement(
@@ -216,7 +219,7 @@ namespace MapThis.Services.SingleMethodGenerator
                                 InvocationExpression(
                                     MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("destination"),
+                                        IdentifierName(destinationVariableName),
                                         IdentifierName("Add")))
                                 .WithArgumentList(
                                     ArgumentList(
@@ -245,7 +248,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
             var returnStatement =
                 ReturnStatement(
-                    IdentifierName("destination")
+                    IdentifierName(destinationVariableName)
                 );
 
             var statements = new List<StatementSyntax>();
@@ -374,18 +377,22 @@ namespace MapThis.Services.SingleMethodGenerator
                 .WithLeadingTrivia(EndOfLine(Environment.NewLine));
         }
 
-        private static string GetForEachVariableName(MapCollectionInformationDto mapCollectionInformationDto)
+        private static string GetUniqueVariableName(string variableName, IList<IParameterSymbol> otherParametersInMethod)
         {
-            if ("item" != mapCollectionInformationDto.FirstParameterName)
+            var resultingVariableName = variableName;
+            var counter = 2;
+
+            do
             {
-                return "item";
+                if (!otherParametersInMethod.Any(x => x.Name == resultingVariableName))
+                {
+                    return resultingVariableName;
+                };
+
+                resultingVariableName = $"{variableName}{counter}";
+                counter++;
             }
-
-            var className = mapCollectionInformationDto.TargetType.GetElementType().Name;
-
-            var classNameCamelCase = char.ToLowerInvariant(className[0]) + className.Substring(1);
-
-            return $"{classNameCamelCase}Item";
+            while (true);
         }
 
         private static string GetSourceTypeListNameAsInterface(ITypeSymbol sourceType)

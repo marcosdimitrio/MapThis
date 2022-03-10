@@ -8,9 +8,9 @@ namespace MapThis.Tests
         {
             var destination = new List<Parent>();
 
-            foreach (var parentDtoItem in dto)
+            foreach (var item2 in dto)
             {
-                destination.Add(Map(parentDtoItem));
+                destination.Add(Map(item2));
             }
 
             return destination;
