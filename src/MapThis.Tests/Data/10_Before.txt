@@ -1,0 +1,14 @@
+﻿using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public IList<Parent> [|Map|](IList<ParentDto> item)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+    public class Parent { public int Id { get; set; } }
+    public class ParentDto { public int Id { get; set; } }
+}

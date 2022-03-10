@@ -1,4 +1,4 @@
-﻿using MapThis.Tests.Parents;
+using MapThis.Tests.Parents;
 
 namespace MapThis.Tests
 {

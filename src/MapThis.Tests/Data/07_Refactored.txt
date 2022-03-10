@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        [Custom]
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public int Id { get; set; } }
+    public class ParentDto { public int Id { get; set; } }
+    public class CustomAttribute : Attribute { }
+}

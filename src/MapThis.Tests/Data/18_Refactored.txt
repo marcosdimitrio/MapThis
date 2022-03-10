@@ -1,0 +1,60 @@
+using MapThis.Tests.Parents;
+using MapThis.Tests.Children;
+using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent Map(ParentDto item)
+        {
+            if (item == null) return null;
+
+            var newItem = new Parent()
+            {
+                Child = Map(item.Child),
+            };
+
+            return newItem;
+        }
+
+        private IList<Child> Map(IList<ChildDto> source)
+        {
+            var destination = new List<Child>();
+
+            if (source == null) return null;
+
+            foreach (var item in source)
+            {
+                destination.Add(Map(item));
+            }
+
+            return destination;
+        }
+
+        private Child Map(ChildDto item)
+        {
+            if (item == null) return null;
+
+            var newItem = new Child()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
+        }
+    }
+}
+namespace MapThis.Tests.Parents
+{
+    using MapThis.Tests.Children;
+    using System.Collections.Generic;
+
+    public class Parent { public IList<Child> Child { get; set; } }
+    public class ParentDto { public IList<ChildDto> Child { get; set; } }
+}
+namespace MapThis.Tests.Children
+{
+    public class Child { public int Id { get; set; } }
+    public class ChildDto { public int Id { get; set; } }
+}

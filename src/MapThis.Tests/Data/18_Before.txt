@@ -1,4 +1,4 @@
-﻿using MapThis.Tests.Parents;
+using MapThis.Tests.Parents;
 
 namespace MapThis.Tests
 {
@@ -13,9 +13,10 @@ namespace MapThis.Tests
 namespace MapThis.Tests.Parents
 {
     using MapThis.Tests.Children;
+    using System.Collections.Generic;
 
-    public class Parent { public Child Child { get; set; } }
-    public class ParentDto { public ChildDto Child { get; set; } }
+    public class Parent { public IList<Child> Child { get; set; } }
+    public class ParentDto { public IList<ChildDto> Child { get; set; } }
 }
 namespace MapThis.Tests.Children
 {

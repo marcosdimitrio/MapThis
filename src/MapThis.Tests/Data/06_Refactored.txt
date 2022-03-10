@@ -4,20 +4,33 @@ namespace MapThis.Tests
 {
     public class Class1
     {
-        public Parent [|Map|](ParentDto item)
+        public Parent Map(ParentDto item)
         {
-            throw new System.NotImplementedException();
+            var newItem = new Parent()
+            {
+                Child = Map(item.Child),
+            };
+
+            return newItem;
+        }
+
+        private Child Map(ChildDto item)
+        {
+            var newItem = new Child()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
         }
     }
 }
 namespace MapThis.Tests.Parents
 {
-    using MapThis.Tests.Children;
-
     public class Parent { public Child Child { get; set; } }
     public class ParentDto { public ChildDto Child { get; set; } }
 }
-namespace MapThis.Tests.Children
+namespace MapThis
 {
     public class Child { public int Id { get; set; } }
     public class ChildDto { public int Id { get; set; } }

@@ -142,4 +142,112 @@
   <data name="_04_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\04_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="_05_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\05_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_05_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\05_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_06_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\06_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_06_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\06_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_07_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\07_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_07_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\07_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_08_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\08_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_08_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\08_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_09_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\09_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_09_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\09_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_10_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\10_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_10_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\10_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_11_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\11_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_11_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\11_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_12_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\12_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_12_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\12_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_13_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\13_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_13_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\13_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_14_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\14_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_14_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\14_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_15_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\15_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_15_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\15_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_16_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\16_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_16_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\16_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_17_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\17_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_17_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\17_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_18_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\18_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_18_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\18_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_19_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\19_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_20_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\20_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_21_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\21_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_21_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\21_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_22_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\22_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_22_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\22_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_23_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\23_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_23_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\23_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
 </root>

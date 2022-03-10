@@ -4,5 +4,6 @@
     {
         public string Before { get; set; }
         public string Refactored { get; set; }
+        public int RefactoringIndex { get; set; }
     }
 }

@@ -1,0 +1,56 @@
+using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                Children = Map(item.Children),
+                GrandChild = Map(item.GrandChild),
+            };
+
+            return newItem;
+        }
+
+        private IList<Child> Map(IList<ChildDto> source)
+        {
+            var destination = new List<Child>();
+
+            foreach (var item in source)
+            {
+                destination.Add(Map(item));
+            }
+
+            return destination;
+        }
+
+        private Child Map(ChildDto item)
+        {
+            var newItem = new Child()
+            {
+                GrandChild = Map(item.GrandChild),
+            };
+
+            return newItem;
+        }
+
+        private GrandChild Map(GrandChildDto item)
+        {
+            var newItem = new GrandChild()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public IList<Child> Children { get; set; } public GrandChild GrandChild { get; set; } }
+    public class ParentDto { public IList<ChildDto> Children { get; set; } public GrandChildDto GrandChild { get; set; } }
+    public class Child { public GrandChild GrandChild { get; set; } }
+    public class ChildDto { public GrandChildDto GrandChild { get; set; } }
+    public class GrandChild { public int Id { get; set; } }
+    public class GrandChildDto { public int Id { get; set; } }
+}

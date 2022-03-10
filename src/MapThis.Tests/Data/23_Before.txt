@@ -1,0 +1,14 @@
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parents.Parent [|Map|](Parents.ParentDto item)
+        {
+        }
+    }
+}
+namespace MapThis.Tests.Parents
+{
+    public class Parent { public int Id { get; set; } }
+    public class ParentDto { public int Id { get; set; } }
+}

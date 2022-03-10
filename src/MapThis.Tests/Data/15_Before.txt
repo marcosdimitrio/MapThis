@@ -1,5 +1,3 @@
-﻿using MapThis.Tests.Parents;
-
 namespace MapThis.Tests
 {
     public class Class1
@@ -8,17 +6,14 @@ namespace MapThis.Tests
         {
             throw new System.NotImplementedException();
         }
-    }
-}
-namespace MapThis.Tests.Parents
-{
-    using MapThis.Tests.Children;
 
+        public int Test()
+        {
+            return 0;
+        }
+    }
     public class Parent { public Child Child { get; set; } }
     public class ParentDto { public ChildDto Child { get; set; } }
-}
-namespace MapThis.Tests.Children
-{
     public class Child { public int Id { get; set; } }
     public class ChildDto { public int Id { get; set; } }
 }
