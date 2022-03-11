@@ -39,9 +39,9 @@ namespace MapThis.Services.CompoundGenerator
                 SingleMethodGeneratorService.Generate(MapInformationDto, CodeAnalisysDependenciesDto)
             };
 
-            foreach (var childCompoundGenerator in MapInformationDto.ChildrenMethodGenerators)
+            foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
             {
-                destination.AddRange(childCompoundGenerator.Generate().Blocks);
+                destination.AddRange(childMethodGenerator.Generate().Blocks);
             }
 
             return destination;
@@ -55,9 +55,9 @@ namespace MapThis.Services.CompoundGenerator
                 MapInformationDto.TargetType.ContainingNamespace,
             };
 
-            foreach (var childCompoundGenerator in MapInformationDto.ChildrenMethodGenerators)
+            foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
             {
-                namespaces.AddRange(childCompoundGenerator.Generate().Namespaces);
+                namespaces.AddRange(childMethodGenerator.Generate().Namespaces);
             }
 
             namespaces = namespaces

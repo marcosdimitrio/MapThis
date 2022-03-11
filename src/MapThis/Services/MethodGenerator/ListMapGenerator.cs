@@ -40,9 +40,9 @@ namespace MapThis.Services.CompoundGenerator
                 SingleMethodGeneratorService.Generate(MapCollectionInformationDto, CodeAnalisysDependenciesDto)
             };
 
-            if (MapCollectionInformationDto.ChildCompoundGenerator != null)
+            if (MapCollectionInformationDto.ChildMethodGenerator != null)
             {
-                destination.AddRange(MapCollectionInformationDto.ChildCompoundGenerator.Generate().Blocks);
+                destination.AddRange(MapCollectionInformationDto.ChildMethodGenerator.Generate().Blocks);
             }
 
             return destination;
@@ -56,9 +56,9 @@ namespace MapThis.Services.CompoundGenerator
                 MapCollectionInformationDto.TargetType.ContainingNamespace,
             };
 
-            if (MapCollectionInformationDto.ChildCompoundGenerator != null)
+            if (MapCollectionInformationDto.ChildMethodGenerator != null)
             {
-                namespaces.AddRange(MapCollectionInformationDto.ChildCompoundGenerator.Generate().Namespaces);
+                namespaces.AddRange(MapCollectionInformationDto.ChildMethodGenerator.Generate().Namespaces);
             }
 
             namespaces = namespaces
