@@ -52,30 +52,30 @@ namespace MapThis.Services.MappingInformation
 
             var otherParametersInMethod = originalMethodSymbol.Parameters.ToList();
 
-            var methodInformationDto = new MethodInformationDto(accessModifiers, sourceType, targetType, firstParameterSymbol.Name, otherParametersInMethod);
+            var currentMethodInformationDto = new MethodInformationDto(accessModifiers, sourceType, targetType, firstParameterSymbol.Name, otherParametersInMethod);
 
             if (targetType.IsCollection() && sourceType.IsCollection())
             {
-                return GetMapForCollection(codeAnalisysDependenciesDto, optionsDto, methodInformationDto, existingMethodsControlService);
+                return GetMapForCollection(codeAnalisysDependenciesDto, optionsDto, currentMethodInformationDto, existingMethodsControlService);
             }
 
-            return GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, methodInformationDto, existingMethodsControlService);
+            return GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, currentMethodInformationDto, existingMethodsControlService);
         }
 
-        private ICompoundMethodGenerator GetMapForSimpleType(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto methodInformationDto, IExistingMethodsControlService existingMethodsControlService)
+        private ICompoundMethodGenerator GetMapForSimpleType(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService)
         {
             var childrenMethodGenerators = new List<ICompoundMethodGenerator>();
 
             var propertiesToMap = new List<PropertyToMapDto>();
 
-            var sourceMembers = methodInformationDto.SourceType.GetPublicProperties();
-            var targetMembers = methodInformationDto.TargetType.GetPublicProperties();
+            var sourceMembers = currentMethodInformationDto.SourceType.GetPublicProperties();
+            var targetMembers = currentMethodInformationDto.TargetType.GetPublicProperties();
 
             foreach (var targetProperty in targetMembers)
             {
                 var sourceProperty = FindCorrespondingPropertyInSourceMembers(targetProperty, sourceMembers);
 
-                var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, methodInformationDto.FirstParameterName);
+                var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, currentMethodInformationDto.FirstParameterName);
 
                 propertiesToMap.Add(propertyToMap);
 
@@ -87,7 +87,7 @@ namespace MapThis.Services.MappingInformation
                     continue;
                 }
 
-                var privateAccessModifiers = GetNewMethodAccessModifiers(methodInformationDto.AccessModifiers);
+                var privateAccessModifiers = GetNewMethodAccessModifiers(currentMethodInformationDto.AccessModifiers);
 
                 if (targetNamedType.IsCollection() && sourceNamedType.IsCollection())
                 {
@@ -110,28 +110,28 @@ namespace MapThis.Services.MappingInformation
                 }
             }
 
-            var mapInformation = new MapInformationDto(methodInformationDto, propertiesToMap, childrenMethodGenerators, optionsDto);
+            var mapInformation = new MapInformationDto(currentMethodInformationDto, propertiesToMap, childrenMethodGenerators, optionsDto);
 
             var methodGenerator = CompoundMethodGeneratorFactory.Get(mapInformation, codeAnalisysDependenciesDto);
 
             return methodGenerator;
         }
 
-        private ICompoundMethodGenerator GetMapForCollection(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto methodInformationDto, IExistingMethodsControlService existingMethodsControlService)
+        private ICompoundMethodGenerator GetMapForCollection(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService)
         {
-            var sourceListType = (INamedTypeSymbol)methodInformationDto.SourceType.GetElementType();
-            var targetListType = (INamedTypeSymbol)methodInformationDto.TargetType.GetElementType();
+            var sourceListType = (INamedTypeSymbol)currentMethodInformationDto.SourceType.GetElementType();
+            var targetListType = (INamedTypeSymbol)currentMethodInformationDto.TargetType.GetElementType();
 
             ICompoundMethodGenerator childMethodGenerator = null;
 
             if (existingMethodsControlService.TryAddMethod(sourceListType, targetListType))
             {
-                var privateAccessModifiers = GetNewMethodAccessModifiers(methodInformationDto.AccessModifiers);
+                var privateAccessModifiers = GetNewMethodAccessModifiers(currentMethodInformationDto.AccessModifiers);
                 var childMethodInformationDto = new MethodInformationDto(privateAccessModifiers, sourceListType, targetListType, "item", new List<IParameterSymbol>());
                 childMethodGenerator = GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService);
             }
 
-            var mapCollectionInformationDto = new MapCollectionInformationDto(methodInformationDto, childMethodGenerator, optionsDto);
+            var mapCollectionInformationDto = new MapCollectionInformationDto(currentMethodInformationDto, childMethodGenerator, optionsDto);
 
             var methodGenerator = CompoundMethodGeneratorFactory.Get(mapCollectionInformationDto, codeAnalisysDependenciesDto);
 
