@@ -17,7 +17,7 @@ namespace MapThis.Services.SingleMethodGenerator
     {
         public MethodDeclarationSyntax Generate(MapInformationDto mapInformation, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
         {
-            var returnVariableName = GetUniqueVariableName("newItem", mapInformation.OtherParametersInMethod);
+            var returnVariableName = GetUniqueVariableName("newItem", mapInformation.MethodInformation.OtherParametersInMethod);
 
             var mappedObjectStatement = GetMappedObjectStatement(mapInformation, returnVariableName, codeAnalisysDependenciesDto);
 
@@ -35,17 +35,17 @@ namespace MapThis.Services.SingleMethodGenerator
 
             var methodDeclaration =
                 MethodDeclaration(
-                    (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(mapInformation.TargetType),
+                    (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(mapInformation.MethodInformation.TargetType),
                     Identifier("Map")
                 )
                 .WithModifiers(
-                    TokenList(mapInformation.AccessModifiers)
+                    TokenList(mapInformation.MethodInformation.AccessModifiers)
                 )
                 .WithParameterList(
                     ParameterList(
                         SingletonSeparatedList(
-                            Parameter(Identifier(mapInformation.FirstParameterName))
-                                .WithType((TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(mapInformation.SourceType))
+                            Parameter(Identifier(mapInformation.MethodInformation.FirstParameterName))
+                                .WithType((TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(mapInformation.MethodInformation.SourceType))
                         )
                     )
                 )
@@ -62,33 +62,33 @@ namespace MapThis.Services.SingleMethodGenerator
         {
             var mapListStatement = GetMappedListBody(childMapCollectionInformation, codeAnalisysDependenciesDto);
 
-            var sourceListTypeName = GetSourceTypeListNameAsInterface(childMapCollectionInformation.SourceType);
+            var sourceListTypeName = GetSourceTypeListNameAsInterface(childMapCollectionInformation.MethodInformation.SourceType);
 
             var methodDeclaration =
                 MethodDeclaration(
-                    GenericName(childMapCollectionInformation.TargetType.Name)
+                    GenericName(childMapCollectionInformation.MethodInformation.TargetType.Name)
                     .WithTypeArgumentList(
                         TypeArgumentList(
                             SingletonSeparatedList<TypeSyntax>(
-                                (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(childMapCollectionInformation.TargetType.GetElementType())
+                                (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(childMapCollectionInformation.MethodInformation.TargetType.GetElementType())
                             )
                         )
                     ),
                     Identifier("Map")
                 )
                 .WithModifiers(
-                    TokenList(childMapCollectionInformation.AccessModifiers)
+                    TokenList(childMapCollectionInformation.MethodInformation.AccessModifiers)
                 )
                 .WithParameterList(
                     ParameterList(
                         SingletonSeparatedList(
-                            Parameter(Identifier(childMapCollectionInformation.FirstParameterName))
+                            Parameter(Identifier(childMapCollectionInformation.MethodInformation.FirstParameterName))
                             .WithType(
                                 GenericName(sourceListTypeName)
                                 .WithTypeArgumentList(
                                     TypeArgumentList(
                                         SingletonSeparatedList<TypeSyntax>(
-                                            (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(childMapCollectionInformation.SourceType.GetElementType())
+                                            (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(childMapCollectionInformation.MethodInformation.SourceType.GetElementType())
                                         )
                                     )
                                 )
@@ -131,7 +131,7 @@ namespace MapThis.Services.SingleMethodGenerator
                             .WithInitializer(
                                 EqualsValueClause(
                                     ObjectCreationExpression(
-                                        (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(mapInformationDto.TargetType))
+                                        (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(mapInformationDto.MethodInformation.TargetType))
                                     .WithArgumentList(
                                         ArgumentList())
                                     .WithInitializer(
@@ -159,7 +159,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
         private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
         {
-            var destinationVariableName = GetUniqueVariableName("destination", mapCollectionInformationDto.OtherParametersInMethod);
+            var destinationVariableName = GetUniqueVariableName("destination", mapCollectionInformationDto.MethodInformation.OtherParametersInMethod);
 
             var variableDeclaration =
                 LocalDeclarationStatement(
@@ -183,7 +183,7 @@ namespace MapThis.Services.SingleMethodGenerator
                                         .WithTypeArgumentList(
                                             TypeArgumentList(
                                                 SingletonSeparatedList<TypeSyntax>(
-                                                    (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(mapCollectionInformationDto.TargetType.GetElementType())))
+                                                    (TypeSyntax)codeAnalisysDependenciesDto.SyntaxGenerator.TypeExpression(mapCollectionInformationDto.MethodInformation.TargetType.GetElementType())))
                                                 )
                                         )
                                         .WithArgumentList(
@@ -203,7 +203,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
             var nullCheckStatement = GetNullCheckStatementForCollection(mapCollectionInformationDto);
 
-            var forEachVariableName = GetUniqueVariableName("item", mapCollectionInformationDto.OtherParametersInMethod);
+            var forEachVariableName = GetUniqueVariableName("item", mapCollectionInformationDto.MethodInformation.OtherParametersInMethod);
 
             var forEachStatement =
                 ForEachStatement(
@@ -215,7 +215,7 @@ namespace MapThis.Services.SingleMethodGenerator
                             "var",
                             TriviaList())),
                     Identifier(forEachVariableName),
-                    IdentifierName(mapCollectionInformationDto.FirstParameterName),
+                    IdentifierName(mapCollectionInformationDto.MethodInformation.FirstParameterName),
                     Block(
                         SingletonList<StatementSyntax>(
                             ExpressionStatement(
@@ -277,7 +277,7 @@ namespace MapThis.Services.SingleMethodGenerator
                 IfStatement(
                     BinaryExpression(
                         SyntaxKind.EqualsExpression,
-                        IdentifierName(mapInformationDto.FirstParameterName),
+                        IdentifierName(mapInformationDto.MethodInformation.FirstParameterName),
                         LiteralExpression(
                             SyntaxKind.NullLiteralExpression)),
                     ReturnStatement(
@@ -307,7 +307,7 @@ namespace MapThis.Services.SingleMethodGenerator
                 IfStatement(
                     BinaryExpression(
                         SyntaxKind.EqualsExpression,
-                        IdentifierName(mapCollectionInformationDto.FirstParameterName),
+                        IdentifierName(mapCollectionInformationDto.MethodInformation.FirstParameterName),
                         LiteralExpression(
                             SyntaxKind.NullLiteralExpression)),
                     ReturnStatement(

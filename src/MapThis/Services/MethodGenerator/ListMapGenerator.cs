@@ -52,8 +52,8 @@ namespace MapThis.Services.CompoundGenerator
         {
             var namespaces = new List<INamespaceSymbol>()
             {
-                MapCollectionInformationDto.SourceType.ContainingNamespace,
-                MapCollectionInformationDto.TargetType.ContainingNamespace,
+                MapCollectionInformationDto.MethodInformation.SourceType.ContainingNamespace,
+                MapCollectionInformationDto.MethodInformation.TargetType.ContainingNamespace,
             };
 
             if (MapCollectionInformationDto.ChildMethodGenerator != null)
