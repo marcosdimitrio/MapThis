@@ -7,15 +7,11 @@ using MapThis.Services.ExistingMethodsControl.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
 using MapThis.Services.MethodGenerator.Factories.Interfaces;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Editing;
 using System.Collections.Generic;
 using System.Composition;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace MapThis.Services.MappingInformation
@@ -33,16 +29,8 @@ namespace MapThis.Services.MappingInformation
             ExistingMethodControlFactory = existingMethodControlFactory;
         }
 
-        public async Task<ICompoundMethodGenerator> GetCompoundMethodsGenerator(OptionsDto optionsDto, CodeRefactoringContext context, MethodDeclarationSyntax originalMethodSyntax, CancellationToken cancellationToken)
+        public ICompoundMethodGenerator GetCompoundMethodsGenerator(OptionsDto optionsDto, MethodDeclarationSyntax originalMethodSyntax, IMethodSymbol originalMethodSymbol, SyntaxNode root, SemanticModel semanticModel, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
         {
-            var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            var originalMethodSymbol = semanticModel.GetDeclaredSymbol(originalMethodSyntax, cancellationToken);
-            var codeAnalisysDependenciesDto = new CodeAnalysisDependenciesDto()
-            {
-                SyntaxGenerator = SyntaxGenerator.GetGenerator(context.Document),
-            };
-
             var accessModifiers = originalMethodSyntax.Modifiers.ToList();
 
             var firstParameterSymbol = originalMethodSymbol.Parameters[0];
@@ -52,7 +40,7 @@ namespace MapThis.Services.MappingInformation
             var existingMethodsList = root
                 .DescendantNodes()
                 .OfType<MethodDeclarationSyntax>()
-                .Select(x => semanticModel.GetDeclaredSymbol(x, cancellationToken))
+                .Select(x => semanticModel.GetDeclaredSymbol(x))
                 .Select(x => new ExistingMethodDto()
                 {
                     SourceType = x.Parameters.FirstOrDefault()?.Type as INamedTypeSymbol, //TODO: See if it can be changed to First()

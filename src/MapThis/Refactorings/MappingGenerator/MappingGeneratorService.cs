@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
 using System;
 using System.Collections.Generic;
 using System.Composition;
@@ -30,8 +31,14 @@ namespace MapThis.Refactorings.MappingGenerator
         {
             var root = await context.Document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var compilationUnitSyntax = (CompilationUnitSyntax)root;
+            var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            var originalMethodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
+            var codeAnalisysDependenciesDto = new CodeAnalysisDependenciesDto()
+            {
+                SyntaxGenerator = SyntaxGenerator.GetGenerator(context.Document),
+            };
 
-            var compoundMethodsGenerator = await MappingInformationService.GetCompoundMethodsGenerator(optionsDto, context, methodSyntax, cancellationToken).ConfigureAwait(false);
+            var compoundMethodsGenerator = MappingInformationService.GetCompoundMethodsGenerator(optionsDto, methodSyntax, originalMethodSymbol, root, semanticModel, codeAnalisysDependenciesDto);
 
             var generatedMethodsDto = compoundMethodsGenerator.Generate();
 
@@ -49,7 +56,7 @@ namespace MapThis.Refactorings.MappingGenerator
                 compilationUnitSyntax = compilationUnitSyntax.InsertNodesAfter(methodToInsertAfter, allOtherBlocks);
             }
 
-            compilationUnitSyntax = await AddMissingUsings(context, methodSyntax, compilationUnitSyntax, generatedMethodsDto.Namespaces, cancellationToken).ConfigureAwait(false);
+            compilationUnitSyntax = AddMissingUsings(originalMethodSymbol, compilationUnitSyntax, generatedMethodsDto.Namespaces);
 
             return context.Document.WithSyntaxRoot(compilationUnitSyntax);
         }
@@ -101,10 +108,8 @@ namespace MapThis.Refactorings.MappingGenerator
             return methodDeclarationSyntax;
         }
 
-        private async Task<CompilationUnitSyntax> AddMissingUsings(CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CompilationUnitSyntax compilationUnitSyntax, IList<INamespaceSymbol> namespaces, CancellationToken cancellationToken)
+        private CompilationUnitSyntax AddMissingUsings(IMethodSymbol methodSymbol, CompilationUnitSyntax compilationUnitSyntax, IList<INamespaceSymbol> namespaces)
         {
-            var semanticModel = await context.Document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax, cancellationToken);
             var currentNamespace = methodSymbol.ContainingNamespace;
 
             foreach (var namespaceToInclude in namespaces)
