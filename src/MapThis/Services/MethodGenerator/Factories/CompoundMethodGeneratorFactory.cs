@@ -2,6 +2,7 @@
 using MapThis.Services.CompoundGenerator.Interfaces;
 using MapThis.Services.MethodGenerator.Factories.Interfaces;
 using MapThis.Services.SingleMethodGenerator.Interfaces;
+using System.Collections.Generic;
 using System.Composition;
 
 namespace MapThis.Services.CompoundGenerator.Factories
@@ -17,14 +18,14 @@ namespace MapThis.Services.CompoundGenerator.Factories
             SingleMethodGeneratorService = singleMethodGeneratorService;
         }
 
-        public ICompoundMethodGenerator Get(MapInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
+        public ICompoundMethodGenerator Get(MapInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
         {
-            return new ClassMapGenerator(dto, SingleMethodGeneratorService, codeAnalisysDependenciesDto);
+            return new ClassMapGenerator(dto, SingleMethodGeneratorService, codeAnalisysDependenciesDto, existingNamespaces);
         }
 
-        public ICompoundMethodGenerator Get(MapCollectionInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
+        public ICompoundMethodGenerator Get(MapCollectionInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
         {
-            return new ListMapGenerator(dto, SingleMethodGeneratorService, codeAnalisysDependenciesDto);
+            return new ListMapGenerator(dto, SingleMethodGeneratorService, codeAnalisysDependenciesDto, existingNamespaces);
         }
 
     }

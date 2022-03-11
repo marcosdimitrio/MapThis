@@ -14,12 +14,14 @@ namespace MapThis.Services.CompoundGenerator
         private readonly MapInformationDto MapInformationDto;
         private readonly ISingleMethodGeneratorService SingleMethodGeneratorService;
         private readonly CodeAnalysisDependenciesDto CodeAnalisysDependenciesDto;
+        private readonly IList<string> ExistingNamespaces;
 
-        public ClassMapGenerator(MapInformationDto mapInformationDto, ISingleMethodGeneratorService singleMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
+        public ClassMapGenerator(MapInformationDto mapInformationDto, ISingleMethodGeneratorService singleMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
         {
             SingleMethodGeneratorService = singleMethodGeneratorService;
             MapInformationDto = mapInformationDto;
             CodeAnalisysDependenciesDto = codeAnalisysDependenciesDto;
+            ExistingNamespaces = existingNamespaces;
         }
 
         public GeneratedMethodsDto Generate()
@@ -36,7 +38,7 @@ namespace MapThis.Services.CompoundGenerator
         private IList<MethodDeclarationSyntax> GenerateBlocks()
         {
             var destination = new List<MethodDeclarationSyntax>() {
-                SingleMethodGeneratorService.Generate(MapInformationDto, CodeAnalisysDependenciesDto)
+                SingleMethodGeneratorService.Generate(MapInformationDto, CodeAnalisysDependenciesDto, ExistingNamespaces)
             };
 
             foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
@@ -49,11 +51,19 @@ namespace MapThis.Services.CompoundGenerator
 
         private IList<INamespaceSymbol> GetNamespaces()
         {
-            var namespaces = new List<INamespaceSymbol>()
+            var namespaces = new List<INamespaceSymbol>();
+
+            var sourceNamespace = MapInformationDto.MethodInformation.SourceType.ContainingNamespace;
+            var targetNamespace = MapInformationDto.MethodInformation.TargetType.ContainingNamespace;
+
+            if (!ExistingNamespaces.Contains(sourceNamespace.ToDisplayString()))
             {
-                MapInformationDto.MethodInformation.SourceType.ContainingNamespace,
-                MapInformationDto.MethodInformation.TargetType.ContainingNamespace,
-            };
+                namespaces.Add(sourceNamespace);
+            }
+            if (!ExistingNamespaces.Contains(targetNamespace.ToDisplayString()))
+            {
+                namespaces.Add(targetNamespace);
+            }
 
             foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
             {
