@@ -48,8 +48,6 @@ namespace MapThis.Services.MappingInformation
                 })
                 .ToList();
 
-            //var a = sourceType.ContainingNamespace
-
             var existingNamespacesList = GetExistingNamespacesList(compilationUnitSyntax, originalMethodSymbol);
 
             var existingMethodsControlService = ExistingMethodControlFactory.Create(existingMethodsList);

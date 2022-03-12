@@ -25,7 +25,6 @@ namespace MapThis
 
         public sealed override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            //root = Microsoft.CodeAnalysis.Formatting.Formatter.Format(root, new AdhocWorkspace());
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
             var node = root.FindNode(context.Span);
 

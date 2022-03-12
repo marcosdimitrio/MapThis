@@ -93,8 +93,10 @@ namespace MapThis.Services.CompoundGenerator
                 namespacesString.AddRange(MapCollectionInformationDto.ChildMethodGenerator.Generate().Namespaces);
             }
 
-            // In case the list type is array
-            namespacesString.Add("System.Collections.Generic");
+            if (sourceListType.IsArray())
+            {
+                namespacesString.Add("System.Collections.Generic");
+            }
 
             namespacesString = namespacesString
                 .GroupBy(x => x)
