@@ -1,0 +1,19 @@
+﻿using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public ICollection<string> Map(ICollection<string> source)
+        {
+            var destination = new List<string>();
+
+            foreach (var item in source)
+            {
+                destination.Add(item);
+            }
+
+            return destination;
+        }
+    }
+}

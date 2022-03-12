@@ -1,5 +1,3 @@
-using MapThis.Tests.Parents;
-using MapThis.Tests.Children;
 using System.Collections.Generic;
 
 namespace MapThis.Tests
@@ -16,7 +14,7 @@ namespace MapThis.Tests
             return newItem;
         }
 
-        private ICollection<Child> Map(ICollection<ChildDto> source)
+        private List<Child> Map(IList<ChildDto> source)
         {
             var destination = new List<Child>();
 
@@ -38,17 +36,8 @@ namespace MapThis.Tests
             return newItem;
         }
     }
-}
-namespace MapThis.Tests.Parents
-{
-    using MapThis.Tests.Children;
-    using System.Collections.Generic;
-
-    public class Parent { public ICollection<Child> Child { get; set; } }
-    public class ParentDto { public ICollection<ChildDto> Child { get; set; } }
-}
-namespace MapThis.Tests.Children
-{
+    public class Parent { public List<Child> Child { get; set; } }
+    public class ParentDto { public List<ChildDto> Child { get; set; } }
     public class Child { public int Id { get; set; } }
     public class ChildDto { public int Id { get; set; } }
 }

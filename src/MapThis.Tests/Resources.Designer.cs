@@ -880,27 +880,29 @@ namespace MapThis.Tests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to using MapThis.Tests.Parents;
+        ///   Looks up a localized string similar to using System.Collections.Generic;
         ///
         ///namespace MapThis.Tests
         ///{
         ///    public class Class1
         ///    {
-        ///        public Parent [|Map|](ParentDto item)
+        ///        public Parent Map(ParentDto item)
         ///        {
-        ///            throw new System.NotImplementedException();
-        ///        }
-        ///    }
-        ///}
-        ///namespace MapThis.Tests.Parents
-        ///{
-        ///    using MapThis.Tests.Children;
-        ///    using System.Collections.Generic;
+        ///            var newItem = new Parent()
+        ///            {
+        ///                Child = Map(item.Child),
+        ///            };
         ///
-        ///    public class Parent { public ICollection&lt;Child&gt; Child { get; set; } }
-        ///    public class ParentDto { public ICollection&lt;ChildDto&gt; Child { get; set; } }
-        ///}
-        ///namespace Map [rest of string was truncated]&quot;;.
+        ///            return newItem;
+        ///        }
+        ///
+        ///        private List&lt;Child&gt; Map(IList&lt;ChildDto&gt; source)
+        ///        {
+        ///            var destination = new List&lt;Child&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string _16_Before {
             get {
@@ -1827,7 +1829,7 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
-        ///        public Parent[] Map(ParentDto[] source)
+        ///        public Parent[] [|Map|](ParentDto[] source)
         ///        {
         ///            throw new System.NotImplementedException();
         ///        }
@@ -1882,7 +1884,7 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
-        ///        public string[] Map(string[] source)
+        ///        public string[] [|Map|](string[] source)
         ///        {
         ///            throw new System.NotImplementedException();
         ///        }
@@ -1921,6 +1923,447 @@ namespace MapThis.Tests {
         internal static string _37_Refactored {
             get {
                 return ResourceManager.GetString("_37_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;string&gt; [|Map|](IList&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _38_Before {
+            get {
+                return ResourceManager.GetString("_38_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;string&gt; Map(IList&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _38_Refactored {
+            get {
+                return ResourceManager.GetString("_38_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;string&gt; [|Map|](ICollection&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _39_Before {
+            get {
+                return ResourceManager.GetString("_39_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;string&gt; Map(ICollection&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _39_Refactored {
+            get {
+                return ResourceManager.GetString("_39_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;string&gt; [|Map|](IEnumerable&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _40_Before {
+            get {
+                return ResourceManager.GetString("_40_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;string&gt; Map(IEnumerable&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _40_Refactored {
+            get {
+                return ResourceManager.GetString("_40_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ICollection&lt;string&gt; [|Map|](IList&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _41_Before {
+            get {
+                return ResourceManager.GetString("_41_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ICollection&lt;string&gt; Map(IList&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _41_Refactored {
+            get {
+                return ResourceManager.GetString("_41_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ICollection&lt;string&gt; [|Map|](ICollection&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _42_Before {
+            get {
+                return ResourceManager.GetString("_42_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ICollection&lt;string&gt; Map(ICollection&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _42_Refactored {
+            get {
+                return ResourceManager.GetString("_42_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ICollection&lt;string&gt; [|Map|](IEnumerable&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _43_Before {
+            get {
+                return ResourceManager.GetString("_43_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ICollection&lt;string&gt; Map(IEnumerable&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _43_Refactored {
+            get {
+                return ResourceManager.GetString("_43_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IEnumerable&lt;string&gt; [|Map|](IList&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _44_Before {
+            get {
+                return ResourceManager.GetString("_44_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IEnumerable&lt;string&gt; Map(IList&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _44_Refactored {
+            get {
+                return ResourceManager.GetString("_44_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IEnumerable&lt;string&gt; [|Map|](ICollection&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _45_Before {
+            get {
+                return ResourceManager.GetString("_45_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IEnumerable&lt;string&gt; Map(ICollection&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _45_Refactored {
+            get {
+                return ResourceManager.GetString("_45_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IEnumerable&lt;string&gt; [|Map|](IEnumerable&lt;string&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _46_Before {
+            get {
+                return ResourceManager.GetString("_46_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IEnumerable&lt;string&gt; Map(IEnumerable&lt;string&gt; source)
+        ///        {
+        ///            var destination = new List&lt;string&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(item);
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _46_Refactored {
+            get {
+                return ResourceManager.GetString("_46_Refactored", resourceCulture);
             }
         }
     }

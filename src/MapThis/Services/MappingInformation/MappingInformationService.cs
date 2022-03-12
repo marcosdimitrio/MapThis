@@ -128,7 +128,7 @@ namespace MapThis.Services.MappingInformation
 
             ICompoundMethodGenerator childMethodGenerator = null;
 
-            if (!(currentMethodInformationDto.SourceType.IsArrayOfSimpleType()))
+            if (!(currentMethodInformationDto.SourceType.IsCollectionOfSimpleType()))
             {
                 if (existingMethodsControlService.TryAddMethod(sourceElementType, targetElementType))
                 {

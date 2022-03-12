@@ -32,7 +32,7 @@ namespace MapThis.Tests
             yield return new object[] { "13 Should not create variable (newItem) with the same name as other method's properties", true, 0, GetData(Resources._13_Before, Resources._13_Refactored) };
             yield return new object[] { "14 Should not create variable (destination) with the same name as other method's properties", true, 0, GetData(Resources._14_Before, Resources._14_Refactored) };
             yield return new object[] { "15 Should place new methods below public methods in between the first map method", true, 0, GetData(Resources._15_Before, Resources._15_Refactored) };
-            yield return new object[] { "16 Should use IList and ICollection for new list map methods with List and Collection", true, 0, GetData(Resources._16_Before, Resources._16_Refactored) };
+            yield return new object[] { "16 Should use IList for new list map methods instead of List", true, 0, GetData(Resources._16_Before, Resources._16_Refactored) };
             yield return new object[] { "17 Should map with null check for classes", true, 1, GetData(Resources._17_Before, Resources._17_Refactored) };
             yield return new object[] { "18 Should map with null check for collections", true, 1, GetData(Resources._18_Before, Resources._18_Refactored) };
             yield return new object[] { "19 Should not create map method from list to class", false, 0, GetData(Resources._19_Before, null) };
@@ -54,6 +54,15 @@ namespace MapThis.Tests
             yield return new object[] { "35 Should not map abstract methods", false, 0, GetData(Resources._35_Before, null) };
             yield return new object[] { "36 Should map a class array", true, 0, GetData(Resources._36_Before, Resources._36_Refactored) };
             yield return new object[] { "37 Should map a simple type array", true, 0, GetData(Resources._37_Before, Resources._37_Refactored) };
+            yield return new object[] { "38 Should map a list of simple type", true, 0, GetData(Resources._38_Before, Resources._38_Refactored) };
+            yield return new object[] { "39 Should map between IList and ICollection", true, 0, GetData(Resources._39_Before, Resources._39_Refactored) };
+            yield return new object[] { "40 Should map between IList and IEnumerable", true, 0, GetData(Resources._40_Before, Resources._40_Refactored) };
+            yield return new object[] { "41 Should map between ICollection and IList", true, 0, GetData(Resources._41_Before, Resources._41_Refactored) };
+            yield return new object[] { "42 Should map between ICollection and ICollection", true, 0, GetData(Resources._42_Before, Resources._42_Refactored) };
+            yield return new object[] { "43 Should map between ICollection and IEnumerable", true, 0, GetData(Resources._43_Before, Resources._43_Refactored) };
+            yield return new object[] { "44 Should map between IEnumerable and IList", true, 0, GetData(Resources._44_Before, Resources._44_Refactored) };
+            yield return new object[] { "45 Should map between IEnumerable and ICollection", true, 0, GetData(Resources._45_Before, Resources._45_Refactored) };
+            yield return new object[] { "46 Should map between IEnumerable and IEnumerable", true, 0, GetData(Resources._46_Before, Resources._46_Refactored) };
         }
 
         [Theory]

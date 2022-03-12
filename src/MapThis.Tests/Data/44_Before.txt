@@ -1,0 +1,12 @@
+﻿using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public IEnumerable<string> [|Map|](IList<string> source)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}

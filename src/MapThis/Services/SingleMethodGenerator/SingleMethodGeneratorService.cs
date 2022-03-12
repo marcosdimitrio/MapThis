@@ -285,7 +285,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
         private ArgumentSyntax GetForEachItemMapExpression(MapCollectionInformationDto mapCollectionInformationDto, string forEachVariableName)
         {
-            if (mapCollectionInformationDto.MethodInformation.SourceType.IsArrayOfSimpleType())
+            if (mapCollectionInformationDto.MethodInformation.SourceType.IsCollectionOfSimpleType())
             {
                 return
                     Argument(

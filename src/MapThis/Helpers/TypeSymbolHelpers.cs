@@ -40,14 +40,14 @@ namespace MapThis.Helpers
             return members;
         }
 
-        public static bool IsArrayOfSimpleType(this ITypeSymbol typeSymbol)
+        public static bool IsCollectionOfSimpleType(this ITypeSymbol typeSymbol)
         {
-            return typeSymbol.IsArray() && typeSymbol.GetElementType().IsSimpleType();
+            return typeSymbol.IsCollection() && typeSymbol.GetElementType().IsSimpleType();
         }
 
         public static bool IsArray(this ITypeSymbol typeSymbol)
         {
-            return typeSymbol.TypeKind == TypeKind.Array && typeSymbol.Kind == SymbolKind.ArrayType;
+            return typeSymbol.Kind == SymbolKind.ArrayType;
         }
 
         public static bool IsClass(this ITypeSymbol typeSymbol)
