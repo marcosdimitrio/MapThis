@@ -43,7 +43,7 @@ namespace MapThis.Services.MappingInformation
                 .Select(x => semanticModel.GetDeclaredSymbol(x))
                 .Select(x => new ExistingMethodDto()
                 {
-                    SourceType = x.Parameters.FirstOrDefault()?.Type as INamedTypeSymbol, //TODO: See if it can be changed to First()
+                    SourceType = x.Parameters.FirstOrDefault()?.Type as INamedTypeSymbol,
                     TargetType = x.ReturnType as INamedTypeSymbol,
                 })
                 .ToList();
