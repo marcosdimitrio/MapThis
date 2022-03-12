@@ -1,4 +1,5 @@
 ﻿using MapThis.Dto;
+using MapThis.Helpers;
 using MapThis.Refactorings.MappingGenerator.Dto;
 using MapThis.Services.CompoundGenerator.Interfaces;
 using MapThis.Services.SingleMethodGenerator.Interfaces;
@@ -53,14 +54,17 @@ namespace MapThis.Services.CompoundGenerator
         {
             var namespaces = new List<INamespaceSymbol>();
 
-            var sourceNamespace = MapInformationDto.MethodInformation.SourceType.ContainingNamespace;
-            var targetNamespace = MapInformationDto.MethodInformation.TargetType.ContainingNamespace;
+            var sourceType = MapInformationDto.MethodInformation.SourceType;
+            var targetType = MapInformationDto.MethodInformation.TargetType;
 
-            if (!ExistingNamespaces.Contains(sourceNamespace.ToDisplayString()))
+            var sourceNamespace = sourceType.ContainingNamespace;
+            var targetNamespace = targetType.ContainingNamespace;
+
+            if (!ExistingNamespaces.Contains(sourceNamespace.ToDisplayString()) && !sourceType.IsSimpleTypeWithAlias())
             {
                 namespaces.Add(sourceNamespace);
             }
-            if (!ExistingNamespaces.Contains(targetNamespace.ToDisplayString()))
+            if (!ExistingNamespaces.Contains(targetNamespace.ToDisplayString()) && !targetType.IsSimpleTypeWithAlias())
             {
                 namespaces.Add(targetNamespace);
             }

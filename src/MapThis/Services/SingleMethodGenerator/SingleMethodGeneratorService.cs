@@ -111,6 +111,11 @@ namespace MapThis.Services.SingleMethodGenerator
 
         private TypeSyntax GetTypeSyntaxConsideringNamespaces(ITypeSymbol typeSymbol, IList<string> existingNamespaces, SyntaxGenerator syntaxGenerator)
         {
+            if (typeSymbol.IsSimpleTypeWithAlias())
+            {
+                return IdentifierName(typeSymbol.ToDisplayString());
+            }
+
             if (existingNamespaces.Any(x => x == typeSymbol.ContainingNamespace.ToDisplayString()))
             {
                 return (TypeSyntax)syntaxGenerator.TypeExpression(typeSymbol);

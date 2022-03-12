@@ -55,10 +55,15 @@ namespace MapThis.Services.CompoundGenerator
         {
             var namespaces = new List<INamespaceSymbol>();
 
-            var sourceListNamespace = MapCollectionInformationDto.MethodInformation.SourceType.ContainingNamespace;
-            var targetListNamespace = MapCollectionInformationDto.MethodInformation.TargetType.ContainingNamespace;
-            var sourceNamespace = MapCollectionInformationDto.MethodInformation.SourceType.GetElementType().ContainingNamespace;
-            var targetNamespace = MapCollectionInformationDto.MethodInformation.TargetType.GetElementType().ContainingNamespace;
+            var sourceListType = MapCollectionInformationDto.MethodInformation.SourceType;
+            var targetListType = MapCollectionInformationDto.MethodInformation.TargetType;
+            var sourceType = MapCollectionInformationDto.MethodInformation.SourceType.GetElementType();
+            var targetType = MapCollectionInformationDto.MethodInformation.TargetType.GetElementType();
+
+            var sourceListNamespace = sourceListType.ContainingNamespace;
+            var targetListNamespace = targetListType.ContainingNamespace;
+            var sourceNamespace = sourceType.ContainingNamespace;
+            var targetNamespace = targetType.ContainingNamespace;
 
             // namespace for the lists can be null when type is array
             if (!ExistingNamespaces.Contains(sourceListNamespace?.ToDisplayString()))
@@ -69,11 +74,11 @@ namespace MapThis.Services.CompoundGenerator
             {
                 namespaces.Add(targetListNamespace);
             }
-            if (!ExistingNamespaces.Contains(sourceNamespace.ToDisplayString()))
+            if (!ExistingNamespaces.Contains(sourceNamespace.ToDisplayString()) && !sourceType.IsSimpleTypeWithAlias())
             {
                 namespaces.Add(sourceNamespace);
             }
-            if (!ExistingNamespaces.Contains(targetNamespace.ToDisplayString()))
+            if (!ExistingNamespaces.Contains(targetNamespace.ToDisplayString()) && !targetType.IsSimpleTypeWithAlias())
             {
                 namespaces.Add(targetNamespace);
             }
