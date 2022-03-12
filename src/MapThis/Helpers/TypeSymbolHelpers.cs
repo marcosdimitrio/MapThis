@@ -74,39 +74,23 @@ namespace MapThis.Helpers
             switch (type.SpecialType)
             {
                 case SpecialType.System_IntPtr:
-                    return type.ToDisplayString() == "nint";
                 case SpecialType.System_UIntPtr:
-                    return type.ToDisplayString() == "nuint";
                 case SpecialType.System_Boolean:
-                    return type.ToDisplayString() == "bool";
                 case SpecialType.System_SByte:
-                    return type.ToDisplayString() == "sbyte";
                 case SpecialType.System_Int16:
-                    return type.ToDisplayString() == "short";
                 case SpecialType.System_Int32:
-                    return type.ToDisplayString() == "int";
                 case SpecialType.System_Int64:
-                    return type.ToDisplayString() == "long";
                 case SpecialType.System_Byte:
-                    return type.ToDisplayString() == "byte";
                 case SpecialType.System_UInt16:
-                    return type.ToDisplayString() == "ushort";
                 case SpecialType.System_UInt32:
-                    return type.ToDisplayString() == "uint";
                 case SpecialType.System_UInt64:
-                    return type.ToDisplayString() == "ulong";
                 case SpecialType.System_Single:
-                    return type.ToDisplayString() == "float";
                 case SpecialType.System_Double:
-                    return type.ToDisplayString() == "double";
                 case SpecialType.System_Char:
-                    return type.ToDisplayString() == "char";
                 case SpecialType.System_String:
-                    return type.ToDisplayString() == "string";
                 case SpecialType.System_Object:
-                    return type.ToDisplayString() == "object" || type.ToDisplayString() == "dynamic";
                 case SpecialType.System_Decimal:
-                    return type.ToDisplayString() == "decimal";
+                    return true;
             }
 
             return false;
