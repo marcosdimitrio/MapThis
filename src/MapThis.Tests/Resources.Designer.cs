@@ -1583,5 +1583,95 @@ namespace MapThis.Tests {
                 return ResourceManager.GetString("_29_Refactored", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _30_Before {
+            get {
+                return ResourceManager.GetString("_30_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _30_Refactored {
+            get {
+                return ResourceManager.GetString("_30_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _31_Before {
+            get {
+                return ResourceManager.GetString("_31_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _31_Refactored {
+            get {
+                return ResourceManager.GetString("_31_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _32_Before {
+            get {
+                return ResourceManager.GetString("_32_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _32_Refactored {
+            get {
+                return ResourceManager.GetString("_32_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _33_Before {
+            get {
+                return ResourceManager.GetString("_33_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _33_Refactored {
+            get {
+                return ResourceManager.GetString("_33_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _34_Before {
+            get {
+                return ResourceManager.GetString("_34_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _34_Refactored {
+            get {
+                return ResourceManager.GetString("_34_Refactored", resourceCulture);
+            }
+        }
     }
 }

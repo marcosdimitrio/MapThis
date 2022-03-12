@@ -46,8 +46,11 @@ namespace MapThis.Tests
             yield return new object[] { "27 Should show map options when cursor is at opening parenthesis", true, 0, GetData(Resources._27_Before, Resources._27_Refactored) };
             yield return new object[] { "28 Should keep using namespace alias for classes", true, 0, GetData(Resources._28_Before, Resources._28_Refactored) };
             yield return new object[] { "29 Should keep using namespace alias for collections", true, 0, GetData(Resources._29_Before, Resources._29_Refactored) };
-            //Fix mapping of classes that have type (DataTablesResponse<MyClass>)
-            //Keep namespaces in front of types (Children.Child Map(Children.ChildDto child))
+            yield return new object[] { "30 Should not map method that has return type broken", true, 0, GetData(Resources._30_Before, Resources._30_Refactored) };
+            yield return new object[] { "31 Should not map method that has first parameter type broken", true, 0, GetData(Resources._31_Before, Resources._31_Refactored) };
+            yield return new object[] { "32 Should map generic classes", true, 0, GetData(Resources._32_Before, Resources._32_Refactored) };
+            yield return new object[] { "33 Should keep namespace alias in types", true, 0, GetData(Resources._33_Before, Resources._33_Refactored) };
+            yield return new object[] { "34 Should not map abstract methods", true, 0, GetData(Resources._34_Before, Resources._34_Refactored) };
             //Map arrays
         }
 
