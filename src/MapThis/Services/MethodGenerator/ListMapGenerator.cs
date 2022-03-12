@@ -55,11 +55,20 @@ namespace MapThis.Services.CompoundGenerator
         {
             var namespaces = new List<INamespaceSymbol>();
 
-            var sourceNamespace = MapCollectionInformationDto.MethodInformation.SourceType.ContainingNamespace;
-            var targetNamespace = MapCollectionInformationDto.MethodInformation.TargetType.ContainingNamespace;
-            var sourceListNamespace = MapCollectionInformationDto.MethodInformation.SourceType.GetElementType().ContainingNamespace;
-            var targetListNamespace = MapCollectionInformationDto.MethodInformation.TargetType.GetElementType().ContainingNamespace;
+            var sourceListNamespace = MapCollectionInformationDto.MethodInformation.SourceType.ContainingNamespace;
+            var targetListNamespace = MapCollectionInformationDto.MethodInformation.TargetType.ContainingNamespace;
+            var sourceNamespace = MapCollectionInformationDto.MethodInformation.SourceType.GetElementType().ContainingNamespace;
+            var targetNamespace = MapCollectionInformationDto.MethodInformation.TargetType.GetElementType().ContainingNamespace;
 
+            // namespace for the lists can be null when type is array
+            if (!ExistingNamespaces.Contains(sourceListNamespace?.ToDisplayString()))
+            {
+                namespaces.Add(sourceListNamespace);
+            }
+            if (!ExistingNamespaces.Contains(targetListNamespace?.ToDisplayString()))
+            {
+                namespaces.Add(targetListNamespace);
+            }
             if (!ExistingNamespaces.Contains(sourceNamespace.ToDisplayString()))
             {
                 namespaces.Add(sourceNamespace);
@@ -67,14 +76,6 @@ namespace MapThis.Services.CompoundGenerator
             if (!ExistingNamespaces.Contains(targetNamespace.ToDisplayString()))
             {
                 namespaces.Add(targetNamespace);
-            }
-            if (!ExistingNamespaces.Contains(sourceListNamespace.ToDisplayString()))
-            {
-                namespaces.Add(sourceListNamespace);
-            }
-            if (!ExistingNamespaces.Contains(targetListNamespace.ToDisplayString()))
-            {
-                namespaces.Add(targetListNamespace);
             }
 
             if (MapCollectionInformationDto.ChildMethodGenerator != null)

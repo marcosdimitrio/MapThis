@@ -56,7 +56,7 @@ namespace MapThis.Refactorings.MappingGenerator
                 compilationUnitSyntax = compilationUnitSyntax.InsertNodesAfter(methodToInsertAfter, allOtherBlocks);
             }
 
-            compilationUnitSyntax = AddMissingUsings(originalMethodSymbol, compilationUnitSyntax, generatedMethodsDto.Namespaces);
+            compilationUnitSyntax = AddMissingUsings(originalMethodSymbol.ContainingNamespace, compilationUnitSyntax, generatedMethodsDto.Namespaces);
 
             return context.Document.WithSyntaxRoot(compilationUnitSyntax);
         }
@@ -108,17 +108,15 @@ namespace MapThis.Refactorings.MappingGenerator
             return methodDeclarationSyntax;
         }
 
-        private CompilationUnitSyntax AddMissingUsings(IMethodSymbol methodSymbol, CompilationUnitSyntax compilationUnitSyntax, IList<INamespaceSymbol> namespaces)
+        private CompilationUnitSyntax AddMissingUsings(INamespaceSymbol originalMethodNamespace, CompilationUnitSyntax compilationUnitSyntax, IList<INamespaceSymbol> namespaces)
         {
-            var currentNamespace = methodSymbol.ContainingNamespace;
-
             foreach (var namespaceToInclude in namespaces)
             {
                 var usingAlreadyExists = compilationUnitSyntax.Usings.Any(x => x.Name.ToFullString() == namespaceToInclude.ToDisplayString());
 
-                var namespaceIsTheSameAsTheMethod = SymbolEqualityComparer.Default.Equals(currentNamespace, namespaceToInclude);
+                var namespaceIsTheSameAsTheMethod = SymbolEqualityComparer.Default.Equals(originalMethodNamespace, namespaceToInclude);
 
-                var currentNamespaceIsDeeperThanBeingMapped = currentNamespace.ToDisplayString().StartsWith(namespaceToInclude.ToDisplayString());
+                var currentNamespaceIsDeeperThanBeingMapped = originalMethodNamespace.ToDisplayString().StartsWith(namespaceToInclude.ToDisplayString());
 
                 if (!usingAlreadyExists && !namespaceIsTheSameAsTheMethod && !currentNamespaceIsDeeperThanBeingMapped)
                 {

@@ -158,8 +158,8 @@ namespace MapThis.Services.MappingInformation
                 existingNamespacesList.Add(originalMethodSymbol.ContainingNamespace.ToDisplayString());
             }
 
-            var sourceNamespace = originalMethodSymbol.Parameters[0].Type.ContainingNamespace.ToDisplayString();
-            var targetNamespace = originalMethodSymbol.ReturnType.ContainingNamespace.ToDisplayString();
+            var sourceNamespace = originalMethodSymbol.Parameters[0].Type.ContainingNamespace?.ToDisplayString();
+            var targetNamespace = originalMethodSymbol.ReturnType.ContainingNamespace?.ToDisplayString();
 
             existingNamespacesList.Add(sourceNamespace);
             existingNamespacesList.Add(targetNamespace);
