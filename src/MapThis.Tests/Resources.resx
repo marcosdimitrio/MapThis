@@ -289,14 +289,8 @@
   <data name="_30_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\30_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="_30_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>data\30_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="_31_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\31_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="_31_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>data\31_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="_32_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\32_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
@@ -315,5 +309,8 @@
   </data>
   <data name="_34_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\34_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="_35_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\35_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

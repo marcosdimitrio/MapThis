@@ -1,0 +1,16 @@
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent [|Map|](BaseClass<ParentDto> item)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}
+namespace MapThis.Tests
+{
+    public class BaseClass<T> { public int Id { get; set; } }
+    public class Parent { public int Id { get; set; } }
+    public class ParentDto { public int Id { get; set; } }
+}

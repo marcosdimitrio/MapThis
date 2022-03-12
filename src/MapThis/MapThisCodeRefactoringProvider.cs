@@ -39,6 +39,10 @@ namespace MapThis
             {
                 return;
             }
+            if (methodDeclaration.Modifiers.Any(x => x.Kind() == SyntaxKind.AbstractKeyword))
+            {
+                return;
+            }
             if (methodDeclaration.ParameterList.Parameters.Count == 0)
             {
                 return;
@@ -46,6 +50,11 @@ namespace MapThis
 
             var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration, context.CancellationToken);
+
+            if (methodSymbol.ReturnType.TypeKind == TypeKind.Error || methodSymbol.Parameters.First().Type.TypeKind == TypeKind.Error)
+            {
+                return;
+            }
 
             if (methodSymbol.ReturnType.IsCollection() && !methodSymbol.Parameters.First().Type.IsCollection() ||
                 !methodSymbol.ReturnType.IsCollection() && methodSymbol.Parameters.First().Type.IsCollection())

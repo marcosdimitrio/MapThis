@@ -1585,7 +1585,22 @@ namespace MapThis.Tests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent1 [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///}
+        ///}
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
         /// </summary>
         internal static string _30_Before {
             get {
@@ -1594,29 +1609,26 @@ namespace MapThis.Tests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string _30_Refactored {
-            get {
-                return ResourceManager.GetString("_30_Refactored", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent [|Map|](ParentDto1 item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///}
+        ///}
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
         /// </summary>
         internal static string _31_Before {
             get {
                 return ResourceManager.GetString("_31_Before", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string _31_Refactored {
-            get {
-                return ResourceManager.GetString("_31_Refactored", resourceCulture);
             }
         }
         
@@ -1671,6 +1683,15 @@ namespace MapThis.Tests {
         internal static string _34_Refactored {
             get {
                 return ResourceManager.GetString("_34_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _35_Before {
+            get {
+                return ResourceManager.GetString("_35_Before", resourceCulture);
             }
         }
     }

@@ -1,12 +1,9 @@
 namespace MapThis.Tests
 {
-    public class Class1
+    public abstract class Class1
     {
-        public Parent [|Map|](ParentDto1 item)
-        {
-            throw new System.NotImplementedException();
-        }
-}
+        public abstract Parent [|Map|](ParentDto item);
+    }
 }
 namespace MapThis.Tests
 {
