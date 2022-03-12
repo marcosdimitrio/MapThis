@@ -51,7 +51,7 @@ namespace MapThis.Services.CompoundGenerator
             return destination;
         }
 
-        private IList<INamespaceSymbol> GetNamespaces()
+        private IList<string> GetNamespaces()
         {
             var namespaces = new List<INamespaceSymbol>();
 
@@ -78,19 +78,26 @@ namespace MapThis.Services.CompoundGenerator
                 namespaces.Add(targetNamespace);
             }
 
-            if (MapCollectionInformationDto.ChildMethodGenerator != null)
-            {
-                namespaces.AddRange(MapCollectionInformationDto.ChildMethodGenerator.Generate().Namespaces);
-            }
-
-            namespaces = namespaces
+            var namespacesString = namespaces
                 .Where(x => x != null && !x.IsGlobalNamespace)
-                .GroupBy(x => x)
-                .Select(x => x.Key)
-                .OrderBy(x => x.ToDisplayString())
+                .Select(x => x.ToDisplayString())
                 .ToList();
 
-            return namespaces;
+            if (MapCollectionInformationDto.ChildMethodGenerator != null)
+            {
+                namespacesString.AddRange(MapCollectionInformationDto.ChildMethodGenerator.Generate().Namespaces);
+            }
+
+            // In case the list type is array
+            namespacesString.Add("System.Collections.Generic");
+
+            namespacesString = namespacesString
+                .GroupBy(x => x)
+                .Select(x => x.Key)
+                .OrderBy(x => x)
+                .ToList();
+
+            return namespacesString;
         }
 
     }

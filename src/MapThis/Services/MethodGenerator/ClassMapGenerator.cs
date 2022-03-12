@@ -49,7 +49,7 @@ namespace MapThis.Services.CompoundGenerator
             return destination;
         }
 
-        private IList<INamespaceSymbol> GetNamespaces()
+        private IList<string> GetNamespaces()
         {
             var namespaces = new List<INamespaceSymbol>();
 
@@ -65,19 +65,23 @@ namespace MapThis.Services.CompoundGenerator
                 namespaces.Add(targetNamespace);
             }
 
-            foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
-            {
-                namespaces.AddRange(childMethodGenerator.Generate().Namespaces);
-            }
-
-            namespaces = namespaces
-                .Where(x => !x.IsGlobalNamespace)
-                .GroupBy(x => x)
-                .Select(x => x.Key)
-                .OrderBy(x => x.ToDisplayString())
+            var namespacesString = namespaces
+                .Where(x => x != null && !x.IsGlobalNamespace)
+                .Select(x => x.ToDisplayString())
                 .ToList();
 
-            return namespaces;
+            foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
+            {
+                namespacesString.AddRange(childMethodGenerator.Generate().Namespaces);
+            }
+
+            namespacesString = namespacesString
+                .GroupBy(x => x)
+                .Select(x => x.Key)
+                .OrderBy(x => x)
+                .ToList();
+
+            return namespacesString;
         }
 
     }

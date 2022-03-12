@@ -1,0 +1,10 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public string[] [|Map|](string[] source)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}

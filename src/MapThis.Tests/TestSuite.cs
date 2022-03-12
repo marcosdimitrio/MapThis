@@ -52,7 +52,8 @@ namespace MapThis.Tests
             yield return new object[] { "33 Should map when first parameter type is a generic class", true, 0, GetData(Resources._33_Before, Resources._33_Refactored) };
             yield return new object[] { "34 Should keep namespace alias in types for further methods", true, 0, GetData(Resources._34_Before, Resources._34_Refactored) };
             yield return new object[] { "35 Should not map abstract methods", false, 0, GetData(Resources._35_Before, null) };
-            //Map arrays
+            yield return new object[] { "36 Should map a class array", true, 0, GetData(Resources._36_Before, Resources._36_Refactored) };
+            yield return new object[] { "37 Should map a simple type array", true, 0, GetData(Resources._37_Before, Resources._37_Refactored) };
         }
 
         [Theory]

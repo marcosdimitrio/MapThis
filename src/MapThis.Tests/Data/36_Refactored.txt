@@ -1,0 +1,35 @@
+﻿using MapThis.Tests.Parents;
+using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent[] Map(ParentDto[] source)
+        {
+            var destination = new List<Parent>();
+
+            foreach (var item in source)
+            {
+                destination.Add(Map(item));
+            }
+
+            return destination.ToArray();
+        }
+
+        private Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
+        }
+    }
+}
+namespace MapThis.Tests.Parents
+{
+    public class Parent { public int Id { get; set; } }
+    public class ParentDto { public int Id { get; set; } }
+}

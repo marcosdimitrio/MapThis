@@ -227,6 +227,8 @@ namespace MapThis.Services.SingleMethodGenerator
 
             var forEachVariableName = GetUniqueVariableName("item", mapCollectionInformationDto.MethodInformation.OtherParametersInMethod);
 
+            var forEachItemMapExpression = GetForEachItemMapExpression(mapCollectionInformationDto, forEachVariableName);
+
             var forEachStatement =
                 ForEachStatement(
                     IdentifierName(
@@ -249,19 +251,7 @@ namespace MapThis.Services.SingleMethodGenerator
                                 .WithArgumentList(
                                     ArgumentList(
                                         SingletonSeparatedList(
-                                            Argument(
-                                                InvocationExpression(
-                                                    IdentifierName("Map"))
-                                                .WithArgumentList(
-                                                    ArgumentList(
-                                                        SingletonSeparatedList(
-                                                            Argument(
-                                                                IdentifierName(forEachVariableName)
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                            )
+                                            forEachItemMapExpression
                                         )
                                     )
                                 )
@@ -271,10 +261,7 @@ namespace MapThis.Services.SingleMethodGenerator
                 )
                 .WithLeadingTrivia(TriviaList(EndOfLine(Environment.NewLine)));
 
-            var returnStatement =
-                ReturnStatement(
-                    IdentifierName(destinationVariableName)
-                );
+            var returnStatement = GetReturnStatement(mapCollectionInformationDto, destinationVariableName);
 
             var statements = new List<StatementSyntax>();
 
@@ -289,6 +276,51 @@ namespace MapThis.Services.SingleMethodGenerator
                 );
 
             return blockSyntax;
+        }
+
+        private ArgumentSyntax GetForEachItemMapExpression(MapCollectionInformationDto mapCollectionInformationDto, string forEachVariableName)
+        {
+            if (mapCollectionInformationDto.MethodInformation.SourceType.IsArrayOfSimpleType())
+            {
+                return
+                    Argument(
+                        IdentifierName(forEachVariableName));
+            }
+
+            return
+                Argument(
+                    InvocationExpression(
+                        IdentifierName("Map"))
+                    .WithArgumentList(
+                        ArgumentList(
+                            SingletonSeparatedList(
+                                Argument(
+                                    IdentifierName(forEachVariableName)
+                                )
+                            )
+                        )
+                    )
+                );
+
+        }
+
+        private ReturnStatementSyntax GetReturnStatement(MapCollectionInformationDto mapCollectionInformationDto, string destinationVariableName)
+        {
+            if (mapCollectionInformationDto.MethodInformation.TargetType.IsArray())
+            {
+                return
+                    ReturnStatement(
+                        InvocationExpression(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName(destinationVariableName),
+                                IdentifierName("ToArray"))));
+            }
+
+            return
+                ReturnStatement(
+                    IdentifierName(destinationVariableName)
+                );
         }
 
         private IfStatementSyntax GetNullCheckStatementForClass(MapInformationDto mapInformationDto)

@@ -123,16 +123,19 @@ namespace MapThis.Services.MappingInformation
 
         private ICompoundMethodGenerator GetMapForCollection(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
         {
-            var sourceListType = (INamedTypeSymbol)currentMethodInformationDto.SourceType.GetElementType();
-            var targetListType = (INamedTypeSymbol)currentMethodInformationDto.TargetType.GetElementType();
+            var sourceElementType = (INamedTypeSymbol)currentMethodInformationDto.SourceType.GetElementType();
+            var targetElementType = (INamedTypeSymbol)currentMethodInformationDto.TargetType.GetElementType();
 
             ICompoundMethodGenerator childMethodGenerator = null;
 
-            if (existingMethodsControlService.TryAddMethod(sourceListType, targetListType))
+            if (!(currentMethodInformationDto.SourceType.IsArrayOfSimpleType()))
             {
-                var privateAccessModifiers = GetNewMethodAccessModifiers(currentMethodInformationDto.AccessModifiers);
-                var childMethodInformationDto = new MethodInformationDto(privateAccessModifiers, sourceListType, targetListType, "item", new List<IParameterSymbol>());
-                childMethodGenerator = GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService, existingNamespaces);
+                if (existingMethodsControlService.TryAddMethod(sourceElementType, targetElementType))
+                {
+                    var privateAccessModifiers = GetNewMethodAccessModifiers(currentMethodInformationDto.AccessModifiers);
+                    var childMethodInformationDto = new MethodInformationDto(privateAccessModifiers, sourceElementType, targetElementType, "item", new List<IParameterSymbol>());
+                    childMethodGenerator = GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService, existingNamespaces);
+                }
             }
 
             var mapCollectionInformationDto = new MapCollectionInformationDto(currentMethodInformationDto, childMethodGenerator, optionsDto);

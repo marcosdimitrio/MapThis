@@ -108,20 +108,20 @@ namespace MapThis.Refactorings.MappingGenerator
             return methodDeclarationSyntax;
         }
 
-        private CompilationUnitSyntax AddMissingUsings(INamespaceSymbol originalMethodNamespace, CompilationUnitSyntax compilationUnitSyntax, IList<INamespaceSymbol> namespaces)
+        private CompilationUnitSyntax AddMissingUsings(INamespaceSymbol originalMethodNamespace, CompilationUnitSyntax compilationUnitSyntax, IList<string> namespaces)
         {
             foreach (var namespaceToInclude in namespaces)
             {
-                var usingAlreadyExists = compilationUnitSyntax.Usings.Any(x => x.Name.ToFullString() == namespaceToInclude.ToDisplayString());
+                var usingAlreadyExists = compilationUnitSyntax.Usings.Any(x => x.Name.ToFullString() == namespaceToInclude);
 
-                var namespaceIsTheSameAsTheMethod = SymbolEqualityComparer.Default.Equals(originalMethodNamespace, namespaceToInclude);
+                var namespaceIsTheSameAsTheMethod = originalMethodNamespace.ToDisplayString() == namespaceToInclude;
 
-                var currentNamespaceIsDeeperThanBeingMapped = originalMethodNamespace.ToDisplayString().StartsWith(namespaceToInclude.ToDisplayString());
+                var currentNamespaceIsDeeperThanBeingMapped = originalMethodNamespace.ToDisplayString().StartsWith(namespaceToInclude);
 
                 if (!usingAlreadyExists && !namespaceIsTheSameAsTheMethod && !currentNamespaceIsDeeperThanBeingMapped)
                 {
                     compilationUnitSyntax = compilationUnitSyntax
-                        .AddUsings(UsingDirective(IdentifierName(namespaceToInclude.ToDisplayString())));
+                        .AddUsings(UsingDirective(IdentifierName(namespaceToInclude)));
                 }
             }
 
