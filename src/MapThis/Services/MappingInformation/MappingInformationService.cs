@@ -48,6 +48,8 @@ namespace MapThis.Services.MappingInformation
                 })
                 .ToList();
 
+            //var a = sourceType.ContainingNamespace
+
             var existingNamespacesList = GetExistingNamespacesList(compilationUnitSyntax, originalMethodSymbol);
 
             var existingMethodsControlService = ExistingMethodControlFactory.Create(existingMethodsList);
@@ -155,6 +157,12 @@ namespace MapThis.Services.MappingInformation
             {
                 existingNamespacesList.Add(originalMethodSymbol.ContainingNamespace.ToDisplayString());
             }
+
+            var sourceNamespace = originalMethodSymbol.Parameters[0].Type.ContainingNamespace.ToDisplayString();
+            var targetNamespace = originalMethodSymbol.ReturnType.ContainingNamespace.ToDisplayString();
+
+            existingNamespacesList.Add(sourceNamespace);
+            existingNamespacesList.Add(targetNamespace);
 
             return existingNamespacesList;
         }
