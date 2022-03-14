@@ -57,7 +57,7 @@ public Parent Map(ParentDto item)
 }
 ```
 
-Into this:
+into:
 
 ```csharp
 public Parent Map(ParentDto item)
@@ -106,7 +106,7 @@ private OtherChild Map(OtherChildDto item)
 
 Other features are:
 
-- New methods are always private and are always placed 
+- New methods are always private and always placed 
   after other public/internal/protected methods in the class.
 - Automatically adds usings as needed.
 - Keeps static access modifier if the method being mapped 
