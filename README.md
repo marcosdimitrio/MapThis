@@ -121,3 +121,12 @@ Other features are:
 # About
 
 Written by Marcos Dimitrio, using C# and Roslyn.
+
+Many thanks to Cezary Piątek and his 
+[MappingGenerator](https://github.com/cezarypiatek/MappingGenerator), 
+which was a great source of knowledge when I started learning how to
+work with Roslyn.
+
+The [RoslynQuoter](https://roslynquoter.azurewebsites.net/) 
+(source [here](https://github.com/KirillOsenkov/RoslynQuoter)) is a 
+must-use tool when writing extensions with code analysis.
