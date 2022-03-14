@@ -33,8 +33,16 @@ return type, so if you have a class `Parent` that has a list of
 `Child` and another property `OtherChild`:
 
 ```csharp
-public class Parent { public IList<Child> Child { get; set; } public OtherChild OtherChild { get; set; } }
-public class ParentDto { public IList<ChildDto> Child { get; set; } public OtherChildDto OtherChild { get; set; } }
+public class Parent
+{
+    public IList<Child> Child { get; set; }
+    public OtherChild OtherChild { get; set; }
+}
+public class ParentDto
+{
+    public IList<ChildDto> Child { get; set; }
+    public OtherChildDto OtherChild { get; set; }
+}
 public class Child { public int Id { get; set; } }
 public class ChildDto { public int Id { get; set; } }
 public class OtherChild { public int Id { get; set; } }
