@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
 	<Metadata>
-		<Identity Id="MapThis for Visual Studio 2019" Version="1.0.0" Language="en-US" Publisher="Marcos Dimitrio"/>
+		<Identity Id="MapThis for Visual Studio 2019" Version="1.0.1" Language="en-US" Publisher="Marcos Dimitrio"/>
 		<DisplayName>MapThis for Visual Studio 2019</DisplayName>
 		<Description xml:space="preserve">Create mapping code in design time automatically.</Description>
 		<Icon>Resources\Icon.png</Icon>

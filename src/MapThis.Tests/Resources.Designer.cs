@@ -886,6 +886,31 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public List&lt;Child&gt; Child { get; set; } }
+        ///    public class ParentDto { public List&lt;ChildDto&gt; Child { get; set; } }
+        ///    public class Child { public int Id { get; set; } }
+        ///    public class ChildDto { public int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _16_Before {
+            get {
+                return ResourceManager.GetString("_16_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
         ///        public Parent Map(ParentDto item)
         ///        {
         ///            var newItem = new Parent()
@@ -903,37 +928,6 @@ namespace MapThis.Tests {
         ///            foreach (var item in source)
         ///            {
         ///                destination [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string _16_Before {
-            get {
-                return ResourceManager.GetString("_16_Before", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to using MapThis.Tests.Parents;
-        ///using MapThis.Tests.Children;
-        ///using System.Collections.Generic;
-        ///
-        ///namespace MapThis.Tests
-        ///{
-        ///    public class Class1
-        ///    {
-        ///        public Parent Map(ParentDto item)
-        ///        {
-        ///            var newItem = new Parent()
-        ///            {
-        ///                Child = Map(item.Child),
-        ///            };
-        ///
-        ///            return newItem;
-        ///        }
-        ///
-        ///        private ICollection&lt;Child&gt; Map(ICollection&lt;ChildDto&gt; source)
-        ///        {
-        ///            var destination = new List&lt;Child&gt;();
-        ///
-        ///           [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string _16_Refactored {
             get {
@@ -2364,6 +2358,30 @@ namespace MapThis.Tests {
         internal static string _46_Refactored {
             get {
                 return ResourceManager.GetString("_46_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public void [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///}
+        ///}
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _47_Before {
+            get {
+                return ResourceManager.GetString("_47_Before", resourceCulture);
             }
         }
     }

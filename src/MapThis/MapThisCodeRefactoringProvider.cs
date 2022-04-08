@@ -46,6 +46,13 @@ namespace MapThis
             {
                 return;
             }
+            if (methodDeclaration.ReturnType is PredefinedTypeSyntax returnTypeSyntax)
+            {
+                if (returnTypeSyntax.Keyword.Kind() == SyntaxKind.VoidKeyword)
+                {
+                    return;
+                }
+            }
 
             var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
             var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration, context.CancellationToken);
