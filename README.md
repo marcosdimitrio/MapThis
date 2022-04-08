@@ -3,6 +3,12 @@
 MapThis is a Visual Studio 2019 Extension that adds code refactoring 
 to map between two types in any given method.
 
+You can download it from within Visual Studio in the Extensions menu or
+directly from the 
+[Market Place](https://marketplace.visualstudio.com/items?itemName=MarcosDimitrio.MapThisForVisualStudio2019).
+
+## How it works
+
 When you have a method like:
 
 ```csharp
@@ -118,7 +124,7 @@ Other features are:
   to map properties even if they are missing in the source 
   class, so that the developer can fix it.
 
-# About
+## About
 
 Written by Marcos Dimitrio, using C# and Roslyn.
 
