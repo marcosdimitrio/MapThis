@@ -2384,5 +2384,54 @@ namespace MapThis.Tests {
                 return ResourceManager.GetString("_47_Before", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///
+        ///    }
+        ///    public class Parent { public byte[] Contents { get; set; } }
+        ///    public class ParentDto { public byte[] Contents { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _48_Before {
+            get {
+                return ResourceManager.GetString("_48_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                Contents = item.Contents,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///
+        ///    }
+        ///    public class Parent { public byte[] Contents { get; set; } }
+        ///    public class ParentDto { public byte[] Contents { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _48_Refactored {
+            get {
+                return ResourceManager.GetString("_48_Refactored", resourceCulture);
+            }
+        }
     }
 }

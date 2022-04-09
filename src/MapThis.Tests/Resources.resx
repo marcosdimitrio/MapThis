@@ -382,4 +382,10 @@
   <data name="_47_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\47_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="_48_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\48_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_48_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\48_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

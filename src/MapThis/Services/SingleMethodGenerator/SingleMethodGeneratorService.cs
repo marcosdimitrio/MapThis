@@ -391,12 +391,19 @@ namespace MapThis.Services.SingleMethodGenerator
 
         private SyntaxNodeOrToken GetPropertyExpression(PropertyToMapDto propertyToMap)
         {
-            if (propertyToMap.Target.Type.IsSimpleType() || propertyToMap.Target.Type.IsNullableSimpleType())
+            if (propertyToMap.Target.Type.IsSimpleType() || propertyToMap.Target.Type.IsNullableSimpleType() ||
+                AreArraysOfTheSameSimpleType(propertyToMap.Target.Type, propertyToMap.Source.Type))
             {
                 return GetNewDirectConversion(propertyToMap.ParameterName, propertyToMap.Target.Name);
             }
 
             return GetConversionWithMap(propertyToMap.ParameterName, propertyToMap.Target.Name);
+        }
+
+        private bool AreArraysOfTheSameSimpleType(ITypeSymbol target, ITypeSymbol source)
+        {
+            return target.IsArray() && source.IsArray() && 
+                SymbolEqualityComparer.Default.Equals(target.GetElementType(), source.GetElementType());
         }
 
         private static AssignmentExpressionSyntax GetNewDirectConversion(string identifierName, string propertyName)

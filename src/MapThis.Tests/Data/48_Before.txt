@@ -1,0 +1,13 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent [|Map|](ParentDto item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+    }
+    public class Parent { public byte[] Contents { get; set; } }
+    public class ParentDto { public byte[] Contents { get; set; } }
+}
