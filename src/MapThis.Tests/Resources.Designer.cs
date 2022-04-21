@@ -2390,7 +2390,7 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
-        ///        public Parent Map(ParentDto item)
+        ///        public Parent [|Map|](ParentDto item)
         ///        {
         ///            throw new System.NotImplementedException();
         ///        }
@@ -2431,6 +2431,46 @@ namespace MapThis.Tests {
         internal static string _48_Refactored {
             get {
                 return ResourceManager.GetString("_48_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public string [|Map|](string item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _49_Before {
+            get {
+                return ResourceManager.GetString("_49_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public TheEnum Map(OtherEnum item)
+        ///        {
+        ///            throw new System.InvalidOperationException();
+        ///        }
+        ///    }
+        ///    public enum TheEnum { }
+        ///    public enum OtherEnum { }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _50_Before {
+            get {
+                return ResourceManager.GetString("_50_Before", resourceCulture);
             }
         }
     }

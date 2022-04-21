@@ -1,0 +1,12 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public TheEnum [|Map|](OtherEnum item)
+        {
+            throw new System.InvalidOperationException();
+        }
+    }
+    public enum TheEnum { }
+    public enum OtherEnum { }
+}

@@ -65,6 +65,8 @@ namespace MapThis.Tests
             yield return new object[] { "46 Should map between IEnumerable and IEnumerable", true, 0, GetData(Resources._46_Before, Resources._46_Refactored) };
             yield return new object[] { "47 Should not map method when return is void", false, 0, GetData(Resources._47_Before, null) };
             yield return new object[] { "48 Should map properties that are arrays of the same simple type directly", true, 0, GetData(Resources._48_Before, Resources._48_Refactored) };
+            yield return new object[] { "49 Should not map when return type is a string (simple type)", false, 0, GetData(Resources._49_Before, null) };
+            yield return new object[] { "50 Should not map when return type is an Enum (simple type)", false, 0, GetData(Resources._50_Before, null) };
         }
 
         [Theory]

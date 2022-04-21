@@ -68,6 +68,11 @@ namespace MapThis
                 return;
             }
 
+            if (methodSymbol.ReturnType.IsSimpleType())
+            {
+                return;
+            }
+
             Register(context, methodDeclaration);
         }
 
