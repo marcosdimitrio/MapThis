@@ -67,6 +67,7 @@ namespace MapThis.Tests
             yield return new object[] { "48 Should map properties that are arrays of the same simple type directly", true, 0, GetData(Resources._48_Before, Resources._48_Refactored) };
             yield return new object[] { "49 Should not map when return type is a string (simple type)", false, 0, GetData(Resources._49_Before, null) };
             yield return new object[] { "50 Should not map when return type is an Enum (simple type)", false, 0, GetData(Resources._50_Before, null) };
+            yield return new object[] { "51 Should map property directly when it doesn't exist in Source type", true, 0, GetData(Resources._51_Before, Resources._51_Refactored) };
         }
 
         [Theory]

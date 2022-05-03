@@ -1,0 +1,20 @@
+﻿namespace CentralDePermissoes.Central.Domain.Mappers
+{
+    public class MapperToPermissoesDoUsuario
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                Id = item.Id,
+                Child = Map(item.Child),
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public int Id { get; set; } public Child Child { get; set; } }
+    public class ParentDto { public int Id { get; set; } public ChildDto SomeChild { get; set; } }
+    public class Child { public int Id { get; set; } }
+    public class ChildDto { public int Id { get; set; } }
+}

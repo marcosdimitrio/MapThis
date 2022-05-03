@@ -2458,7 +2458,7 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
-        ///        public TheEnum Map(OtherEnum item)
+        ///        public TheEnum [|Map|](OtherEnum item)
         ///        {
         ///            throw new System.InvalidOperationException();
         ///        }
@@ -2471,6 +2471,24 @@ namespace MapThis.Tests {
         internal static string _50_Before {
             get {
                 return ResourceManager.GetString("_50_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _51_Before {
+            get {
+                return ResourceManager.GetString("_51_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string _51_Refactored {
+            get {
+                return ResourceManager.GetString("_51_Refactored", resourceCulture);
             }
         }
     }
