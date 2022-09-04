@@ -1,6 +1,6 @@
-﻿namespace CentralDePermissoes.Central.Domain.Mappers
+﻿namespace MapThis.Tests
 {
-    public class MapperToPermissoesDoUsuario
+    public class Class1
     {
         public Parent [|Map|](ParentDto item)
         {

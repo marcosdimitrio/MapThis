@@ -34,11 +34,11 @@ namespace MapThis
             {
                 return;
             }
-            if (methodDeclaration.Parent?.Kind() == SyntaxKind.InterfaceDeclaration)
+            if (methodDeclaration.Parent?.IsKind(SyntaxKind.InterfaceDeclaration) ?? false)
             {
                 return;
             }
-            if (methodDeclaration.Modifiers.Any(x => x.Kind() == SyntaxKind.AbstractKeyword))
+            if (methodDeclaration.Modifiers.Any(x => x.IsKind(SyntaxKind.AbstractKeyword)))
             {
                 return;
             }
@@ -48,7 +48,7 @@ namespace MapThis
             }
             if (methodDeclaration.ReturnType is PredefinedTypeSyntax returnTypeSyntax)
             {
-                if (returnTypeSyntax.Keyword.Kind() == SyntaxKind.VoidKeyword)
+                if (returnTypeSyntax.Keyword.IsKind(SyntaxKind.VoidKeyword))
                 {
                     return;
                 }
@@ -64,6 +64,11 @@ namespace MapThis
 
             if (methodSymbol.ReturnType.IsCollection() && !methodSymbol.Parameters.First().Type.IsCollection() ||
                 !methodSymbol.ReturnType.IsCollection() && methodSymbol.Parameters.First().Type.IsCollection())
+            {
+                return;
+            }
+
+            if (methodSymbol.ReturnType.IsInterface() || methodSymbol.Parameters.First().Type.IsInterface())
             {
                 return;
             }

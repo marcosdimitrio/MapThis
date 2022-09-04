@@ -1,0 +1,9 @@
+﻿namespace MapThis.Tests
+{
+    public interface IMyInterface
+    {
+        Parent [|Map|](ParentDto item);
+    }
+    public class Parent { public int Id { get; set; } }
+    public class ParentDto { public int Id { get; set; } }
+}

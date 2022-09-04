@@ -24,7 +24,7 @@ namespace MapThis.Tests
             yield return new object[] { "05 Should automatically add usings for collections", true, 0, GetData(Resources._05_Before, Resources._05_Refactored) };
             yield return new object[] { "06 Should not add usings for namespaces above the current one", true, 0, GetData(Resources._06_Before, Resources._06_Refactored) };
             yield return new object[] { "07 Should keep original attributes", true, 0, GetData(Resources._07_Before, Resources._07_Refactored) };
-            yield return new object[] { "08 Should keep static access modifier if its present for every child method", true, 0, GetData(Resources._08_Before, Resources._08_Refactored) };
+            yield return new object[] { "08 Should keep static access modifier if it's present for every child method", true, 0, GetData(Resources._08_Before, Resources._08_Refactored) };
             yield return new object[] { "09 Should create all new methods for classes or colletions as private", true, 0, GetData(Resources._09_Before, Resources._09_Refactored) };
             yield return new object[] { "10 Should not create foreach variable with the same name as the first parameter", true, 0, GetData(Resources._10_Before, Resources._10_Refactored) };
             yield return new object[] { "11 Should not create foreach variable with the same name as other method's properties", true, 0, GetData(Resources._11_Before, Resources._11_Refactored) };
@@ -68,6 +68,9 @@ namespace MapThis.Tests
             yield return new object[] { "49 Should not map when return type is a string (simple type)", false, 0, GetData(Resources._49_Before, null) };
             yield return new object[] { "50 Should not map when return type is an Enum (simple type)", false, 0, GetData(Resources._50_Before, null) };
             yield return new object[] { "51 Should map property directly when it doesn't exist in Source type", true, 0, GetData(Resources._51_Before, Resources._51_Refactored) };
+            yield return new object[] { "52 Should not map when source parameter is an interface", false, 0, GetData(Resources._52_Before, null) };
+            yield return new object[] { "53 Should not map when destination type is an interface", false, 0, GetData(Resources._53_Before, null) };
+            yield return new object[] { "54 Should not map method in an interface", false, 0, GetData(Resources._54_Before, null) };
         }
 
         [Theory]

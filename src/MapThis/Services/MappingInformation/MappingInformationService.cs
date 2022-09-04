@@ -180,13 +180,13 @@ namespace MapThis.Services.MappingInformation
             var listToRemove = new List<SyntaxKind>();
             var listToAdd = new List<SyntaxToken>();
 
-            if (originalModifiers.Any(x => x.Kind() == SyntaxKind.PublicKeyword))
+            if (originalModifiers.Any(x => x.IsKind(SyntaxKind.PublicKeyword)))
             {
                 listToAdd.Add(Token(SyntaxKind.PrivateKeyword));
                 listToRemove.Add(SyntaxKind.PublicKeyword);
             }
 
-            if (originalModifiers.Any(x => x.Kind() == SyntaxKind.VirtualKeyword))
+            if (originalModifiers.Any(x => x.IsKind(SyntaxKind.VirtualKeyword)))
             {
                 listToRemove.Add(SyntaxKind.VirtualKeyword);
             }

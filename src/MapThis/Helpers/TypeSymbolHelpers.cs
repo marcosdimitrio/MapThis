@@ -55,6 +55,11 @@ namespace MapThis.Helpers
             return !typeSymbol.IsSimpleType() && typeSymbol.TypeKind == TypeKind.Class;
         }
 
+        public static bool IsInterface(this ITypeSymbol typeSymbol)
+        {
+            return typeSymbol.TypeKind == TypeKind.Interface && !typeSymbol.IsCollection();
+        }
+
         public static bool IsCollection(this ITypeSymbol typeSymbol)
         {
             return

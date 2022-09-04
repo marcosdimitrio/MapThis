@@ -1,15 +1,12 @@
-namespace MapThis.Tests
+﻿namespace MapThis.Tests
 {
     public class Class1
     {
-        public void [|Map|](ParentDto item)
+        public Parent [|Map|](IParentDto item)
         {
             throw new System.NotImplementedException();
         }
     }
-}
-namespace MapThis.Tests
-{
     public class Parent { public int Id { get; set; } }
-    public class ParentDto { public int Id { get; set; } }
+    public interface IParentDto { int Id { get; set; } }
 }

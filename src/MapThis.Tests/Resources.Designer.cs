@@ -19,7 +19,7 @@ namespace MapThis.Tests {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -2370,7 +2370,7 @@ namespace MapThis.Tests {
         ///        {
         ///            throw new System.NotImplementedException();
         ///        }
-        ///}
+        ///    }
         ///}
         ///namespace MapThis.Tests
         ///{
@@ -2475,7 +2475,21 @@ namespace MapThis.Tests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public int Id { get; set; } public Child Child { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } public ChildDto SomeChild { get; set; } }
+        ///    public class Child { public int Id { get; set; } }
+        ///    public class ChildDto { public int Id { get; set; } }
+        ///}
+        ///.
         /// </summary>
         internal static string _51_Before {
             get {
@@ -2484,11 +2498,88 @@ namespace MapThis.Tests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                Id = item.Id,
+        ///                Child = Map(item.Child),
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public class Parent { public int Id { get; set; } public Child Child { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } public ChildDto SomeChild { get; set; } }
+        ///    public clas [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string _51_Refactored {
             get {
                 return ResourceManager.GetString("_51_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(IParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public interface IParentDto { int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _52_Before {
+            get {
+                return ResourceManager.GetString("_52_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IParent Map(ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public interface IParent { int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _53_Before {
+            get {
+                return ResourceManager.GetString("_53_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public interface IMyInterface
+        ///    {
+        ///        Parent Map(ParentDto item);
+        ///    }
+        ///    public class Parent { public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _54_Before {
+            get {
+                return ResourceManager.GetString("_54_Before", resourceCulture);
             }
         }
     }
