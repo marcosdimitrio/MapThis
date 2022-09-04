@@ -1,11 +1,14 @@
 # MapThis
 
-MapThis is a Visual Studio 2019 Extension that adds code refactoring 
+MapThis is a Visual Studio 2022 Extension that adds code refactoring 
 to map between two types in any given method.
 
 You can download it from within Visual Studio in the Extensions menu or
 directly from the 
-[Market Place](https://marketplace.visualstudio.com/items?itemName=MarcosDimitrio.MapThisForVisualStudio2019).
+[Market Place](https://marketplace.visualstudio.com/items?itemName=MarcosDimitrio.MapThisForVisualStudio2022). 
+The previous version for 
+[VS2019 is also available](https://marketplace.visualstudio.com/items?itemName=MarcosDimitrio.MapThisForVisualStudio2019), 
+but no longer being maintained.
 
 ## How it works
 
