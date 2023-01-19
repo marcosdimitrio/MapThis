@@ -71,6 +71,9 @@ namespace MapThis.Tests
             yield return new object[] { "52 Should not map when source parameter is an interface", false, 0, GetData(Resources._52_Before, null) };
             yield return new object[] { "53 Should not map when destination type is an interface", false, 0, GetData(Resources._53_Before, null) };
             yield return new object[] { "54 Should not map method in an interface", false, 0, GetData(Resources._54_Before, null) };
+            yield return new object[] { "55 Should map from a record to a record", true, 0, GetData(Resources._55_Before, Resources._55_Refactored) };
+            yield return new object[] { "56 Should map from a record to a class", true, 0, GetData(Resources._56_Before, Resources._56_Refactored) };
+            yield return new object[] { "57 Should map from a class to a record", true, 0, GetData(Resources._57_Before, Resources._57_Refactored) };
         }
 
         [Theory]

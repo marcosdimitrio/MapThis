@@ -1,0 +1,12 @@
+﻿namespace MapThis.Tests
+{
+    public class MyClass
+    {
+        public Parent [|Map|](ParentDto item)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+    public record Parent { public int Id { get; set; } }
+    public record ParentDto { public int Id { get; set; } }
+}
