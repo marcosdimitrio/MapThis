@@ -78,7 +78,7 @@ namespace MapThis.Tests
 
         [Theory]
         [MemberData(nameof(GetClients))]
-        #region SupressMessage
+        #region SuppressMessage
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026", Justification = "The name is displayed in test explorer")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "IDE0060", Justification = "The name is displayed in test explorer")]
         #endregion
