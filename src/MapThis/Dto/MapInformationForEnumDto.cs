@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace MapThis.Dto
 {
-    public class MapInformationDto
+    public class MapEnumInformationDto
     {
         public MethodInformationDto MethodInformation { get; }
-        public IList<PropertyToMapDto> PropertiesToMap { get; }
+        public IList<EnumItemToMapDto> EnumsItemsToMap { get; }
         public IList<ICompoundMethodGenerator> ChildrenMethodGenerators { get; }
         public OptionsDto Options { get; }
 
-        public MapInformationDto(MethodInformationDto methodInformation, IList<PropertyToMapDto> propertiesToMap, IList<ICompoundMethodGenerator> childrenMethodGenerators, OptionsDto options)
+        public MapEnumInformationDto(MethodInformationDto methodInformation, IList<EnumItemToMapDto> enumItemsToMap, IList<ICompoundMethodGenerator> childrenMethodGenerators, OptionsDto options)
         {
             MethodInformation = methodInformation;
-            PropertiesToMap = propertiesToMap;
+            EnumsItemsToMap = enumItemsToMap;
             ChildrenMethodGenerators = childrenMethodGenerators;
             Options = options;
         }

@@ -1,4 +1,4 @@
-﻿using MapThis.Services.CompoundGenerator.Interfaces;
+﻿using MapThis.Services.MethodGenerator.Interfaces;
 
 namespace MapThis.Dto
 {

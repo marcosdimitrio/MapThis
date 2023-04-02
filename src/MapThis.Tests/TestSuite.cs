@@ -1,13 +1,15 @@
 using MapThis.Refactorings.MappingGenerator;
-using MapThis.Services.CompoundGenerator.Factories;
+using MapThis.Services.EnumMethodGenerator;
 using MapThis.Services.ExistingMethodsControl.Factories;
 using MapThis.Services.MappingInformation;
+using MapThis.Services.MethodGenerator.Factories;
 using MapThis.Services.SingleMethodGenerator;
 using MapThis.Tests.Builder;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using RoslynTestKit;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Xunit;
 
 namespace MapThis.Tests
@@ -38,7 +40,7 @@ namespace MapThis.Tests
             yield return new object[] { "19 Should not create map method from list to class", false, 0, GetData(Resources._19_Before, null) };
             yield return new object[] { "20 Should not create map method from class to list", false, 0, GetData(Resources._20_Before, null) };
             yield return new object[] { "21 Should not repeat mappings when Parent has GrandChild and List of Child that has GrandChild", true, 0, GetData(Resources._21_Before, Resources._21_Refactored) };
-            yield return new object[] { "22 Should stop mapping at mapping that already exist on class", true, 0, GetData(Resources._22_Before, Resources._22_Refactored) };
+            yield return new object[] { "22 Should stop mapping at class mapping that already exist on class", true, 0, GetData(Resources._22_Before, Resources._22_Refactored) };
             yield return new object[] { "23 Should keep \"namespace name\" like in Parents.Parent and not add to usings", true, 0, GetData(Resources._23_Before, Resources._23_Refactored) };
             yield return new object[] { "24 Should map non nullable to nullable directly", true, 0, GetData(Resources._24_Before, Resources._24_Refactored) };
             yield return new object[] { "25 Should map nullable to non nullable directly", true, 0, GetData(Resources._25_Before, Resources._25_Refactored) };
@@ -66,7 +68,7 @@ namespace MapThis.Tests
             yield return new object[] { "47 Should not map method when return is void", false, 0, GetData(Resources._47_Before, null) };
             yield return new object[] { "48 Should map properties that are arrays of the same simple type directly", true, 0, GetData(Resources._48_Before, Resources._48_Refactored) };
             yield return new object[] { "49 Should not map when return type is a string (simple type)", false, 0, GetData(Resources._49_Before, null) };
-            yield return new object[] { "50 Should not map when return type is an Enum (simple type)", false, 0, GetData(Resources._50_Before, null) };
+            yield return new object[] { "50 Should map one enum to another enum", true, 0, GetData(Resources._50_Before, Resources._50_Refactored) };
             yield return new object[] { "51 Should map property directly when it doesn't exist in Source type", true, 0, GetData(Resources._51_Before, Resources._51_Refactored) };
             yield return new object[] { "52 Should not map when source parameter is an interface", false, 0, GetData(Resources._52_Before, null) };
             yield return new object[] { "53 Should not map when destination type is an interface", false, 0, GetData(Resources._53_Before, null) };
@@ -74,8 +76,24 @@ namespace MapThis.Tests
             yield return new object[] { "55 Should map from a record to a record", true, 0, GetData(Resources._55_Before, Resources._55_Refactored) };
             yield return new object[] { "56 Should map from a record to a class", true, 0, GetData(Resources._56_Before, Resources._56_Refactored) };
             yield return new object[] { "57 Should map from a class to a record", true, 0, GetData(Resources._57_Before, Resources._57_Refactored) };
+            yield return new object[] { "58 Should map an enum when it's inside a parent class", true, 0, GetData(Resources._58_Before, Resources._58_Refactored) };
+            yield return new object[] { "59 Should map a list of enum into another list of enum", true, 0, GetData(Resources._59_Before, Resources._59_Refactored) };
+            yield return new object[] { "60 Should keep \"namespace name\" like in Parents.Parent and not add to usings for enums", true, 0, GetData(Resources._60_Before, Resources._60_Refactored) };
+            yield return new object[] { "61 Should keep using namespace alias for enums", true, 0, GetData(Resources._61_Before, Resources._61_Refactored) };
+            yield return new object[] { "62 Should map enum item directly when it doesn't exist in Source enum", true, 0, GetData(Resources._62_Before, Resources._62_Refactored) };
+            yield return new object[] { "63 Should map a list of enum when it's inside a parent class", true, 0, GetData(Resources._63_Before, Resources._63_Refactored) };
+            yield return new object[] { "64 Should stop mapping when enum list already exists", true, 0, GetData(Resources._64_Before, Resources._64_Refactored) };
+            yield return new object[] { "65 Should stop mapping when enum mapping already exist when mapping from a list", true, 0, GetData(Resources._65_Before, Resources._65_Refactored) };
+            yield return new object[] { "66 Should stop mapping when enum mapping already exist when mapping from a class", true, 0, GetData(Resources._66_Before, Resources._66_Refactored) };
         }
 
+        /// <summary>
+        /// Executes all tests
+        /// </summary>
+        /// <param name="name">Name of the test</param>
+        /// <param name="shouldRefactor">Determines whether there should be a code refactoring in this context</param>
+        /// <param name="refactoringIndex">Determines which CodeAction was selected, for instance "Map this" or "Map this with null check"</param>
+        /// <param name="dto">The test source code, with before and refactored code</param>
         [Theory]
         [MemberData(nameof(GetClients))]
         #region SuppressMessage
@@ -98,12 +116,24 @@ namespace MapThis.Tests
         protected override CodeRefactoringProvider CreateProvider()
         {
             var singleMethodGeneratorService = new SingleMethodGeneratorService();
-            var compoundMethodGeneratorFactory = new CompoundMethodGeneratorFactory(singleMethodGeneratorService);
+            var enumMethodGenerator = new EnumMethodGenerator();
+            var compoundMethodGeneratorFactory = new CompoundMethodGeneratorFactory(singleMethodGeneratorService, enumMethodGenerator);
             var existingMethodControlFactory = new ExistingMethodControlFactory();
             var mappingInformationService = new MappingInformationService(compoundMethodGeneratorFactory, existingMethodControlFactory);
             var mappingGeneratorService = new MappingGeneratorService(mappingInformationService);
 
             return new MapThisCodeRefactoringProvider(mappingGeneratorService);
+        }
+
+        protected override IReadOnlyCollection<MetadataReference> References
+        {
+            get
+            {
+                return new MetadataReference[]
+                {
+                    MetadataReference.CreateFromFile(typeof(InvalidEnumArgumentException).Assembly.Location)
+                };
+            }
         }
 
         private static MemberDataSerializer<TestDataDto> GetData(string before, string refactored)

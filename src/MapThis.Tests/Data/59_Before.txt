@@ -1,8 +1,10 @@
-﻿namespace MapThis.Tests
+using System.Collections.Generic;
+
+namespace MapThis.Tests
 {
     public class Class1
     {
-        public EnumDestination [|Map|](EnumSource item)
+        public IList<EnumDestination> [|Map|](IList<EnumSource> source)
         {
             throw new System.NotImplementedException();
         }

@@ -1,0 +1,43 @@
+using System.Collections.Generic;
+using System.ComponentModel;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent [|Map|](ParentDto item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private IList<EnumDestination> Map(IList<EnumSource> source)
+        {
+            var destination = new List<EnumDestination>();
+
+            foreach (var item in source)
+            {
+                destination.Add(Map(item));
+            }
+
+            return destination;
+        }
+
+        private EnumDestination Map(EnumSource item)
+        {
+            var newItem = item switch
+            {
+                EnumSource.Item1 => EnumDestination.Item1,
+                EnumSource.Item2 => EnumDestination.Item2,
+                _ => throw new InvalidEnumArgumentException($"Can't map from item \"{item}\" of enum {item.GetType().FullName} to destination enum {typeof(EnumDestination).FullName}."),
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public Child Child { get; set; } }
+    public class ParentDto { public ChildDto Child { get; set; } }
+    public class Child { public IList<EnumDestination> SomeValue { get; set; } }
+    public class ChildDto { public IList<EnumSource> SomeValue { get; set; } }
+    public enum EnumSource { Item1, Item2 }
+    public enum EnumDestination { Item1, Item2 }
+}

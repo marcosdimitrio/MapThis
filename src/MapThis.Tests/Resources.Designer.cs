@@ -2458,19 +2458,39 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
-        ///        public TheEnum [|Map|](OtherEnum item)
+        ///        public EnumDestination [|Map|](EnumSource item)
         ///        {
-        ///            throw new System.InvalidOperationException();
+        ///            throw new System.NotImplementedException();
         ///        }
         ///    }
-        ///    public enum TheEnum { }
-        ///    public enum OtherEnum { }
-        ///}
-        ///.
+        ///    public enum EnumSource { Item1, Item2 }
+        ///    public enum EnumDestination { Item1, Item2 }
+        ///}.
         /// </summary>
         internal static string _50_Before {
             get {
                 return ResourceManager.GetString("_50_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public EnumDestination Map(EnumSource item)
+        ///        {
+        ///            var newItem = item switch
+        ///            {
+        ///                EnumSource.Item1 =&gt; EnumDestination.Item1,
+        ///                EnumSource.Item2 =&gt; EnumDestination.Item2,
+        ///                _ =&gt; throw new InvalidEnumArgumentException($&quot;Can&apos;t map from item \&quot;{item}\&quot; of enum {item.GetType().FullName} to destination enum {typeof(EnumDestination).FullName}. [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _50_Refactored {
+            get {
+                return ResourceManager.GetString("_50_Refactored", resourceCulture);
             }
         }
         
@@ -2721,6 +2741,479 @@ namespace MapThis.Tests {
         internal static string _57_Refactored {
             get {
                 return ResourceManager.GetString("_57_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public EnumDestination SomeValue { get; set; } }
+        ///    public class ParentDto { public EnumSource SomeValue { get; set; } }
+        ///    public enum EnumSource { Item1, Item2 }
+        ///    public enum EnumDestination { Item1, Item2 }
+        ///}.
+        /// </summary>
+        internal static string _58_Before {
+            get {
+                return ResourceManager.GetString("_58_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                SomeValue = Map(item.SomeValue),
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///
+        ///        private EnumDestination Map(EnumSource item)
+        ///        {
+        ///            var newItem = item switch
+        ///            {
+        ///                EnumSource.Item1 =&gt; EnumDestination.Item1,
+        ///                EnumSo [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _58_Refactored {
+            get {
+                return ResourceManager.GetString("_58_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;EnumDestination&gt; [|Map|](IList&lt;EnumSource&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public enum EnumSource { Item1, Item2 }
+        ///    public enum EnumDestination { Item1, Item2 }
+        ///}.
+        /// </summary>
+        internal static string _59_Before {
+            get {
+                return ResourceManager.GetString("_59_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;EnumDestination&gt; Map(IList&lt;EnumSource&gt; source)
+        ///        {
+        ///            var destination = new List&lt;EnumDestination&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(Map(item));
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///
+        ///        private EnumDestination Map(EnumSource item)
+        ///        {
+        ///            v [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _59_Refactored {
+            get {
+                return ResourceManager.GetString("_59_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parents.EnumDestination [|Map|](Parents.EnumSource item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///namespace MapThis.Tests.Parents
+        ///{
+        ///    public enum EnumSource { Item1, Item2 }
+        ///    public enum EnumDestination { Item1, Item2 }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _60_Before {
+            get {
+                return ResourceManager.GetString("_60_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parents.EnumDestination Map(Parents.EnumSource item)
+        ///        {
+        ///            var newItem = item switch
+        ///            {
+        ///                Parents.EnumSource.Item1 =&gt; Parents.EnumDestination.Item1,
+        ///                Parents.EnumSource.Item2 =&gt; Parents.EnumDestination.Item2,
+        ///                _ =&gt; throw new InvalidEnumArgumentException($&quot;Can&apos;t map from item \&quot;{item}\&quot; of enum {item.GetType().FullName} to dest [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _60_Refactored {
+            get {
+                return ResourceManager.GetString("_60_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using P = MapThis.Tests.Parents;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public P.Parent [|Map|](P.ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///}
+        ///namespace MapThis.Tests.Parents
+        ///{
+        ///    public class Parent { public EnumDestination SomeValue { get; set; } }
+        ///    public class ParentDto { public EnumSource SomeValue { get; set; } }
+        ///    public enum EnumSource { Item1, Item2 }
+        ///    public enum EnumDestination { Item1, Item [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _61_Before {
+            get {
+                return ResourceManager.GetString("_61_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using P = MapThis.Tests.Parents;
+        ///using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public P.Parent Map(P.ParentDto item)
+        ///        {
+        ///            var newItem = new P.Parent()
+        ///            {
+        ///                SomeValue = Map(item.SomeValue),
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///
+        ///        private P.EnumDestination Map(P.EnumSource item)
+        ///        {
+        ///            var newItem = item switch
+        ///            {
+        ///                P.EnumSource.Item1 =&gt;  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _61_Refactored {
+            get {
+                return ResourceManager.GetString("_61_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public EnumDestination [|Map|](EnumSource item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public enum EnumSource { Item1, ItemDifferent }
+        ///    public enum EnumDestination { Item1, Item2 }
+        ///}.
+        /// </summary>
+        internal static string _62_Before {
+            get {
+                return ResourceManager.GetString("_62_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public EnumDestination Map(EnumSource item)
+        ///        {
+        ///            var newItem = item switch
+        ///            {
+        ///                EnumSource.Item1 =&gt; EnumDestination.Item1,
+        ///                EnumSource.Item2 =&gt; EnumDestination.Item2,
+        ///                _ =&gt; throw new InvalidEnumArgumentException($&quot;Can&apos;t map from item \&quot;{item}\&quot; of enum {item.GetType().FullName} to destination enum {typeof(EnumDestination).FullName}. [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _62_Refactored {
+            get {
+                return ResourceManager.GetString("_62_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public IList&lt;EnumDestination&gt; SomeValue { get; set; } }
+        ///    public class ParentDto { public IList&lt;EnumSource&gt; SomeValue { get; set; } }
+        ///    public enum EnumSource { Item1, Item2 }
+        ///    public enum EnumDestination { Item1, Item2 }
+        ///}.
+        /// </summary>
+        internal static string _63_Before {
+            get {
+                return ResourceManager.GetString("_63_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                SomeValue = Map(item.SomeValue),
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///
+        ///        private IList&lt;EnumDestination&gt; Map(IList&lt;EnumSource&gt; source)
+        ///        {
+        ///            var destination = new List&lt;EnumDestination&gt;();
+        ///
+        ///            foreach (va [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _63_Refactored {
+            get {
+                return ResourceManager.GetString("_63_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///
+        ///        private IList&lt;EnumDestination&gt; Map(IList&lt;EnumSource&gt; source)
+        ///        {
+        ///            var destination = new List&lt;EnumDestination&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(Map(item));
+        ///            }
+        ///        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _64_Before {
+            get {
+                return ResourceManager.GetString("_64_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                Child = Map(item.Child),
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///
+        ///        private Child Map(ChildDto item)
+        ///        {
+        ///            var newItem = new Child()
+        ///            {
+        ///                SomeValue = Map(item.SomeValue),
+        ///            };
+        ///        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _64_Refactored {
+            get {
+                return ResourceManager.GetString("_64_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;EnumDestination&gt; Map(IList&lt;EnumSource&gt; source)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///
+        ///        private EnumDestination Map(EnumSource item)
+        ///        {
+        ///            var newItem = item switch
+        ///            {
+        ///                EnumSource.Item1 =&gt; EnumDestination.Item1,
+        ///                EnumSource.Item2 =&gt; EnumDestination.Item [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _65_Before {
+            get {
+                return ResourceManager.GetString("_65_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public IList&lt;EnumDestination&gt; Map(IList&lt;EnumSource&gt; source)
+        ///        {
+        ///            var destination = new List&lt;EnumDestination&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                destination.Add(Map(item));
+        ///            }
+        ///
+        ///            return destination;
+        ///        }
+        ///
+        ///        private EnumDestination Map(EnumSource item)
+        ///        {
+        ///            v [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _65_Refactored {
+            get {
+                return ResourceManager.GetString("_65_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///
+        ///        private EnumDestination Map(EnumSource item)
+        ///        {
+        ///            var newItem = item switch
+        ///            {
+        ///                EnumSource.Item1 =&gt; EnumDestination.Item1,
+        ///                EnumSource.Item2 =&gt; EnumDestination.Item2,
+        ///                _ =&gt; throw new InvalidEnumArgumentExcepti [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _66_Before {
+            get {
+                return ResourceManager.GetString("_66_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.ComponentModel;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                SomeValue = Map(item.SomeValue),
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///
+        ///        private EnumDestination Map(EnumSource item)
+        ///        {
+        ///            var newItem = item switch
+        ///            {
+        ///                EnumSource.Item1 =&gt; EnumDestination.Item1,
+        ///                EnumSo [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _66_Refactored {
+            get {
+                return ResourceManager.GetString("_66_Refactored", resourceCulture);
             }
         }
     }

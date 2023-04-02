@@ -1,11 +1,11 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Services.CompoundGenerator.Interfaces;
 using MapThis.Services.ExistingMethodsControl.Dto;
 using MapThis.Services.ExistingMethodsControl.Factories.Interfaces;
 using MapThis.Services.ExistingMethodsControl.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
 using MapThis.Services.MethodGenerator.Factories.Interfaces;
+using MapThis.Services.MethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -61,6 +61,11 @@ namespace MapThis.Services.MappingInformation
                 return GetMapForCollection(codeAnalisysDependenciesDto, optionsDto, currentMethodInformationDto, existingMethodsControlService, existingNamespacesList);
             }
 
+            if (targetType.IsEnum() && sourceType.IsEnum())
+            {
+                return GetMapForEnum(codeAnalisysDependenciesDto, optionsDto, currentMethodInformationDto, existingMethodsControlService, existingNamespacesList);
+            }
+
             return GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, currentMethodInformationDto, existingMethodsControlService, existingNamespacesList);
         }
 
@@ -75,7 +80,7 @@ namespace MapThis.Services.MappingInformation
 
             foreach (var targetProperty in targetMembers)
             {
-                var sourceProperty = FindCorrespondingPropertyInSourceMembers(targetProperty, sourceMembers);
+                var sourceProperty = FindCorrespondingPropertyInPropertySymbols(targetProperty, sourceMembers);
 
                 var propertyToMap = new PropertyToMapDto(sourceProperty, targetProperty, currentMethodInformationDto.FirstParameterName);
 
@@ -110,6 +115,16 @@ namespace MapThis.Services.MappingInformation
                         childrenMethodGenerators.Add(childMethodGenerator);
                     }
                 }
+
+                if (targetNamedType.IsEnum() && sourceNamedType.IsEnum())
+                {
+                    if (existingMethodsControlService.TryAddMethod(sourceNamedType, targetNamedType))
+                    {
+                        var childMethodInformationDto = new MethodInformationDto(privateAccessModifiers, sourceNamedType, targetNamedType, "item", new List<IParameterSymbol>());
+                        var childMethodGenerator = GetMapForEnum(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService, existingNamespaces);
+                        childrenMethodGenerators.Add(childMethodGenerator);
+                    }
+                }
             }
 
             var mapInformation = new MapInformationDto(currentMethodInformationDto, propertiesToMap, childrenMethodGenerators, optionsDto);
@@ -126,7 +141,7 @@ namespace MapThis.Services.MappingInformation
 
             ICompoundMethodGenerator childMethodGenerator = null;
 
-            if (!(currentMethodInformationDto.SourceType.IsCollectionOfSimpleType()))
+            if (!currentMethodInformationDto.SourceType.IsCollectionOfSimpleType())
             {
                 if (existingMethodsControlService.TryAddMethod(sourceElementType, targetElementType))
                 {
@@ -135,10 +150,44 @@ namespace MapThis.Services.MappingInformation
                     childMethodGenerator = GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService, existingNamespaces);
                 }
             }
+            else if (targetElementType.IsEnum() && sourceElementType.IsEnum())
+            {
+                if (existingMethodsControlService.TryAddMethod(sourceElementType, targetElementType))
+                {
+                    var privateAccessModifiers = GetNewMethodAccessModifiers(currentMethodInformationDto.AccessModifiers);
+                    var childMethodInformationDto = new MethodInformationDto(privateAccessModifiers, sourceElementType, targetElementType, "item", new List<IParameterSymbol>());
+                    childMethodGenerator = GetMapForEnum(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService, existingNamespaces);
+                }
+            }
 
             var mapCollectionInformationDto = new MapCollectionInformationDto(currentMethodInformationDto, childMethodGenerator, optionsDto);
 
             var methodGenerator = CompoundMethodGeneratorFactory.Get(mapCollectionInformationDto, codeAnalisysDependenciesDto, existingNamespaces);
+
+            return methodGenerator;
+        }
+
+        private ICompoundMethodGenerator GetMapForEnum(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
+        {
+            var sourceMembers = currentMethodInformationDto.SourceType.GetMembers().Where(x => x.Kind == SymbolKind.Field).ToList();
+            var targetMembers = currentMethodInformationDto.TargetType.GetMembers().Where(x => x.Kind == SymbolKind.Field).ToList();
+
+            var childrenMethodGenerators = new List<ICompoundMethodGenerator>();
+
+            var enumItemsToMap = new List<EnumItemToMapDto>();
+
+            foreach (var targetProperty in targetMembers)
+            {
+                var sourceProperty = FindCorrespondingPropertyInSymbols(targetProperty, sourceMembers);
+
+                var enumItemToMap = new EnumItemToMapDto(targetProperty, currentMethodInformationDto.FirstParameterName);
+
+                enumItemsToMap.Add(enumItemToMap);
+            }
+
+            var mapInformation = new MapEnumInformationDto(currentMethodInformationDto, enumItemsToMap, childrenMethodGenerators, optionsDto);
+
+            var methodGenerator = CompoundMethodGeneratorFactory.Get(mapInformation, codeAnalisysDependenciesDto, existingNamespaces);
 
             return methodGenerator;
         }
@@ -168,7 +217,14 @@ namespace MapThis.Services.MappingInformation
             return existingNamespacesList;
         }
 
-        private static IPropertySymbol FindCorrespondingPropertyInSourceMembers(IPropertySymbol targetProperty, IList<IPropertySymbol> sourceMembers)
+        private static IPropertySymbol FindCorrespondingPropertyInPropertySymbols(IPropertySymbol targetProperty, IList<IPropertySymbol> sourceMembers)
+        {
+            var sourceProperty = sourceMembers.FirstOrDefault(x => x.Name == targetProperty.Name);
+
+            return sourceProperty;
+        }
+
+        private static ISymbol FindCorrespondingPropertyInSymbols(ISymbol targetProperty, IList<ISymbol> sourceMembers)
         {
             var sourceProperty = sourceMembers.FirstOrDefault(x => x.Name == targetProperty.Name);
 

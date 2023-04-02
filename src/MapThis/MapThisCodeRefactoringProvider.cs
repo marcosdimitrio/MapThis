@@ -73,7 +73,7 @@ namespace MapThis
                 return;
             }
 
-            if (methodSymbol.ReturnType.IsSimpleType())
+            if (methodSymbol.ReturnType.IsSimpleType() && !methodSymbol.ReturnType.IsEnum())
             {
                 return;
             }

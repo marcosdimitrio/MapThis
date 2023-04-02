@@ -1,14 +1,14 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Refactorings.MappingGenerator.Dto;
-using MapThis.Services.CompoundGenerator.Interfaces;
+using MapThis.Services.MethodGenerator.Interfaces;
 using MapThis.Services.SingleMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MapThis.Services.CompoundGenerator
+namespace MapThis.Services.MethodGenerator
 {
     public class ListMapGenerator : ICompoundMethodGenerator
     {

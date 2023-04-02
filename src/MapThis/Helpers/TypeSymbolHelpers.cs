@@ -45,6 +45,18 @@ namespace MapThis.Helpers
             return typeSymbol.IsCollection() && typeSymbol.GetElementType().IsSimpleType();
         }
 
+        public static bool IsCollectionOfSimpleTypeExceptEnum(this ITypeSymbol typeSymbol)
+        {
+            if (!typeSymbol.IsCollection())
+            {
+                return false;
+            }
+
+            var elementType = typeSymbol.GetElementType();
+
+            return elementType.IsSimpleType() && !elementType.IsEnum();
+        }
+
         public static bool IsArray(this ITypeSymbol typeSymbol)
         {
             return typeSymbol.Kind == SymbolKind.ArrayType;
@@ -67,6 +79,11 @@ namespace MapThis.Helpers
                 (
                     typeSymbol.Kind == SymbolKind.ArrayType || typeSymbol.OriginalDefinition.AllInterfaces.Any(x => x.Name == "IEnumerable" && x.ToDisplayString() == "System.Collections.IEnumerable")
                 );
+        }
+
+        public static bool IsEnum(this ITypeSymbol typeSymbol)
+        {
+            return typeSymbol.IsSimpleType() && typeSymbol.TypeKind == TypeKind.Enum;
         }
 
         public static bool IsNullableSimpleType(this ITypeSymbol type)

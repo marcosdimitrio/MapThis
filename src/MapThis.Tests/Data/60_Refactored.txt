@@ -1,0 +1,24 @@
+using System.ComponentModel;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parents.EnumDestination Map(Parents.EnumSource item)
+        {
+            var newItem = item switch
+            {
+                Parents.EnumSource.Item1 => Parents.EnumDestination.Item1,
+                Parents.EnumSource.Item2 => Parents.EnumDestination.Item2,
+                _ => throw new InvalidEnumArgumentException($"Can't map from item \"{item}\" of enum {item.GetType().FullName} to destination enum {typeof(Parents.EnumDestination).FullName}."),
+            };
+
+            return newItem;
+        }
+    }
+}
+namespace MapThis.Tests.Parents
+{
+    public enum EnumSource { Item1, Item2 }
+    public enum EnumDestination { Item1, Item2 }
+}

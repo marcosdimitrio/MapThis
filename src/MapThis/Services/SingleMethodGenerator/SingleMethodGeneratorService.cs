@@ -16,11 +16,11 @@ namespace MapThis.Services.SingleMethodGenerator
     [Export(typeof(ISingleMethodGeneratorService))]
     public class SingleMethodGeneratorService : ISingleMethodGeneratorService
     {
-        public MethodDeclarationSyntax Generate(MapInformationDto mapInformation, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
+        public MethodDeclarationSyntax Generate(MapInformationDto mapInformation, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
         {
             var returnVariableName = GetUniqueVariableName("newItem", mapInformation.MethodInformation.OtherParametersInMethod);
 
-            var mappedObjectStatement = GetMappedObjectStatement(mapInformation, returnVariableName, codeAnalisysDependenciesDto, existingNamespaces);
+            var mappedObjectStatement = GetMappedObjectStatement(mapInformation, returnVariableName, codeAnalysisDependenciesDto, existingNamespaces);
 
             var nullCheckStatement = GetNullCheckStatementForClass(mapInformation);
 
@@ -34,8 +34,8 @@ namespace MapThis.Services.SingleMethodGenerator
             statements.Add(mappedObjectStatement);
             statements.Add(returnStatement);
 
-            var targetTypeSyntax = GetTypeSyntaxConsideringNamespaces(mapInformation.MethodInformation.TargetType, existingNamespaces, codeAnalisysDependenciesDto.SyntaxGenerator);
-            var sourceTypeSyntax = GetTypeSyntaxConsideringNamespaces(mapInformation.MethodInformation.SourceType, existingNamespaces, codeAnalisysDependenciesDto.SyntaxGenerator);
+            var targetTypeSyntax = GetTypeSyntaxConsideringNamespaces(mapInformation.MethodInformation.TargetType, existingNamespaces, codeAnalysisDependenciesDto.SyntaxGenerator);
+            var sourceTypeSyntax = GetTypeSyntaxConsideringNamespaces(mapInformation.MethodInformation.SourceType, existingNamespaces, codeAnalysisDependenciesDto.SyntaxGenerator);
 
             var methodDeclaration =
                 MethodDeclaration(
@@ -62,15 +62,15 @@ namespace MapThis.Services.SingleMethodGenerator
             return methodDeclaration;
         }
 
-        public MethodDeclarationSyntax Generate(MapCollectionInformationDto childMapCollectionInformation, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
+        public MethodDeclarationSyntax Generate(MapCollectionInformationDto childMapCollectionInformation, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
         {
-            var mapListStatement = GetMappedListBody(childMapCollectionInformation, codeAnalisysDependenciesDto, existingNamespaces);
+            var mapListStatement = GetMappedListBody(childMapCollectionInformation, codeAnalysisDependenciesDto, existingNamespaces);
 
             var sourceListTypeName = GetSourceTypeListNameAsInterface(childMapCollectionInformation.MethodInformation.SourceType);
 
-            var targetTypeSyntax = GetTypeSyntaxConsideringNamespaces(childMapCollectionInformation.MethodInformation.TargetType.GetElementType(), existingNamespaces, codeAnalisysDependenciesDto.SyntaxGenerator);
+            var targetTypeSyntax = GetTypeSyntaxConsideringNamespaces(childMapCollectionInformation.MethodInformation.TargetType.GetElementType(), existingNamespaces, codeAnalysisDependenciesDto.SyntaxGenerator);
 
-            var sourceListTypeSyntax = GetTypeSyntaxConsideringNamespaces(childMapCollectionInformation.MethodInformation.SourceType.GetElementType(), existingNamespaces, codeAnalisysDependenciesDto.SyntaxGenerator);
+            var sourceListTypeSyntax = GetTypeSyntaxConsideringNamespaces(childMapCollectionInformation.MethodInformation.SourceType.GetElementType(), existingNamespaces, codeAnalysisDependenciesDto.SyntaxGenerator);
 
             var methodDeclaration =
                 MethodDeclaration(
@@ -124,7 +124,7 @@ namespace MapThis.Services.SingleMethodGenerator
             return IdentifierName(typeSymbol.Name);
         }
 
-        private LocalDeclarationStatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto, string returnVariableName, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
+        private LocalDeclarationStatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto, string returnVariableName, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
         {
             var syntaxNodeOrTokenList = new List<SyntaxNodeOrToken>();
 
@@ -134,7 +134,7 @@ namespace MapThis.Services.SingleMethodGenerator
                 syntaxNodeOrTokenList.Add(Token(SyntaxKind.CommaToken));
             }
 
-            var targetTypeSyntax = GetTypeSyntaxConsideringNamespaces(mapInformationDto.MethodInformation.TargetType, existingNamespaces, codeAnalisysDependenciesDto.SyntaxGenerator);
+            var targetTypeSyntax = GetTypeSyntaxConsideringNamespaces(mapInformationDto.MethodInformation.TargetType, existingNamespaces, codeAnalysisDependenciesDto.SyntaxGenerator);
 
             var localDeclarationStatement =
                 LocalDeclarationStatement(
@@ -181,11 +181,11 @@ namespace MapThis.Services.SingleMethodGenerator
             return localDeclarationStatement;
         }
 
-        private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
+        private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
         {
             var destinationVariableName = GetUniqueVariableName("destination", mapCollectionInformationDto.MethodInformation.OtherParametersInMethod);
 
-            var targetListTypeSyntax = GetTypeSyntaxConsideringNamespaces(mapCollectionInformationDto.MethodInformation.TargetType.GetElementType(), existingNamespaces, codeAnalisysDependenciesDto.SyntaxGenerator);
+            var targetListTypeSyntax = GetTypeSyntaxConsideringNamespaces(mapCollectionInformationDto.MethodInformation.TargetType.GetElementType(), existingNamespaces, codeAnalysisDependenciesDto.SyntaxGenerator);
 
             var variableDeclaration =
                 LocalDeclarationStatement(
@@ -285,7 +285,7 @@ namespace MapThis.Services.SingleMethodGenerator
 
         private ArgumentSyntax GetForEachItemMapExpression(MapCollectionInformationDto mapCollectionInformationDto, string forEachVariableName)
         {
-            if (mapCollectionInformationDto.MethodInformation.SourceType.IsCollectionOfSimpleType())
+            if (mapCollectionInformationDto.MethodInformation.SourceType.IsCollectionOfSimpleTypeExceptEnum())
             {
                 return
                     Argument(
@@ -391,13 +391,23 @@ namespace MapThis.Services.SingleMethodGenerator
 
         private SyntaxNodeOrToken GetPropertyExpression(PropertyToMapDto propertyToMap)
         {
-            if (propertyToMap.Target.Type.IsSimpleType() || propertyToMap.Target.Type.IsNullableSimpleType() ||
+            if (IsSimpleTypeExceptEnum(propertyToMap.Target) ||
                 AreArraysOfTheSameSimpleType(propertyToMap.Target, propertyToMap.Source))
             {
                 return GetNewDirectConversion(propertyToMap.ParameterName, propertyToMap.Target.Name);
             }
 
             return GetConversionWithMap(propertyToMap.ParameterName, propertyToMap.Target.Name);
+        }
+
+        private static bool IsSimpleTypeExceptEnum(IPropertySymbol target)
+        {
+            if (target.Type.IsEnum())
+            {
+                return false;
+            }
+
+            return target.Type.IsSimpleType() || target.Type.IsNullableSimpleType();
         }
 
         private bool AreArraysOfTheSameSimpleType(IPropertySymbol target, IPropertySymbol source)

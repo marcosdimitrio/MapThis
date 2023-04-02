@@ -1,4 +1,4 @@
-﻿namespace MapThis.Tests
+namespace MapThis.Tests
 {
     public class Class1
     {
@@ -7,6 +7,6 @@
             throw new System.NotImplementedException();
         }
     }
-    public enum EnumSource { Item1, Item2 }
+    public enum EnumSource { Item1, ItemDifferent }
     public enum EnumDestination { Item1, Item2 }
 }

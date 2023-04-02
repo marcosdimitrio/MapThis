@@ -1,5 +1,5 @@
 ﻿using MapThis.Dto;
-using MapThis.Services.CompoundGenerator.Interfaces;
+using MapThis.Services.MethodGenerator.Interfaces;
 using System.Collections.Generic;
 
 namespace MapThis.Services.MethodGenerator.Factories.Interfaces
@@ -8,5 +8,6 @@ namespace MapThis.Services.MethodGenerator.Factories.Interfaces
     {
         ICompoundMethodGenerator Get(MapInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces);
         ICompoundMethodGenerator Get(MapCollectionInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces);
+        ICompoundMethodGenerator Get(MapEnumInformationDto dto, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces);
     }
 }

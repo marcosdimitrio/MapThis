@@ -1,12 +1,15 @@
-﻿namespace MapThis.Tests
+namespace MapThis.Tests
 {
     public class Class1
     {
-        public EnumDestination [|Map|](EnumSource item)
+        public Parents.EnumDestination [|Map|](Parents.EnumSource item)
         {
             throw new System.NotImplementedException();
         }
     }
+}
+namespace MapThis.Tests.Parents
+{
     public enum EnumSource { Item1, Item2 }
     public enum EnumDestination { Item1, Item2 }
 }
