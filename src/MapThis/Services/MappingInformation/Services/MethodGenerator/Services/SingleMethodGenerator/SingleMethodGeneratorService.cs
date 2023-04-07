@@ -1,6 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Services.SingleMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -11,7 +11,7 @@ using System.Composition;
 using System.Linq;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace MapThis.Services.SingleMethodGenerator
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator
 {
     [Export(typeof(ISingleMethodGeneratorService))]
     public class SingleMethodGeneratorService : ISingleMethodGeneratorService
@@ -77,7 +77,7 @@ namespace MapThis.Services.SingleMethodGenerator
                     GenericName(childMapCollectionInformation.MethodInformation.TargetType.Name)
                     .WithTypeArgumentList(
                         TypeArgumentList(
-                            SingletonSeparatedList<TypeSyntax>(
+                            SingletonSeparatedList(
                                 targetTypeSyntax
                             )
                         )
@@ -95,7 +95,7 @@ namespace MapThis.Services.SingleMethodGenerator
                                 GenericName(sourceListTypeName)
                                 .WithTypeArgumentList(
                                     TypeArgumentList(
-                                        SingletonSeparatedList<TypeSyntax>(
+                                        SingletonSeparatedList(
                                             sourceListTypeSyntax
                                         )
                                     )
@@ -208,7 +208,7 @@ namespace MapThis.Services.SingleMethodGenerator
                                             Identifier("List"))
                                         .WithTypeArgumentList(
                                             TypeArgumentList(
-                                                SingletonSeparatedList<TypeSyntax>(
+                                                SingletonSeparatedList(
                                                     targetListTypeSyntax)
                                                 )
                                             )

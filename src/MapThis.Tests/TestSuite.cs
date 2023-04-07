@@ -1,9 +1,9 @@
 using MapThis.Refactorings.MappingGenerator;
-using MapThis.Services.EnumMethodGenerator;
-using MapThis.Services.ExistingMethodsControl.Factories;
 using MapThis.Services.MappingInformation;
-using MapThis.Services.MethodGenerator.Factories;
-using MapThis.Services.SingleMethodGenerator;
+using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Factories;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator;
 using MapThis.Tests.Builder;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;

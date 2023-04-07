@@ -1,26 +1,26 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Refactorings.MappingGenerator.Dto;
-using MapThis.Services.EnumMethodGenerator.Interfaces;
-using MapThis.Services.MethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MapThis.Services.MethodGenerator
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator
 {
-    public class EnumMapGenerator : ICompoundMethodGenerator
+    public class ClassMapGenerator : ICompoundMethodGenerator
     {
-        private readonly MapEnumInformationDto MapEnumInformationDto;
-        private readonly IEnumMethodGenerator EnumMethodGenerator;
+        private readonly MapInformationDto MapInformationDto;
+        private readonly ISingleMethodGeneratorService SingleMethodGeneratorService;
         private readonly CodeAnalysisDependenciesDto CodeAnalisysDependenciesDto;
         private readonly IList<string> ExistingNamespaces;
 
-        public EnumMapGenerator(MapEnumInformationDto mapEnumInformationDto, IEnumMethodGenerator enumMethodGenerator, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
+        public ClassMapGenerator(MapInformationDto mapInformationDto, ISingleMethodGeneratorService singleMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
         {
-            MapEnumInformationDto = mapEnumInformationDto;
-            EnumMethodGenerator = enumMethodGenerator;
+            SingleMethodGeneratorService = singleMethodGeneratorService;
+            MapInformationDto = mapInformationDto;
             CodeAnalisysDependenciesDto = codeAnalisysDependenciesDto;
             ExistingNamespaces = existingNamespaces;
         }
@@ -39,10 +39,10 @@ namespace MapThis.Services.MethodGenerator
         private IList<MethodDeclarationSyntax> GenerateBlocks()
         {
             var destination = new List<MethodDeclarationSyntax>() {
-                EnumMethodGenerator.Generate(MapEnumInformationDto, CodeAnalisysDependenciesDto, ExistingNamespaces)
+                SingleMethodGeneratorService.Generate(MapInformationDto, CodeAnalisysDependenciesDto, ExistingNamespaces)
             };
 
-            foreach (var childMethodGenerator in MapEnumInformationDto.ChildrenMethodGenerators)
+            foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
             {
                 destination.AddRange(childMethodGenerator.Generate().Blocks);
             }
@@ -54,8 +54,8 @@ namespace MapThis.Services.MethodGenerator
         {
             var namespaces = new List<INamespaceSymbol>();
 
-            var sourceType = MapEnumInformationDto.MethodInformation.SourceType;
-            var targetType = MapEnumInformationDto.MethodInformation.TargetType;
+            var sourceType = MapInformationDto.MethodInformation.SourceType;
+            var targetType = MapInformationDto.MethodInformation.TargetType;
 
             var sourceNamespace = sourceType.ContainingNamespace;
             var targetNamespace = targetType.ContainingNamespace;
@@ -69,28 +69,24 @@ namespace MapThis.Services.MethodGenerator
                 namespaces.Add(targetNamespace);
             }
 
-            var namespaceStringList = namespaces
+            var namespacesString = namespaces
                 .Where(x => x != null && !x.IsGlobalNamespace)
                 .Select(x => x.ToDisplayString())
                 .ToList();
 
-            foreach (var childMethodGenerator in MapEnumInformationDto.ChildrenMethodGenerators)
+            foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
             {
-                namespaceStringList.AddRange(childMethodGenerator.Generate().Namespaces);
+                namespacesString.AddRange(childMethodGenerator.Generate().Namespaces);
             }
 
-            if (!ExistingNamespaces.Contains("System.ComponentModel"))
-            {
-                namespaceStringList.Add("System.ComponentModel");
-            }
-
-            namespaceStringList = namespaceStringList
+            namespacesString = namespacesString
                 .GroupBy(x => x)
                 .Select(x => x.Key)
                 .OrderBy(x => x)
                 .ToList();
 
-            return namespaceStringList;
+            return namespacesString;
         }
+
     }
 }

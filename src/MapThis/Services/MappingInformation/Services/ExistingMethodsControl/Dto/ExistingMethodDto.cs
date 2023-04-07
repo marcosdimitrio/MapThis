@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace MapThis.Services.ExistingMethodsControl.Dto
+namespace MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Dto
 {
     public class ExistingMethodDto
     {

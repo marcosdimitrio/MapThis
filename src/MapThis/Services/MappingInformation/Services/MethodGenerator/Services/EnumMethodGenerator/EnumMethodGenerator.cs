@@ -1,6 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Services.EnumMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -11,7 +11,7 @@ using System.Composition;
 using System.Linq;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace MapThis.Services.EnumMethodGenerator
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator
 {
     [Export(typeof(IEnumMethodGenerator))]
     public class EnumMethodGenerator : IEnumMethodGenerator
@@ -145,12 +145,12 @@ namespace MapThis.Services.EnumMethodGenerator
                             IdentifierName("InvalidEnumArgumentException"))
                         .WithArgumentList(
                             ArgumentList(
-                                SingletonSeparatedList<ArgumentSyntax>(
+                                SingletonSeparatedList(
                                     Argument(
                                         InterpolatedStringExpression(
                                             Token(SyntaxKind.InterpolatedStringStartToken))
                                         .WithContents(
-                                            List<InterpolatedStringContentSyntax>(
+                                            List(
                                                 new InterpolatedStringContentSyntax[]{
                                                     InterpolatedStringText()
                                                     .WithTextToken(

@@ -1,6 +1,6 @@
 ﻿using MapThis.Refactorings.MappingGenerator.Dto;
 
-namespace MapThis.Services.MethodGenerator.Interfaces
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces
 {
     public interface ICompoundMethodGenerator
     {

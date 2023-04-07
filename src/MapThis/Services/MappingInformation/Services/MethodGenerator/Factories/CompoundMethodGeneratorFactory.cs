@@ -1,12 +1,12 @@
 ﻿using MapThis.Dto;
-using MapThis.Services.EnumMethodGenerator.Interfaces;
-using MapThis.Services.MethodGenerator.Factories.Interfaces;
-using MapThis.Services.MethodGenerator.Interfaces;
-using MapThis.Services.SingleMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator.Interfaces;
 using System.Collections.Generic;
 using System.Composition;
 
-namespace MapThis.Services.MethodGenerator.Factories
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Factories
 {
     [Export(typeof(ICompoundMethodGeneratorFactory))]
     public class CompoundMethodGeneratorFactory : ICompoundMethodGeneratorFactory

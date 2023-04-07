@@ -1,5 +1,5 @@
 ﻿using MapThis.Dto;
-using MapThis.Services.MethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 

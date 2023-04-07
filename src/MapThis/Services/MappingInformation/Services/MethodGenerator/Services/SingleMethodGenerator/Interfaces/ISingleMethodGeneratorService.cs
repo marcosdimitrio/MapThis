@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 
-namespace MapThis.Services.SingleMethodGenerator.Interfaces
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator.Interfaces
 {
     public interface ISingleMethodGeneratorService
     {

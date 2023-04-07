@@ -1,11 +1,11 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Services.ExistingMethodsControl.Dto;
-using MapThis.Services.ExistingMethodsControl.Factories.Interfaces;
-using MapThis.Services.ExistingMethodsControl.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
-using MapThis.Services.MethodGenerator.Factories.Interfaces;
-using MapThis.Services.MethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Dto;
+using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Factories.Interfaces;
+using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

@@ -1,8 +1,8 @@
 ﻿using MapThis.Dto;
-using MapThis.Services.MethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 using System.Collections.Generic;
 
-namespace MapThis.Services.MethodGenerator.Factories.Interfaces
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Factories.Interfaces
 {
     public interface ICompoundMethodGeneratorFactory
     {
