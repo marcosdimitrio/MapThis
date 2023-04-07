@@ -1,8 +1,8 @@
-﻿using MapThis.Services.ExistingMethodsControl.Dto;
-using MapThis.Services.ExistingMethodsControl.Interfaces;
+﻿using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Dto;
+using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Interfaces;
 using System.Collections.Generic;
 
-namespace MapThis.Services.ExistingMethodsControl.Factories.Interfaces
+namespace MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Factories.Interfaces
 {
     public interface IExistingMethodControlFactory
     {
