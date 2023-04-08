@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace MapThis.Services.MappingInformation.Services.MethodGenerator
 {
-    public class ClassMapGenerator : ICompoundMethodGenerator
+    public class ClassMapGenerator : IMethodGenerator
     {
         private readonly MapInformationDto MapInformationDto;
         private readonly ISingleMethodGeneratorService SingleMethodGeneratorService;

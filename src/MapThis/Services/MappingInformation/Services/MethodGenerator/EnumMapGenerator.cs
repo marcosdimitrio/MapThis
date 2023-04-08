@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace MapThis.Services.MappingInformation.Services.MethodGenerator
 {
-    public class EnumMapGenerator : ICompoundMethodGenerator
+    public class EnumMapGenerator : IMethodGenerator
     {
         private readonly MapEnumInformationDto MapEnumInformationDto;
         private readonly IEnumMethodGenerator EnumMethodGenerator;

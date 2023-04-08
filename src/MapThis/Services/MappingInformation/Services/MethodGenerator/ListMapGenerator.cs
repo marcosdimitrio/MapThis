@@ -2,7 +2,7 @@
 using MapThis.Helpers;
 using MapThis.Refactorings.MappingGenerator.Dto;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
-using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -10,17 +10,17 @@ using System.Linq;
 
 namespace MapThis.Services.MappingInformation.Services.MethodGenerator
 {
-    public class ListMapGenerator : ICompoundMethodGenerator
+    public class ListMapGenerator : IMethodGenerator
     {
         private readonly MapCollectionInformationDto MapCollectionInformationDto;
-        private readonly ISingleMethodGeneratorService SingleMethodGeneratorService;
+        private readonly ICollectionMethodGeneratorService CollectionMethodGeneratorService;
         private readonly CodeAnalysisDependenciesDto CodeAnalisysDependenciesDto;
         private readonly IList<string> ExistingNamespaces;
 
-        public ListMapGenerator(MapCollectionInformationDto mapCollectionInformationDto, ISingleMethodGeneratorService singleMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
+        public ListMapGenerator(MapCollectionInformationDto mapCollectionInformationDto, ICollectionMethodGeneratorService collectionMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
         {
             MapCollectionInformationDto = mapCollectionInformationDto;
-            SingleMethodGeneratorService = singleMethodGeneratorService;
+            CollectionMethodGeneratorService = collectionMethodGeneratorService;
             CodeAnalisysDependenciesDto = codeAnalisysDependenciesDto;
             ExistingNamespaces = existingNamespaces;
         }
@@ -40,7 +40,7 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
         {
             var destination = new List<MethodDeclarationSyntax>()
             {
-                SingleMethodGeneratorService.Generate(MapCollectionInformationDto, CodeAnalisysDependenciesDto, ExistingNamespaces)
+                CollectionMethodGeneratorService.Generate(MapCollectionInformationDto, CodeAnalisysDependenciesDto, ExistingNamespaces)
             };
 
             if (MapCollectionInformationDto.ChildMethodGenerator != null)

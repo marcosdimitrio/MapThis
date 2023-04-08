@@ -1,7 +1,10 @@
+using MapThis.CommonServices.IdentifierNames;
+using MapThis.CommonServices.UniqueVariableNames;
 using MapThis.Refactorings.MappingGenerator;
 using MapThis.Services.MappingInformation;
 using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Factories;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator;
 using MapThis.Tests.Builder;
@@ -115,9 +118,12 @@ namespace MapThis.Tests
 
         protected override CodeRefactoringProvider CreateProvider()
         {
-            var singleMethodGeneratorService = new SingleMethodGeneratorService();
+            var identifierNameService = new IdentifierNameService();
+            var uniqueVariableNameGenerator = new UniqueVariableNameGenerator();
+            var singleMethodGeneratorService = new SingleMethodGeneratorService(identifierNameService, uniqueVariableNameGenerator);
+            var collectionMethodGeneratorService = new CollectionMethodGeneratorService(identifierNameService, uniqueVariableNameGenerator);
             var enumMethodGenerator = new EnumMethodGenerator();
-            var compoundMethodGeneratorFactory = new CompoundMethodGeneratorFactory(singleMethodGeneratorService, enumMethodGenerator);
+            var compoundMethodGeneratorFactory = new MethodGeneratorFactory(singleMethodGeneratorService, collectionMethodGeneratorService, enumMethodGenerator);
             var existingMethodControlFactory = new ExistingMethodControlFactory();
             var mappingInformationService = new MappingInformationService(compoundMethodGeneratorFactory, existingMethodControlFactory);
             var mappingGeneratorService = new MappingGeneratorService(mappingInformationService);

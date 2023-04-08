@@ -7,6 +7,5 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
     public interface ISingleMethodGeneratorService
     {
         MethodDeclarationSyntax Generate(MapInformationDto mapInformation, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces);
-        MethodDeclarationSyntax Generate(MapCollectionInformationDto childMapCollectionInformation, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces);
     }
 }

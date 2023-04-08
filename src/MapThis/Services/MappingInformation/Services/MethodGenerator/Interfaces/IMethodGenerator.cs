@@ -2,7 +2,7 @@
 
 namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces
 {
-    public interface ICompoundMethodGenerator
+    public interface IMethodGenerator
     {
         GeneratedMethodsDto Generate();
     }

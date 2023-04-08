@@ -7,10 +7,10 @@ namespace MapThis.Dto
     {
         public MethodInformationDto MethodInformation { get; }
         public IList<PropertyToMapDto> PropertiesToMap { get; }
-        public IList<ICompoundMethodGenerator> ChildrenMethodGenerators { get; }
+        public IList<IMethodGenerator> ChildrenMethodGenerators { get; }
         public OptionsDto Options { get; }
 
-        public MapInformationDto(MethodInformationDto methodInformation, IList<PropertyToMapDto> propertiesToMap, IList<ICompoundMethodGenerator> childrenMethodGenerators, OptionsDto options)
+        public MapInformationDto(MethodInformationDto methodInformation, IList<PropertyToMapDto> propertiesToMap, IList<IMethodGenerator> childrenMethodGenerators, OptionsDto options)
         {
             MethodInformation = methodInformation;
             PropertiesToMap = propertiesToMap;

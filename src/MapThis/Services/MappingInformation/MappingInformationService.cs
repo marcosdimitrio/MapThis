@@ -19,17 +19,17 @@ namespace MapThis.Services.MappingInformation
     [Export(typeof(IMappingInformationService))]
     public class MappingInformationService : IMappingInformationService
     {
-        private readonly ICompoundMethodGeneratorFactory CompoundMethodGeneratorFactory;
+        private readonly IMethodGeneratorFactory CompoundMethodGeneratorFactory;
         private readonly IExistingMethodControlFactory ExistingMethodControlFactory;
 
         [ImportingConstructor]
-        public MappingInformationService(ICompoundMethodGeneratorFactory compoundMethodGeneratorFactory, IExistingMethodControlFactory existingMethodControlFactory)
+        public MappingInformationService(IMethodGeneratorFactory compoundMethodGeneratorFactory, IExistingMethodControlFactory existingMethodControlFactory)
         {
             CompoundMethodGeneratorFactory = compoundMethodGeneratorFactory;
             ExistingMethodControlFactory = existingMethodControlFactory;
         }
 
-        public ICompoundMethodGenerator GetCompoundMethodsGenerator(OptionsDto optionsDto, MethodDeclarationSyntax originalMethodSyntax, IMethodSymbol originalMethodSymbol, SyntaxNode root, CompilationUnitSyntax compilationUnitSyntax, SemanticModel semanticModel, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
+        public IMethodGenerator GetCompoundMethodsGenerator(OptionsDto optionsDto, MethodDeclarationSyntax originalMethodSyntax, IMethodSymbol originalMethodSymbol, SyntaxNode root, CompilationUnitSyntax compilationUnitSyntax, SemanticModel semanticModel, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto)
         {
             var accessModifiers = originalMethodSyntax.Modifiers.ToList();
 
@@ -69,9 +69,9 @@ namespace MapThis.Services.MappingInformation
             return GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, currentMethodInformationDto, existingMethodsControlService, existingNamespacesList);
         }
 
-        private ICompoundMethodGenerator GetMapForSimpleType(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
+        private IMethodGenerator GetMapForSimpleType(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
         {
-            var childrenMethodGenerators = new List<ICompoundMethodGenerator>();
+            var childrenMethodGenerators = new List<IMethodGenerator>();
 
             var propertiesToMap = new List<PropertyToMapDto>();
 
@@ -134,12 +134,12 @@ namespace MapThis.Services.MappingInformation
             return methodGenerator;
         }
 
-        private ICompoundMethodGenerator GetMapForCollection(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
+        private IMethodGenerator GetMapForCollection(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
         {
             var sourceElementType = (INamedTypeSymbol)currentMethodInformationDto.SourceType.GetElementType();
             var targetElementType = (INamedTypeSymbol)currentMethodInformationDto.TargetType.GetElementType();
 
-            ICompoundMethodGenerator childMethodGenerator = null;
+            IMethodGenerator childMethodGenerator = null;
 
             if (!currentMethodInformationDto.SourceType.IsCollectionOfSimpleType())
             {
@@ -167,12 +167,12 @@ namespace MapThis.Services.MappingInformation
             return methodGenerator;
         }
 
-        private ICompoundMethodGenerator GetMapForEnum(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
+        private IMethodGenerator GetMapForEnum(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
         {
             var sourceMembers = currentMethodInformationDto.SourceType.GetMembers().Where(x => x.Kind == SymbolKind.Field).ToList();
             var targetMembers = currentMethodInformationDto.TargetType.GetMembers().Where(x => x.Kind == SymbolKind.Field).ToList();
 
-            var childrenMethodGenerators = new List<ICompoundMethodGenerator>();
+            var childrenMethodGenerators = new List<IMethodGenerator>();
 
             var enumItemsToMap = new List<EnumItemToMapDto>();
 
