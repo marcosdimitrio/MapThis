@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Interfaces
+namespace MapThis.CommonServices.ExistingMethodsControl.Interfaces
 {
     public interface IExistingMethodsControlService
     {

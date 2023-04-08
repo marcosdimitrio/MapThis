@@ -1,8 +1,8 @@
+using MapThis.CommonServices.ExistingMethodsControl.Factories;
 using MapThis.CommonServices.IdentifierNames;
 using MapThis.CommonServices.UniqueVariableNames;
 using MapThis.Refactorings.MappingGenerator;
 using MapThis.Services.MappingInformation;
-using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Factories;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator;
@@ -124,7 +124,7 @@ namespace MapThis.Tests
             var collectionMethodGeneratorService = new CollectionMethodGeneratorService(identifierNameService, uniqueVariableNameGenerator);
             var enumMethodGenerator = new EnumMethodGenerator();
             var compoundMethodGeneratorFactory = new MethodGeneratorFactory(singleMethodGeneratorService, collectionMethodGeneratorService, enumMethodGenerator);
-            var existingMethodControlFactory = new ExistingMethodControlFactory();
+            var existingMethodControlFactory = new ExistingMethodControlServiceFactory();
             var mappingInformationService = new MappingInformationService(compoundMethodGeneratorFactory, existingMethodControlFactory);
             var mappingGeneratorService = new MappingGeneratorService(mappingInformationService);
 

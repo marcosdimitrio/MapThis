@@ -69,23 +69,23 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
                 namespaces.Add(targetNamespace);
             }
 
-            var namespacesString = namespaces
+            var namespaceStringList = namespaces
                 .Where(x => x != null && !x.IsGlobalNamespace)
                 .Select(x => x.ToDisplayString())
                 .ToList();
 
             foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
             {
-                namespacesString.AddRange(childMethodGenerator.Generate().Namespaces);
+                namespaceStringList.AddRange(childMethodGenerator.Generate().Namespaces);
             }
 
-            namespacesString = namespacesString
+            namespaceStringList = namespaceStringList
                 .GroupBy(x => x)
                 .Select(x => x.Key)
                 .OrderBy(x => x)
                 .ToList();
 
-            return namespacesString;
+            return namespaceStringList;
         }
 
     }

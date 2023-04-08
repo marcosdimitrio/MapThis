@@ -1,10 +1,10 @@
-﻿using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Dto;
-using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Interfaces;
+﻿using MapThis.CommonServices.ExistingMethodsControl.Dto;
+using MapThis.CommonServices.ExistingMethodsControl.Interfaces;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MapThis.Services.MappingInformation.Services.ExistingMethodsControl
+namespace MapThis.CommonServices.ExistingMethodsControl
 {
     public class ExistingMethodsControlService : IExistingMethodsControlService
     {

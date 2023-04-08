@@ -79,6 +79,7 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
                 namespaceStringList.AddRange(childMethodGenerator.Generate().Namespaces);
             }
 
+            // Necessary for InvalidEnumArgumentException which is thrown in the switch case's default option
             if (!ExistingNamespaces.Contains("System.ComponentModel"))
             {
                 namespaceStringList.Add("System.ComponentModel");

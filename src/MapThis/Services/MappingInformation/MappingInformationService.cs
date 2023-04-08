@@ -1,9 +1,9 @@
-﻿using MapThis.Dto;
+﻿using MapThis.CommonServices.ExistingMethodsControl.Dto;
+using MapThis.CommonServices.ExistingMethodsControl.Factories.Interfaces;
+using MapThis.CommonServices.ExistingMethodsControl.Interfaces;
+using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Services.MappingInformation.Interfaces;
-using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Dto;
-using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Factories.Interfaces;
-using MapThis.Services.MappingInformation.Services.ExistingMethodsControl.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
@@ -20,10 +20,10 @@ namespace MapThis.Services.MappingInformation
     public class MappingInformationService : IMappingInformationService
     {
         private readonly IMethodGeneratorFactory CompoundMethodGeneratorFactory;
-        private readonly IExistingMethodControlFactory ExistingMethodControlFactory;
+        private readonly IExistingMethodControlServiceFactory ExistingMethodControlFactory;
 
         [ImportingConstructor]
-        public MappingInformationService(IMethodGeneratorFactory compoundMethodGeneratorFactory, IExistingMethodControlFactory existingMethodControlFactory)
+        public MappingInformationService(IMethodGeneratorFactory compoundMethodGeneratorFactory, IExistingMethodControlServiceFactory existingMethodControlFactory)
         {
             CompoundMethodGeneratorFactory = compoundMethodGeneratorFactory;
             ExistingMethodControlFactory = existingMethodControlFactory;
@@ -105,8 +105,7 @@ namespace MapThis.Services.MappingInformation
                         childrenMethodGenerators.Add(childMethodGenerator);
                     }
                 }
-
-                if (targetNamedType.IsClass() && sourceNamedType.IsClass())
+                else if (targetNamedType.IsClass() && sourceNamedType.IsClass())
                 {
                     if (existingMethodsControlService.TryAddMethod(sourceNamedType, targetNamedType))
                     {
@@ -115,8 +114,7 @@ namespace MapThis.Services.MappingInformation
                         childrenMethodGenerators.Add(childMethodGenerator);
                     }
                 }
-
-                if (targetNamedType.IsEnum() && sourceNamedType.IsEnum())
+                else if (targetNamedType.IsEnum() && sourceNamedType.IsEnum())
                 {
                     if (existingMethodsControlService.TryAddMethod(sourceNamedType, targetNamedType))
                     {
@@ -141,11 +139,12 @@ namespace MapThis.Services.MappingInformation
 
             IMethodGenerator childMethodGenerator = null;
 
+            var privateAccessModifiers = GetNewMethodAccessModifiers(currentMethodInformationDto.AccessModifiers);
+
             if (!currentMethodInformationDto.SourceType.IsCollectionOfSimpleType())
             {
                 if (existingMethodsControlService.TryAddMethod(sourceElementType, targetElementType))
                 {
-                    var privateAccessModifiers = GetNewMethodAccessModifiers(currentMethodInformationDto.AccessModifiers);
                     var childMethodInformationDto = new MethodInformationDto(privateAccessModifiers, sourceElementType, targetElementType, "item", new List<IParameterSymbol>());
                     childMethodGenerator = GetMapForSimpleType(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService, existingNamespaces);
                 }
@@ -154,7 +153,6 @@ namespace MapThis.Services.MappingInformation
             {
                 if (existingMethodsControlService.TryAddMethod(sourceElementType, targetElementType))
                 {
-                    var privateAccessModifiers = GetNewMethodAccessModifiers(currentMethodInformationDto.AccessModifiers);
                     var childMethodInformationDto = new MethodInformationDto(privateAccessModifiers, sourceElementType, targetElementType, "item", new List<IParameterSymbol>());
                     childMethodGenerator = GetMapForEnum(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService, existingNamespaces);
                 }
