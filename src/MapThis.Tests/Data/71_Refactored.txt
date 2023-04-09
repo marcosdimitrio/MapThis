@@ -1,0 +1,61 @@
+﻿using System.ComponentModel;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                Child = Map(item.Child),
+            };
+
+            return newItem;
+        }
+
+        private Child Map(ChildDto item)
+        {
+            var newItem = new Child()
+            {
+                Id = item.Id,
+                TheEnum = Map(item.TheEnum),
+                AnotherEnum = Map(item.AnotherEnum),
+            };
+
+            return newItem;
+        }
+
+        private TheEnum Map(TheEnumDto item)
+        {
+            var newItem = item switch
+            {
+                TheEnumDto.Item1 => TheEnum.Item1,
+                TheEnumDto.Item2 => TheEnum.Item2,
+                _ => throw new InvalidEnumArgumentException($"Can't map from item \"{item}\" of enum {item.GetType().FullName} to destination enum {typeof(TheEnum).FullName}."),
+            };
+
+            return newItem;
+        }
+
+        private AnotherEnum Map(AnotherEnumDto item)
+        {
+            var newItem = item switch
+            {
+                AnotherEnumDto.Item1 => AnotherEnum.Item1,
+                AnotherEnumDto.Item2 => AnotherEnum.Item2,
+                _ => throw new InvalidEnumArgumentException($"Can't map from item \"{item}\" of enum {item.GetType().FullName} to destination enum {typeof(AnotherEnum).FullName}."),
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public Child Child { get; set; } }
+    public class ParentDto { public ChildDto Child { get; set; } }
+    public class Child { public int Id { get; set; } public TheEnum TheEnum { get; set; } public AnotherEnum AnotherEnum { get; set; } }
+    public class ChildDto { public int Id { get; set; } public TheEnumDto TheEnum { get; set; } public AnotherEnumDto AnotherEnum { get; set; } }
+    public enum TheEnum { Item1, Item2 }
+    public enum TheEnumDto { Item1, Item2 }
+    public enum AnotherEnum { Item1, Item2 }
+    public enum AnotherEnumDto { Item1, Item2 }
+}

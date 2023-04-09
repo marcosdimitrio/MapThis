@@ -1,0 +1,20 @@
+using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent [|Map|](ParentDto item)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+    public class Parent { public Child Id { get; set; } }
+    public class ParentDto { public ChildDto Id { get; set; } }
+    public class Child { public int Id { get; set; } public IList<GrandChild1> GrandChildren1 { get; set; } public IList<GrandChild2> GrandChildren2 { get; set; } }
+    public class ChildDto { public int Id { get; set; } public IList<GrandChild1Dto> GrandChildren1 { get; set; } public IList<GrandChild2Dto> GrandChildren2 { get; set; } }
+    public class GrandChild1 { public int Id { get; set; } }
+    public class GrandChild1Dto { public int Id { get; set; } }
+    public class GrandChild2 { public int Id { get; set; } }
+    public class GrandChild2Dto { public int Id { get; set; } }
+}

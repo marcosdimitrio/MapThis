@@ -1,7 +1,7 @@
 using MapThis.CommonServices.ExistingMethodsControl.Factories;
 using MapThis.CommonServices.IdentifierNames;
 using MapThis.CommonServices.UniqueVariableNames;
-using MapThis.Refactorings.MappingGenerator;
+using MapThis.Refactorings.MappingRefactors;
 using MapThis.Services.MappingInformation;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator;
@@ -88,6 +88,13 @@ namespace MapThis.Tests
             yield return new object[] { "64 Should stop mapping when enum list already exists", true, 0, GetData(Resources._64_Before, Resources._64_Refactored) };
             yield return new object[] { "65 Should stop mapping when enum mapping already exist when mapping from a list", true, 0, GetData(Resources._65_Before, Resources._65_Refactored) };
             yield return new object[] { "66 Should stop mapping when enum mapping already exist when mapping from a class", true, 0, GetData(Resources._66_Before, Resources._66_Refactored) };
+            yield return new object[] { "67 Should map a class when it has many simple type properties", true, 0, GetData(Resources._67_Before, Resources._67_Refactored) };
+            yield return new object[] { "68 Should map a class when the child class has many simple type properties", true, 0, GetData(Resources._68_Before, Resources._68_Refactored) };
+            yield return new object[] { "69 Should map a class when it has two child classes", true, 0, GetData(Resources._69_Before, Resources._69_Refactored) };
+            yield return new object[] { "70 Should map a class when it has many enum properties", true, 0, GetData(Resources._70_Before, Resources._70_Refactored) };
+            yield return new object[] { "71 Should map a class when the child class has many enum properties", true, 0, GetData(Resources._71_Before, Resources._71_Refactored) };
+            yield return new object[] { "72 Should map a class when it has many list properties", true, 0, GetData(Resources._72_Before, Resources._72_Refactored) };
+            yield return new object[] { "73 Should map a class when the child class has many list properties", true, 0, GetData(Resources._73_Before, Resources._73_Refactored) };
         }
 
         /// <summary>
@@ -126,7 +133,7 @@ namespace MapThis.Tests
             var compoundMethodGeneratorFactory = new MethodGeneratorFactory(singleMethodGeneratorService, collectionMethodGeneratorService, enumMethodGenerator);
             var existingMethodControlFactory = new ExistingMethodControlServiceFactory();
             var mappingInformationService = new MappingInformationService(compoundMethodGeneratorFactory, existingMethodControlFactory);
-            var mappingGeneratorService = new MappingGeneratorService(mappingInformationService);
+            var mappingGeneratorService = new MappingRefactorService(mappingInformationService);
 
             return new MapThisCodeRefactoringProvider(mappingGeneratorService);
         }

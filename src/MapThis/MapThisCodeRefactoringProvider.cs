@@ -1,6 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Refactorings.MappingGenerator.Interfaces;
+using MapThis.Refactorings.MappingRefactors.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -15,12 +15,12 @@ namespace MapThis
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(MapThisCodeRefactoringProvider)), Shared]
     public class MapThisCodeRefactoringProvider : CodeRefactoringProvider
     {
-        private readonly IMappingGeneratorService MappingGeneratorService;
+        private readonly IMappingRefactorService MappingRefactorService;
 
         [ImportingConstructor]
-        public MapThisCodeRefactoringProvider(IMappingGeneratorService mappingGeneratorService)
+        public MapThisCodeRefactoringProvider(IMappingRefactorService mappingRefactorService)
         {
-            MappingGeneratorService = mappingGeneratorService;
+            MappingRefactorService = mappingRefactorService;
         }
 
         public sealed override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
@@ -101,8 +101,8 @@ namespace MapThis
             var options1 = new OptionsDto() { NullChecking = false };
             var options2 = new OptionsDto() { NullChecking = true };
 
-            var action1 = CodeAction.Create("Map this", c => MappingGeneratorService.ReplaceAsync(options1, context, methodDeclaration, c));
-            var action2 = CodeAction.Create("Map this with null check", c => MappingGeneratorService.ReplaceAsync(options2, context, methodDeclaration, c));
+            var action1 = CodeAction.Create("Map this", c => MappingRefactorService.ReplaceAsync(options1, context, methodDeclaration, c));
+            var action2 = CodeAction.Create("Map this with null check", c => MappingRefactorService.ReplaceAsync(options2, context, methodDeclaration, c));
 
             context.RegisterRefactoring(action1);
             context.RegisterRefactoring(action2);

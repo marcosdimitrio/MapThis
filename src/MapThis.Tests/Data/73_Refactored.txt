@@ -1,0 +1,81 @@
+using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                Id = Map(item.Id),
+            };
+
+            return newItem;
+        }
+
+        private Child Map(ChildDto item)
+        {
+            var newItem = new Child()
+            {
+                Id = item.Id,
+                GrandChildren1 = Map(item.GrandChildren1),
+                GrandChildren2 = Map(item.GrandChildren2),
+            };
+
+            return newItem;
+        }
+
+        private IList<GrandChild1> Map(IList<GrandChild1Dto> source)
+        {
+            var destination = new List<GrandChild1>();
+
+            foreach (var item in source)
+            {
+                destination.Add(Map(item));
+            }
+
+            return destination;
+        }
+
+        private GrandChild1 Map(GrandChild1Dto item)
+        {
+            var newItem = new GrandChild1()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
+        }
+
+        private IList<GrandChild2> Map(IList<GrandChild2Dto> source)
+        {
+            var destination = new List<GrandChild2>();
+
+            foreach (var item in source)
+            {
+                destination.Add(Map(item));
+            }
+
+            return destination;
+        }
+
+        private GrandChild2 Map(GrandChild2Dto item)
+        {
+            var newItem = new GrandChild2()
+            {
+                Id = item.Id,
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public Child Id { get; set; } }
+    public class ParentDto { public ChildDto Id { get; set; } }
+    public class Child { public int Id { get; set; } public IList<GrandChild1> GrandChildren1 { get; set; } public IList<GrandChild2> GrandChildren2 { get; set; } }
+    public class ChildDto { public int Id { get; set; } public IList<GrandChild1Dto> GrandChildren1 { get; set; } public IList<GrandChild2Dto> GrandChildren2 { get; set; } }
+    public class GrandChild1 { public int Id { get; set; } }
+    public class GrandChild1Dto { public int Id { get; set; } }
+    public class GrandChild2 { public int Id { get; set; } }
+    public class GrandChild2Dto { public int Id { get; set; } }
+}

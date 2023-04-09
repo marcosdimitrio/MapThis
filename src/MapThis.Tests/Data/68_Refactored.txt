@@ -1,0 +1,31 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                Child = Map(item.Child),
+            };
+
+            return newItem;
+        }
+
+        private Child Map(ChildDto item)
+        {
+            var newItem = new Child()
+            {
+                Id = item.Id,
+                Prop1 = item.Prop1,
+                Prop2 = item.Prop2,
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public Child Child { get; set; } }
+    public class ParentDto { public ChildDto Child { get; set; } }
+    public class Child { public int Id { get; set; } public int Prop1 { get; set; } public int Prop2 { get; set; } }
+    public class ChildDto { public int Id { get; set; } public int Prop1 { get; set; } public int Prop2 { get; set; } }
+}

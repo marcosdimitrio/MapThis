@@ -1,5 +1,4 @@
-﻿using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MapThis.Dto
 {
@@ -7,14 +6,12 @@ namespace MapThis.Dto
     {
         public MethodInformationDto MethodInformation { get; }
         public IList<EnumItemToMapDto> EnumsItemsToMap { get; }
-        public IList<IMethodGenerator> ChildrenMethodGenerators { get; }
         public OptionsDto Options { get; }
 
-        public MapEnumInformationDto(MethodInformationDto methodInformation, IList<EnumItemToMapDto> enumItemsToMap, IList<IMethodGenerator> childrenMethodGenerators, OptionsDto options)
+        public MapEnumInformationDto(MethodInformationDto methodInformation, IList<EnumItemToMapDto> enumItemsToMap, OptionsDto options)
         {
             MethodInformation = methodInformation;
             EnumsItemsToMap = enumItemsToMap;
-            ChildrenMethodGenerators = childrenMethodGenerators;
             Options = options;
         }
     }

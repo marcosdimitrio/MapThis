@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Helpers taken from https://github.com/cezarypiatek/MappingGenerator
+// Helpers taken from https://github.com/cezarypiatek/MappingRefactors
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Refactorings.MappingGenerator.Dto;
+using MapThis.Refactorings.MappingRefactors.Dto;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;

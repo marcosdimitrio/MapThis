@@ -1,0 +1,18 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent [|Map|](ParentDto item)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+    public class Parent { public Child Child { get; set; } }
+    public class ParentDto { public ChildDto Child { get; set; } }
+    public class Child { public int Id { get; set; } public TheEnum TheEnum { get; set; } public AnotherEnum AnotherEnum { get; set; } }
+    public class ChildDto { public int Id { get; set; } public TheEnumDto TheEnum { get; set; } public AnotherEnumDto AnotherEnum { get; set; } }
+    public enum TheEnum { Item1, Item2 }
+    public enum TheEnumDto { Item1, Item2 }
+    public enum AnotherEnum { Item1, Item2 }
+    public enum AnotherEnumDto { Item1, Item2 }
+}

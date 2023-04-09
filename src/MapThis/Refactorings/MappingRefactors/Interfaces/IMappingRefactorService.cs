@@ -5,9 +5,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MapThis.Refactorings.MappingGenerator.Interfaces
+namespace MapThis.Refactorings.MappingRefactors.Interfaces
 {
-    public interface IMappingGeneratorService
+    public interface IMappingRefactorService
     {
         Task<Document> ReplaceAsync(OptionsDto optionsDto, CodeRefactoringContext context, MethodDeclarationSyntax methodSyntax, CancellationToken cancellationToken);
     }

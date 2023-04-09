@@ -1,4 +1,4 @@
-﻿using MapThis.Refactorings.MappingGenerator.Dto;
+﻿using MapThis.Refactorings.MappingRefactors.Dto;
 
 namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces
 {

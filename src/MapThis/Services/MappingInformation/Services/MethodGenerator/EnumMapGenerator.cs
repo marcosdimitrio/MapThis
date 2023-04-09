@@ -1,6 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Refactorings.MappingGenerator.Dto;
+using MapThis.Refactorings.MappingRefactors.Dto;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
@@ -42,11 +42,6 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
                 EnumMethodGenerator.Generate(MapEnumInformationDto, CodeAnalisysDependenciesDto, ExistingNamespaces)
             };
 
-            foreach (var childMethodGenerator in MapEnumInformationDto.ChildrenMethodGenerators)
-            {
-                destination.AddRange(childMethodGenerator.Generate().Blocks);
-            }
-
             return destination;
         }
 
@@ -73,11 +68,6 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
                 .Where(x => x != null && !x.IsGlobalNamespace)
                 .Select(x => x.ToDisplayString())
                 .ToList();
-
-            foreach (var childMethodGenerator in MapEnumInformationDto.ChildrenMethodGenerators)
-            {
-                namespaceStringList.AddRange(childMethodGenerator.Generate().Namespaces);
-            }
 
             // Necessary for InvalidEnumArgumentException which is thrown in the switch case's default option
             if (!ExistingNamespaces.Contains("System.ComponentModel"))

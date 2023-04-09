@@ -1,5 +1,5 @@
 ﻿using MapThis.Dto;
-using MapThis.Refactorings.MappingGenerator.Interfaces;
+using MapThis.Refactorings.MappingRefactors.Interfaces;
 using MapThis.Services.MappingInformation.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -14,15 +14,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace MapThis.Refactorings.MappingGenerator
+namespace MapThis.Refactorings.MappingRefactors
 {
-    [Export(typeof(IMappingGeneratorService))]
-    public class MappingGeneratorService : IMappingGeneratorService
+    [Export(typeof(IMappingRefactorService))]
+    public class MappingRefactorService : IMappingRefactorService
     {
         private readonly IMappingInformationService MappingInformationService;
 
         [ImportingConstructor]
-        public MappingGeneratorService(IMappingInformationService mappingInformationService)
+        public MappingRefactorService(IMappingInformationService mappingInformationService)
         {
             MappingInformationService = mappingInformationService;
         }
