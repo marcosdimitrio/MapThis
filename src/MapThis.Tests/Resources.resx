@@ -526,4 +526,10 @@
   <data name="_73_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\73_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="_74_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\74_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_74_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>data\74_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

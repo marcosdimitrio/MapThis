@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MapThis.CommonServices.ExistingMethodsControl.Factories.Interfaces
 {
-    public interface IExistingMethodControlServiceFactory
+    public interface IExistingMethodsControlServiceFactory
     {
         IExistingMethodsControlService Create(IList<ExistingMethodDto> existingMethodList);
     }

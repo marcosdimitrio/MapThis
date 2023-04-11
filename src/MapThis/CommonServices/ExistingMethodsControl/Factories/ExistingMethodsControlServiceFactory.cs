@@ -6,8 +6,8 @@ using System.Composition;
 
 namespace MapThis.CommonServices.ExistingMethodsControl.Factories
 {
-    [Export(typeof(IExistingMethodControlServiceFactory))]
-    public class ExistingMethodControlServiceFactory : IExistingMethodControlServiceFactory
+    [Export(typeof(IExistingMethodsControlServiceFactory))]
+    public class ExistingMethodsControlServiceFactory : IExistingMethodsControlServiceFactory
     {
         public IExistingMethodsControlService Create(IList<ExistingMethodDto> existingMethodList)
         {

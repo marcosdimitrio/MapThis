@@ -1,8 +1,10 @@
+using MapThis.CommonServices.AccessModifierIdentifiers;
 using MapThis.CommonServices.ExistingMethodsControl.Factories;
 using MapThis.CommonServices.IdentifierNames;
 using MapThis.CommonServices.UniqueVariableNames;
 using MapThis.Refactorings.MappingRefactors;
 using MapThis.Services.MappingInformation;
+using MapThis.Services.MappingInformation.MethodConstructors;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator;
@@ -95,6 +97,7 @@ namespace MapThis.Tests
             yield return new object[] { "71 Should map a class when the child class has many enum properties", true, 0, GetData(Resources._71_Before, Resources._71_Refactored) };
             yield return new object[] { "72 Should map a class when it has many list properties", true, 0, GetData(Resources._72_Before, Resources._72_Refactored) };
             yield return new object[] { "73 Should map a class when the child class has many list properties", true, 0, GetData(Resources._73_Before, Resources._73_Refactored) };
+            yield return new object[] { "74 Should not map a child class when it is an interface", true, 0, GetData(Resources._74_Before, Resources._74_Refactored) };
         }
 
         /// <summary>
@@ -130,9 +133,11 @@ namespace MapThis.Tests
             var singleMethodGeneratorService = new SingleMethodGeneratorService(identifierNameService, uniqueVariableNameGenerator);
             var collectionMethodGeneratorService = new CollectionMethodGeneratorService(identifierNameService, uniqueVariableNameGenerator);
             var enumMethodGenerator = new EnumMethodGenerator();
-            var compoundMethodGeneratorFactory = new MethodGeneratorFactory(singleMethodGeneratorService, collectionMethodGeneratorService, enumMethodGenerator);
-            var existingMethodControlFactory = new ExistingMethodControlServiceFactory();
-            var mappingInformationService = new MappingInformationService(compoundMethodGeneratorFactory, existingMethodControlFactory);
+            var methodGeneratorFactory = new MethodGeneratorFactory(singleMethodGeneratorService, collectionMethodGeneratorService, enumMethodGenerator);
+            var existingMethodsControlServiceFactory = new ExistingMethodsControlServiceFactory();
+            var accessModifierIdentifier = new AccessModifierIdentifier();
+            var methodConstructor = new RecursiveMethodConstructor(methodGeneratorFactory, accessModifierIdentifier);
+            var mappingInformationService = new MappingInformationService(existingMethodsControlServiceFactory, methodConstructor);
             var mappingGeneratorService = new MappingRefactorService(mappingInformationService);
 
             return new MapThisCodeRefactoringProvider(mappingGeneratorService);

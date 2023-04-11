@@ -3473,18 +3473,19 @@ namespace MapThis.Tests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
         ///{
         ///    public class Class1
         ///    {
-        ///        public Parent Map(ParentDto item)
+        ///        public Parent [|Map|](ParentDto item)
         ///        {
         ///            throw new System.NotImplementedException();
         ///        }
         ///    }
         ///    public class Parent { public int Id { get; set; } public IList&lt;Child&gt; Children { get; set; } public IList&lt;AnotherChild&gt; OtherChildren { get; set; } }
-        ///    public class ParentDto { public int Id { get; set; } public IList&lt;ChildDto&gt; Children { get; set; } public IList&lt;AnotherChildDto&gt; OtherChildren { get; set; } }
-        ///     [rest of string was truncated]&quot;;.
+        ///    public class ParentDto { public int Id { get; set; } public IList&lt;ChildDto&gt; Children { get; set; } public IList&lt;AnotherChil [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string _72_Before {
             get {
@@ -3522,19 +3523,20 @@ namespace MapThis.Tests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
         ///{
         ///    public class Class1
         ///    {
-        ///        public Parent Map(ParentDto item)
+        ///        public Parent [|Map|](ParentDto item)
         ///        {
         ///            throw new System.NotImplementedException();
         ///        }
         ///    }
         ///    public class Parent { public Child Id { get; set; } }
         ///    public class ParentDto { public ChildDto Id { get; set; } }
-        ///    public class Child { public int Id { get; set; } public IList&lt;GrandChild1&gt; GrandChildren1 { get; set; } public IList&lt;GrandChild2&gt; GrandChildren2 { get; set; } }
-        ///    public class ChildDto { publi [rest of string was truncated]&quot;;.
+        ///    public class Child { public int Id { get; set; } public IList&lt;GrandChild1&gt; GrandChildren1 { get; set; } public IList&lt;GrandChild2&gt; GrandChildren2 { get; se [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string _73_Before {
             get {
@@ -3570,6 +3572,62 @@ namespace MapThis.Tests {
         internal static string _73_Refactored {
             get {
                 return ResourceManager.GetString("_73_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public IList&lt;IChild&gt; Children { get; set; } }
+        ///    public class ParentDto { public IList&lt;IChildDto&gt; Children { get; set; } }
+        ///    public interface IChild { int Id { get; set; } }
+        ///    public interface IChildDto { int Id { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _74_Before {
+            get {
+                return ResourceManager.GetString("_74_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections.Generic;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                Children = Map(item.Children),
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///
+        ///        private IList&lt;IChild&gt; Map(IList&lt;IChildDto&gt; source)
+        ///        {
+        ///            var destination = new List&lt;IChild&gt;();
+        ///
+        ///            foreach (var item in source)
+        ///            {
+        ///                d [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string _74_Refactored {
+            get {
+                return ResourceManager.GetString("_74_Refactored", resourceCulture);
             }
         }
     }

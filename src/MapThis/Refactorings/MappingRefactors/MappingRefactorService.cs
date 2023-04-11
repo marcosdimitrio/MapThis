@@ -38,9 +38,9 @@ namespace MapThis.Refactorings.MappingRefactors
                 SyntaxGenerator = SyntaxGenerator.GetGenerator(context.Document),
             };
 
-            var compoundMethodsGenerator = MappingInformationService.GetCompoundMethodsGenerator(optionsDto, methodSyntax, originalMethodSymbol, root, compilationUnitSyntax, semanticModel, codeAnalisysDependenciesDto);
+            var methodGenerator = MappingInformationService.GetMethodGenerator(optionsDto, methodSyntax, originalMethodSymbol, root, compilationUnitSyntax, semanticModel, codeAnalisysDependenciesDto);
 
-            var generatedMethodsDto = compoundMethodsGenerator.Generate();
+            var generatedMethodsDto = methodGenerator.Generate();
 
             var firstBlock = generatedMethodsDto.Blocks.First();
             var allOtherBlocks = generatedMethodsDto.Blocks.Skip(1).ToList();
