@@ -136,11 +136,11 @@ namespace MapThis.Tests
             var methodGeneratorFactory = new MethodGeneratorFactory(singleMethodGeneratorService, collectionMethodGeneratorService, enumMethodGenerator);
             var existingMethodsControlServiceFactory = new ExistingMethodsControlServiceFactory();
             var accessModifierIdentifier = new AccessModifierIdentifier();
-            var methodConstructor = new RecursiveMethodConstructor(methodGeneratorFactory, accessModifierIdentifier);
-            var mappingInformationService = new MappingInformationService(existingMethodsControlServiceFactory, methodConstructor);
+            var recursiveMethodConstructor = new RecursiveMethodConstructor(methodGeneratorFactory, accessModifierIdentifier);
+            var mappingInformationService = new MappingInformationService(existingMethodsControlServiceFactory, recursiveMethodConstructor);
             var mappingGeneratorService = new MappingRefactorService(mappingInformationService);
 
-            return new MapThisCodeRefactoringProvider(mappingGeneratorService);
+            return new MapThisCodeRefactoringProvider(mappingGeneratorService, recursiveMethodConstructor);
         }
 
         protected override IReadOnlyCollection<MetadataReference> References

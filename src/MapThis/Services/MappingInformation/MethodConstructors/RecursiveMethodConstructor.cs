@@ -7,8 +7,10 @@ using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Simple
 using MapThis.Services.MappingInformation.MethodConstructors.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
+using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Composition;
+using System.Linq;
 
 namespace MapThis.Services.MappingInformation.MethodConstructors
 {
@@ -26,6 +28,11 @@ namespace MapThis.Services.MappingInformation.MethodConstructors
                 new EnumConstructor(methodGeneratorFactory),
                 new SimpleTypeConstructor(this, methodGeneratorFactory, accessModifierIdentifier),
             };
+        }
+
+        public bool CanProcess(ITypeSymbol targetType, ITypeSymbol sourceType)
+        {
+            return _constructors.Any(x => x.CanProcess(targetType, sourceType));
         }
 
         public IMethodGenerator GetMap(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)

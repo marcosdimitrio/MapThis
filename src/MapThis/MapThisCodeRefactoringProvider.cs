@@ -1,6 +1,6 @@
 ﻿using MapThis.Dto;
-using MapThis.Helpers;
 using MapThis.Refactorings.MappingRefactors.Interfaces;
+using MapThis.Services.MappingInformation.MethodConstructors.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -16,11 +16,13 @@ namespace MapThis
     public class MapThisCodeRefactoringProvider : CodeRefactoringProvider
     {
         private readonly IMappingRefactorService MappingRefactorService;
+        private readonly IRecursiveMethodConstructor RecursiveMethodConstructor;
 
         [ImportingConstructor]
-        public MapThisCodeRefactoringProvider(IMappingRefactorService mappingRefactorService)
+        public MapThisCodeRefactoringProvider(IMappingRefactorService mappingRefactorService, IRecursiveMethodConstructor recursiveMethodConstructor)
         {
             MappingRefactorService = mappingRefactorService;
+            RecursiveMethodConstructor = recursiveMethodConstructor;
         }
 
         public sealed override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
@@ -62,18 +64,7 @@ namespace MapThis
                 return;
             }
 
-            if (methodSymbol.ReturnType.IsCollection() && !methodSymbol.Parameters.First().Type.IsCollection() ||
-                !methodSymbol.ReturnType.IsCollection() && methodSymbol.Parameters.First().Type.IsCollection())
-            {
-                return;
-            }
-
-            if (methodSymbol.ReturnType.IsInterface() || methodSymbol.Parameters.First().Type.IsInterface())
-            {
-                return;
-            }
-
-            if (methodSymbol.ReturnType.IsSimpleType() && !methodSymbol.ReturnType.IsEnum())
+            if (!RecursiveMethodConstructor.CanProcess(methodSymbol.ReturnType, methodSymbol.Parameters.First().Type))
             {
                 return;
             }
