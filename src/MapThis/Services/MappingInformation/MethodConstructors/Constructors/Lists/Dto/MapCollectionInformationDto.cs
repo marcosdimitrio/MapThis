@@ -1,6 +1,7 @@
-﻿using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
+﻿using MapThis.Dto;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 
-namespace MapThis.Dto
+namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Lists.Dto
 {
     public class MapCollectionInformationDto
     {

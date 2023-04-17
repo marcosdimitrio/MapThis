@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace MapThis.Dto
+namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Enums.Dto
 {
     public class EnumItemToMapDto
     {

@@ -1,5 +1,6 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
+using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Enums.Dto;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;

@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using MapThis.Dto;
+using System.Collections.Generic;
 
-namespace MapThis.Dto
+namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Enums.Dto
 {
     public class MapEnumInformationDto
     {

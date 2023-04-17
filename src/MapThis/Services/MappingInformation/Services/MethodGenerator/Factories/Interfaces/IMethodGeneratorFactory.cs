@@ -1,4 +1,7 @@
 ﻿using MapThis.Dto;
+using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Enums.Dto;
+using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Lists.Dto;
+using MapThis.Services.MappingInformation.MethodConstructors.Constructors.SimpleTypes.Dto;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 using System.Collections.Generic;
 
