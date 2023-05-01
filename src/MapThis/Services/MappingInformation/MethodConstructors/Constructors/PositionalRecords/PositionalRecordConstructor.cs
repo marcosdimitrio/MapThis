@@ -2,7 +2,7 @@
 using MapThis.CommonServices.ExistingMethodsControl.Interfaces;
 using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Services.MappingInformation.MethodConstructors.Constructors.SimpleTypes.Dto;
+using MapThis.Services.MappingInformation.MethodConstructors.Constructors.PositionalRecords.Dto;
 using MapThis.Services.MappingInformation.MethodConstructors.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
@@ -10,24 +10,28 @@ using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.SimpleTypes
+namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.PositionalRecords
 {
-    public class SimpleTypeConstructor : IConstructor
+    public class PositionalRecordConstructor : IConstructor
     {
         private readonly IRecursiveMethodConstructor RecursiveMethodConstructor;
         private readonly IMethodGeneratorFactory MethodGeneratorFactory;
         private readonly IAccessModifierIdentifier AccessModifierIdentifier;
 
-        public SimpleTypeConstructor(IRecursiveMethodConstructor methodConstructor, IMethodGeneratorFactory methodGeneratorFactory, IAccessModifierIdentifier accessModifierIdentifier)
+        public PositionalRecordConstructor(IRecursiveMethodConstructor recursiveMethodConstructor, IMethodGeneratorFactory methodGeneratorFactory, IAccessModifierIdentifier accessModifierIdentifier)
         {
-            RecursiveMethodConstructor = methodConstructor;
+            RecursiveMethodConstructor = recursiveMethodConstructor;
             MethodGeneratorFactory = methodGeneratorFactory;
             AccessModifierIdentifier = accessModifierIdentifier;
         }
 
         public bool CanProcess(ITypeSymbol targetType, ITypeSymbol sourceType)
         {
-            var canProcess = BothTypesAreClasses(targetType, sourceType) && IsNotPositionalRecord(targetType);
+            var canProcess =
+                targetType.IsRecord &&
+                sourceType.IsClass() &&
+                HasExactlyOneExplicitDeclaredConstructor(targetType) &&
+                AllPropertiesComeFromConstructor(targetType);
 
             return canProcess;
         }
@@ -72,23 +76,30 @@ namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Si
                 }
             }
 
-            var mapInformation = new MapInformationDto(currentMethodInformationDto, propertiesToMap, childrenMethodGenerators, optionsDto);
+            var mapInformationForPositionalRecordDto = new MapInformationForPositionalRecordDto(currentMethodInformationDto, propertiesToMap, childrenMethodGenerators, optionsDto);
 
-            var methodGenerator = MethodGeneratorFactory.Get(mapInformation, codeAnalisysDependenciesDto, existingNamespaces);
+            var methodGenerator = MethodGeneratorFactory.Get(mapInformationForPositionalRecordDto, codeAnalisysDependenciesDto, existingNamespaces);
 
             return methodGenerator;
         }
 
-        private static bool BothTypesAreClasses(ITypeSymbol targetType, ITypeSymbol sourceType)
+        private static bool HasExactlyOneExplicitDeclaredConstructor(ITypeSymbol targetType)
         {
-            return targetType.IsClass() && sourceType.IsClass();
+            return ((INamedTypeSymbol)targetType).Constructors.Count(x => !x.IsImplicitlyDeclared) == 1;
         }
 
-        private static bool IsNotPositionalRecord(ITypeSymbol targetType)
+        private bool AllPropertiesComeFromConstructor(ITypeSymbol targetType)
         {
-            var hasExplicitConstructors = ((INamedTypeSymbol)targetType).Constructors.Where(x => !x.IsImplicitlyDeclared).Any();
+            var constructor = ((INamedTypeSymbol)targetType).Constructors.SingleOrDefault(x => !x.IsImplicitlyDeclared);
 
-            return !(targetType.IsRecord && hasExplicitConstructors);
+            if (constructor == null) return false;
+
+            var allProperties = targetType.GetPublicProperties();
+            var constructorParameters = constructor.Parameters.ToList();
+
+            var allPropertiesComeFromConstructor = allProperties.All(x => constructorParameters.Any(y => x.MetadataName == y.MetadataName));
+
+            return allPropertiesComeFromConstructor;
         }
 
         private static IPropertySymbol FindCorrespondingPropertyInPropertySymbols(IPropertySymbol targetProperty, IList<IPropertySymbol> sourceMembers)

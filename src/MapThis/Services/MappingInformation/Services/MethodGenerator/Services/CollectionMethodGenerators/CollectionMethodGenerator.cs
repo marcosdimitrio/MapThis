@@ -3,7 +3,7 @@ using MapThis.CommonServices.UniqueVariableNames.Interfaces;
 using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Lists.Dto;
-using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerators.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -12,22 +12,22 @@ using System.Collections.Generic;
 using System.Composition;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerators
 {
-    [Export(typeof(ICollectionMethodGeneratorService))]
-    public class CollectionMethodGeneratorService : ICollectionMethodGeneratorService
+    [Export(typeof(ICollectionMethodGenerator))]
+    public class CollectionMethodGenerator : ICollectionMethodGenerator
     {
         private readonly IIdentifierNameService IdentifierNameService;
         private readonly IUniqueVariableNameGenerator UniqueVariableNameGenerator;
 
         [ImportingConstructor]
-        public CollectionMethodGeneratorService(IIdentifierNameService identifierNameService, IUniqueVariableNameGenerator uniqueVariableNameGenerator)
+        public CollectionMethodGenerator(IIdentifierNameService identifierNameService, IUniqueVariableNameGenerator uniqueVariableNameGenerator)
         {
             IdentifierNameService = identifierNameService;
             UniqueVariableNameGenerator = uniqueVariableNameGenerator;
         }
 
-        public MethodDeclarationSyntax Generate(MapCollectionInformationDto childMapCollectionInformation, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
+        public MethodDeclarationSyntax Generate(MapInformationForCollectionDto childMapCollectionInformation, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
         {
             var mapListStatement = GetMappedListBody(childMapCollectionInformation, codeAnalysisDependenciesDto, existingNamespaces);
 
@@ -74,7 +74,7 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
             return methodDeclaration;
         }
 
-        private BlockSyntax GetMappedListBody(MapCollectionInformationDto mapCollectionInformationDto, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
+        private BlockSyntax GetMappedListBody(MapInformationForCollectionDto mapCollectionInformationDto, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
         {
             var destinationVariableName = UniqueVariableNameGenerator.GetUniqueVariableName("destination", mapCollectionInformationDto.MethodInformation.OtherParametersInMethod);
 
@@ -163,8 +163,8 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
 
             var statements = new List<StatementSyntax>();
 
-            statements.Add(variableDeclaration);
             if (nullCheckStatement != null) statements.Add(nullCheckStatement);
+            statements.Add(variableDeclaration);
             statements.Add(forEachStatement);
             statements.Add(returnStatement);
 
@@ -176,7 +176,7 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
             return blockSyntax;
         }
 
-        private ArgumentSyntax GetForEachItemMapExpression(MapCollectionInformationDto mapCollectionInformationDto, string forEachVariableName)
+        private ArgumentSyntax GetForEachItemMapExpression(MapInformationForCollectionDto mapCollectionInformationDto, string forEachVariableName)
         {
             if (mapCollectionInformationDto.MethodInformation.SourceType.IsCollectionOfSimpleTypeExceptEnum())
             {
@@ -202,7 +202,7 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
 
         }
 
-        private ReturnStatementSyntax GetReturnStatement(MapCollectionInformationDto mapCollectionInformationDto, string destinationVariableName)
+        private ReturnStatementSyntax GetReturnStatement(MapInformationForCollectionDto mapCollectionInformationDto, string destinationVariableName)
         {
             if (mapCollectionInformationDto.MethodInformation.TargetType.IsArray())
             {
@@ -221,7 +221,7 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
                 );
         }
 
-        private IfStatementSyntax GetNullCheckStatementForCollection(MapCollectionInformationDto mapCollectionInformationDto)
+        private IfStatementSyntax GetNullCheckStatementForCollection(MapInformationForCollectionDto mapCollectionInformationDto)
         {
             if (!mapCollectionInformationDto.Options.NullChecking) return null;
 
@@ -248,8 +248,8 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
                         SyntaxKind.CloseParenToken,
                         TriviaList(
                             Space)))
-                .WithTrailingTrivia(TriviaList(EndOfLine(Environment.NewLine)))
-                .WithLeadingTrivia(TriviaList(EndOfLine(Environment.NewLine)));
+                .WithLeadingTrivia(TriviaList(EndOfLine(Environment.NewLine)))
+                .WithTrailingTrivia(TriviaList(EndOfLine(Environment.NewLine), EndOfLine(Environment.NewLine)));
         }
 
         private static string GetSourceTypeListNameAsInterface(ITypeSymbol sourceType)

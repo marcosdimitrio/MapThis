@@ -20,9 +20,9 @@ namespace MapThis.Tests
 
         private IList<Child> Map(IList<ChildDto> source)
         {
-            var destination = new List<Child>();
-
             if (source == null) return null;
+
+            var destination = new List<Child>();
 
             foreach (var item in source)
             {

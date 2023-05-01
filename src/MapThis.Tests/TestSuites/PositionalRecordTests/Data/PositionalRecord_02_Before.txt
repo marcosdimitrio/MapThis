@@ -1,0 +1,16 @@
+﻿namespace MapThis.Tests
+{
+    public class MyClass
+    {
+        public Parent [|Map|](ParentDto item)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+    public record Parent(int Id, decimal Amount);
+    public record ParentDto(int OtherId, decimal Amount);
+}
+namespace System.Runtime.CompilerServices
+{
+    internal static class IsExternalInit {}
+}

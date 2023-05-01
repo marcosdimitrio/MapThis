@@ -3,7 +3,7 @@ using MapThis.Helpers;
 using MapThis.Refactorings.MappingRefactors.Dto;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Lists.Dto;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
-using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.CollectionMethodGenerators.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -13,12 +13,12 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
 {
     public class ListMapGenerator : IMethodGenerator
     {
-        private readonly MapCollectionInformationDto MapCollectionInformationDto;
-        private readonly ICollectionMethodGeneratorService CollectionMethodGeneratorService;
+        private readonly MapInformationForCollectionDto MapCollectionInformationDto;
+        private readonly ICollectionMethodGenerator CollectionMethodGeneratorService;
         private readonly CodeAnalysisDependenciesDto CodeAnalisysDependenciesDto;
         private readonly IList<string> ExistingNamespaces;
 
-        public ListMapGenerator(MapCollectionInformationDto mapCollectionInformationDto, ICollectionMethodGeneratorService collectionMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
+        public ListMapGenerator(MapInformationForCollectionDto mapCollectionInformationDto, ICollectionMethodGenerator collectionMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
         {
             MapCollectionInformationDto = mapCollectionInformationDto;
             CollectionMethodGeneratorService = collectionMethodGeneratorService;

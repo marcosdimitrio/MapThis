@@ -26,7 +26,9 @@ namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Li
 
         public bool CanProcess(ITypeSymbol targetType, ITypeSymbol sourceType)
         {
-            return targetType.IsCollection() && sourceType.IsCollection();
+            var canProcess = targetType.IsCollection() && sourceType.IsCollection();
+
+            return canProcess;
         }
 
         public IMethodGenerator GetMap(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
@@ -44,9 +46,9 @@ namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Li
                 childMethodGenerator = RecursiveMethodConstructor.GetMap(codeAnalisysDependenciesDto, optionsDto, childMethodInformationDto, existingMethodsControlService, existingNamespaces);
             }
 
-            var mapCollectionInformationDto = new MapCollectionInformationDto(currentMethodInformationDto, childMethodGenerator, optionsDto);
+            var mapInformationForCollectionDto = new MapInformationForCollectionDto(currentMethodInformationDto, childMethodGenerator, optionsDto);
 
-            var methodGenerator = MethodGeneratorFactory.Get(mapCollectionInformationDto, codeAnalisysDependenciesDto, existingNamespaces);
+            var methodGenerator = MethodGeneratorFactory.Get(mapInformationForCollectionDto, codeAnalisysDependenciesDto, existingNamespaces);
 
             return methodGenerator;
         }

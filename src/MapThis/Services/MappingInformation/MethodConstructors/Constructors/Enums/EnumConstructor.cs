@@ -22,7 +22,9 @@ namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.En
 
         public bool CanProcess(ITypeSymbol targetType, ITypeSymbol sourceType)
         {
-            return targetType.IsEnum() && sourceType.IsEnum();
+            var canProcess = targetType.IsEnum() && sourceType.IsEnum();
+
+            return canProcess;
         }
 
         public IMethodGenerator GetMap(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)

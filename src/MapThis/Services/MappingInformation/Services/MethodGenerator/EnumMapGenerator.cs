@@ -3,7 +3,7 @@ using MapThis.Helpers;
 using MapThis.Refactorings.MappingRefactors.Dto;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Enums.Dto;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
-using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerators.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;

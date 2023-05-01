@@ -88,7 +88,7 @@ namespace MapThis.Refactorings.MappingRefactors
 
         private MethodDeclarationSyntax GetFirstBlockWithOriginalSignature(MethodDeclarationSyntax methodSyntax, BlockSyntax newBodyBlock)
         {
-            // Recreating the MethodDeclaration will fix when the method's body is null,
+            // Recreating the MethodDeclaration will fix the method when its body is null,
             // i.e., when it doesn't have opening/closing braces "{}".
             var methodDeclarationSyntax =
                 MethodDeclaration(

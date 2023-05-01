@@ -2,8 +2,8 @@
 using MapThis.CommonServices.UniqueVariableNames.Interfaces;
 using MapThis.Dto;
 using MapThis.Helpers;
-using MapThis.Services.MappingInformation.MethodConstructors.Constructors.SimpleTypes.Dto;
-using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.MethodConstructors.Constructors.PositionalRecords.Dto;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.PositionalRecordMethodGenerators.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -12,22 +12,22 @@ using System.Collections.Generic;
 using System.Composition;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerator
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.PositionalRecordMethodGenerators
 {
-    [Export(typeof(ISingleMethodGeneratorService))]
-    public class SingleMethodGeneratorService : ISingleMethodGeneratorService
+    [Export(typeof(IPositionalRecordMethodGenerator))]
+    public class PositionalRecordMethodGenerator : IPositionalRecordMethodGenerator
     {
         private readonly IIdentifierNameService IdentifierNameService;
         private readonly IUniqueVariableNameGenerator UniqueVariableNameGenerator;
 
         [ImportingConstructor]
-        public SingleMethodGeneratorService(IIdentifierNameService identifierNameService, IUniqueVariableNameGenerator uniqueVariableNameGenerator)
+        public PositionalRecordMethodGenerator(IIdentifierNameService identifierNameService, IUniqueVariableNameGenerator uniqueVariableNameGenerator)
         {
             IdentifierNameService = identifierNameService;
             UniqueVariableNameGenerator = uniqueVariableNameGenerator;
         }
 
-        public MethodDeclarationSyntax Generate(MapInformationDto mapInformation, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
+        public MethodDeclarationSyntax Generate(MapInformationForPositionalRecordDto mapInformation, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
         {
             var returnVariableName = UniqueVariableNameGenerator.GetUniqueVariableName("newItem", mapInformation.MethodInformation.OtherParametersInMethod);
 
@@ -73,17 +73,22 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
             return methodDeclaration;
         }
 
-        private LocalDeclarationStatementSyntax GetMappedObjectStatement(MapInformationDto mapInformationDto, string returnVariableName, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
+        private LocalDeclarationStatementSyntax GetMappedObjectStatement(MapInformationForPositionalRecordDto MapInformationForRecordDto, string returnVariableName, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
         {
             var syntaxNodeOrTokenList = new List<SyntaxNodeOrToken>();
 
-            foreach (var propertyToMap in mapInformationDto.PropertiesToMap)
+            var isFirstExecution = true;
+            foreach (var propertyToMap in MapInformationForRecordDto.PropertiesToMap)
             {
+                if (!isFirstExecution)
+                {
+                    syntaxNodeOrTokenList.Add(Token(SyntaxKind.CommaToken));
+                }
+                isFirstExecution = false;
                 syntaxNodeOrTokenList.Add(GetPropertyExpression(propertyToMap));
-                syntaxNodeOrTokenList.Add(Token(SyntaxKind.CommaToken));
             }
 
-            var targetTypeSyntax = IdentifierNameService.GetTypeSyntaxConsideringNamespaces(mapInformationDto.MethodInformation.TargetType, existingNamespaces, codeAnalysisDependenciesDto.SyntaxGenerator);
+            var targetTypeSyntax = IdentifierNameService.GetTypeSyntaxConsideringNamespaces(MapInformationForRecordDto.MethodInformation.TargetType, existingNamespaces, codeAnalysisDependenciesDto.SyntaxGenerator);
 
             var localDeclarationStatement =
                 LocalDeclarationStatement(
@@ -106,11 +111,8 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
                                 EqualsValueClause(
                                     ObjectCreationExpression(targetTypeSyntax)
                                     .WithArgumentList(
-                                        ArgumentList())
-                                    .WithInitializer(
-                                        InitializerExpression(
-                                            SyntaxKind.ObjectInitializerExpression,
-                                            SeparatedList<ExpressionSyntax>(
+                                        ArgumentList(
+                                            SeparatedList<ArgumentSyntax>(
                                                 syntaxNodeOrTokenList
                                             )
                                         )
@@ -130,15 +132,15 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
             return localDeclarationStatement;
         }
 
-        private IfStatementSyntax GetNullCheckStatementForClass(MapInformationDto mapInformationDto)
+        private IfStatementSyntax GetNullCheckStatementForClass(MapInformationForPositionalRecordDto MapInformationForRecordDto)
         {
-            if (!mapInformationDto.Options.NullChecking) return null;
+            if (!MapInformationForRecordDto.Options.NullChecking) return null;
 
             return
                 IfStatement(
                     BinaryExpression(
                         SyntaxKind.EqualsExpression,
-                        IdentifierName(mapInformationDto.MethodInformation.FirstParameterName),
+                        IdentifierName(MapInformationForRecordDto.MethodInformation.FirstParameterName),
                         LiteralExpression(
                             SyntaxKind.NullLiteralExpression)),
                     ReturnStatement(
@@ -188,44 +190,36 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
                 SymbolEqualityComparer.Default.Equals(target.Type.GetElementType(), source.Type.GetElementType());
         }
 
-        private static AssignmentExpressionSyntax GetNewDirectConversion(string identifierName, string propertyName)
+        private static ArgumentSyntax GetNewDirectConversion(string identifierName, string propertyName)
         {
-            // This will return an expression like "Id = item.Id"
+            // This will return an expression like "item.Id".
+            // If we wanted "Id: item.Id", then we'd need to use WithNameColon.
             return
-                AssignmentExpression(
-                    SyntaxKind.SimpleAssignmentExpression,
-                    IdentifierName(propertyName),
+                Argument(
                     MemberAccessExpression(
                         SyntaxKind.SimpleMemberAccessExpression,
                         IdentifierName(identifierName),
-                        IdentifierName(propertyName)))
-                .WithLeadingTrivia(EndOfLine(Environment.NewLine));
+                        IdentifierName(propertyName)
+                    )
+                );
         }
 
-        private static AssignmentExpressionSyntax GetConversionWithMap(string identifierName, string propertyName)
+        private static ArgumentSyntax GetConversionWithMap(string identifierName, string propertyName)
         {
-            // This will return an expression like "Children = Map(item.Children)"
+            // This will return an expression like "Children: Map(item.Children)".
+            // If we wanted "Id: item.Id", then we'd need to use WithNameColon.
             return
-                AssignmentExpression(
-                    SyntaxKind.SimpleAssignmentExpression,
-                    IdentifierName(propertyName),
+                Argument(
                     InvocationExpression(
                         IdentifierName("Map"))
                     .WithArgumentList(
                         ArgumentList(
-                            SingletonSeparatedList(
+                            SingletonSeparatedList<ArgumentSyntax>(
                                 Argument(
                                     MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
                                         IdentifierName(identifierName),
-                                        IdentifierName(propertyName)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-                .WithLeadingTrivia(EndOfLine(Environment.NewLine));
+                                        IdentifierName(propertyName)))))));
         }
 
     }

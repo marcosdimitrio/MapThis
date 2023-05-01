@@ -3,6 +3,7 @@ using MapThis.CommonServices.ExistingMethodsControl.Interfaces;
 using MapThis.Dto;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Enums;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Lists;
+using MapThis.Services.MappingInformation.MethodConstructors.Constructors.PositionalRecords;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.SimpleTypes;
 using MapThis.Services.MappingInformation.MethodConstructors.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories.Interfaces;
@@ -27,6 +28,7 @@ namespace MapThis.Services.MappingInformation.MethodConstructors
                 new CollectionConstructor(this, methodGeneratorFactory, accessModifierIdentifier),
                 new EnumConstructor(methodGeneratorFactory),
                 new SimpleTypeConstructor(this, methodGeneratorFactory, accessModifierIdentifier),
+                new PositionalRecordConstructor(this, methodGeneratorFactory, accessModifierIdentifier),
             };
         }
 

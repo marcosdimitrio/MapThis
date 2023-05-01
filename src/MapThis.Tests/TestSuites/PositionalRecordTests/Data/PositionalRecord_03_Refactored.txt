@@ -1,0 +1,32 @@
+﻿using System.Collections.Generic;
+
+namespace MapThis.Tests
+{
+    public class MyClass
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent(item.Id, Map(item.List));
+
+            return newItem;
+        }
+
+        private IList<int> Map(IList<int> source)
+        {
+            var destination = new List<int>();
+
+            foreach (var item in source)
+            {
+                destination.Add(item);
+            }
+
+            return destination;
+        }
+    }
+    public record Parent(int Id, IList<int> List);
+    public record ParentDto(int Id, IList<int> List);
+}
+namespace System.Runtime.CompilerServices
+{
+    internal static class IsExternalInit {}
+}

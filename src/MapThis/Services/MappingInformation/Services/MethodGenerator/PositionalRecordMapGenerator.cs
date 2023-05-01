@@ -1,9 +1,9 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Refactorings.MappingRefactors.Dto;
-using MapThis.Services.MappingInformation.MethodConstructors.Constructors.SimpleTypes.Dto;
+using MapThis.Services.MappingInformation.MethodConstructors.Constructors.PositionalRecords.Dto;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
-using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.SingleMethodGenerators.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.PositionalRecordMethodGenerators.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -11,17 +11,17 @@ using System.Linq;
 
 namespace MapThis.Services.MappingInformation.Services.MethodGenerator
 {
-    public class ClassMapGenerator : IMethodGenerator
+    public class PositionalRecordMapGenerator : IMethodGenerator
     {
-        private readonly MapInformationDto MapInformationDto;
-        private readonly ISingleMethodGenerator SingleMethodGeneratorService;
+        private readonly MapInformationForPositionalRecordDto MapInformationForRecordDto;
+        private readonly IPositionalRecordMethodGenerator PositionalRecordMethodGenerator;
         private readonly CodeAnalysisDependenciesDto CodeAnalisysDependenciesDto;
         private readonly IList<string> ExistingNamespaces;
 
-        public ClassMapGenerator(MapInformationDto mapInformationDto, ISingleMethodGenerator singleMethodGeneratorService, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
+        public PositionalRecordMapGenerator(MapInformationForPositionalRecordDto mapInformationForRecordDto, IPositionalRecordMethodGenerator positionalRecordMethodGenerator, CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, IList<string> existingNamespaces)
         {
-            MapInformationDto = mapInformationDto;
-            SingleMethodGeneratorService = singleMethodGeneratorService;
+            MapInformationForRecordDto = mapInformationForRecordDto;
+            PositionalRecordMethodGenerator = positionalRecordMethodGenerator;
             CodeAnalisysDependenciesDto = codeAnalisysDependenciesDto;
             ExistingNamespaces = existingNamespaces;
         }
@@ -40,10 +40,10 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
         private IList<MethodDeclarationSyntax> GenerateBlocks()
         {
             var destination = new List<MethodDeclarationSyntax>() {
-                SingleMethodGeneratorService.Generate(MapInformationDto, CodeAnalisysDependenciesDto, ExistingNamespaces)
+                PositionalRecordMethodGenerator.Generate(MapInformationForRecordDto, CodeAnalisysDependenciesDto, ExistingNamespaces)
             };
 
-            foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
+            foreach (var childMethodGenerator in MapInformationForRecordDto.ChildrenMethodGenerators)
             {
                 destination.AddRange(childMethodGenerator.Generate().Blocks);
             }
@@ -55,8 +55,8 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
         {
             var namespaces = new List<INamespaceSymbol>();
 
-            var sourceType = MapInformationDto.MethodInformation.SourceType;
-            var targetType = MapInformationDto.MethodInformation.TargetType;
+            var sourceType = MapInformationForRecordDto.MethodInformation.SourceType;
+            var targetType = MapInformationForRecordDto.MethodInformation.TargetType;
 
             var sourceNamespace = sourceType.ContainingNamespace;
             var targetNamespace = targetType.ContainingNamespace;
@@ -75,7 +75,7 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator
                 .Select(x => x.ToDisplayString())
                 .ToList();
 
-            foreach (var childMethodGenerator in MapInformationDto.ChildrenMethodGenerators)
+            foreach (var childMethodGenerator in MapInformationForRecordDto.ChildrenMethodGenerators)
             {
                 namespaceStringList.AddRange(childMethodGenerator.Generate().Namespaces);
             }

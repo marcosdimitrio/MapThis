@@ -1,7 +1,7 @@
 ﻿using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.Enums.Dto;
-using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator.Interfaces;
+using MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerators.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -12,7 +12,7 @@ using System.Composition;
 using System.Linq;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerator
+namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.EnumMethodGenerators
 {
     [Export(typeof(IEnumMethodGenerator))]
     public class EnumMethodGenerator : IEnumMethodGenerator
