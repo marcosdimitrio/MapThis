@@ -32,6 +32,7 @@ namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Si
             return canProcess;
         }
 
+        // todo: almost exactly like PositionalRecordConstructor, refactor?
         public IMethodGenerator GetMap(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
         {
             var childrenMethodGenerators = new List<IMethodGenerator>();

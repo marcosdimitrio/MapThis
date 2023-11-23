@@ -4,7 +4,7 @@
     {
         public Parent Map(ParentDto item)
         {
-            if (item == null) return null;
+            if (item is null) return null;
 
             var newItem = new Parent(item.Id, item.Amount);
 

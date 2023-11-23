@@ -1,5 +1,6 @@
 ﻿using MapThis.CommonServices.IdentifierNames.Interfaces;
 using MapThis.CommonServices.UniqueVariableNames.Interfaces;
+using MapThis.CommonServices.UserOptions.Interfaces;
 using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.SimpleTypes.Dto;
@@ -19,12 +20,14 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
     {
         private readonly IIdentifierNameService IdentifierNameService;
         private readonly IUniqueVariableNameGenerator UniqueVariableNameGenerator;
+        private readonly IUserOptionsService UserOptionsService;
 
         [ImportingConstructor]
-        public SingleMethodGenerator(IIdentifierNameService identifierNameService, IUniqueVariableNameGenerator uniqueVariableNameGenerator)
+        public SingleMethodGenerator(IIdentifierNameService identifierNameService, IUniqueVariableNameGenerator uniqueVariableNameGenerator, IUserOptionsService userOptionsService)
         {
             IdentifierNameService = identifierNameService;
             UniqueVariableNameGenerator = uniqueVariableNameGenerator;
+            UserOptionsService = userOptionsService;
         }
 
         public MethodDeclarationSyntax Generate(MapInformationDto mapInformation, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
@@ -134,13 +137,29 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
         {
             if (!mapInformationDto.Options.NullChecking) return null;
 
-            return
-                IfStatement(
+            ExpressionSyntax expressionSyntax;
+            if (UserOptionsService.GeneralOptions.UsePatternMatchingForNullChecking)
+            {
+                expressionSyntax =
+                    IsPatternExpression(
+                        IdentifierName(mapInformationDto.MethodInformation.FirstParameterName),
+                        ConstantPattern(
+                            LiteralExpression(
+                                SyntaxKind.NullLiteralExpression)));
+            }
+            else
+            {
+                expressionSyntax =
                     BinaryExpression(
                         SyntaxKind.EqualsExpression,
                         IdentifierName(mapInformationDto.MethodInformation.FirstParameterName),
                         LiteralExpression(
-                            SyntaxKind.NullLiteralExpression)),
+                            SyntaxKind.NullLiteralExpression));
+            }
+
+            return
+                IfStatement(
+                    expressionSyntax,
                     ReturnStatement(
                         LiteralExpression(
                             SyntaxKind.NullLiteralExpression))

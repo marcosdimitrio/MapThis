@@ -36,6 +36,7 @@ namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Po
             return canProcess;
         }
 
+        // todo: almost exactly like SimpleTypeConstructor, refactor?
         public IMethodGenerator GetMap(CodeAnalysisDependenciesDto codeAnalisysDependenciesDto, OptionsDto optionsDto, MethodInformationDto currentMethodInformationDto, IExistingMethodsControlService existingMethodsControlService, IList<string> existingNamespaces)
         {
             var childrenMethodGenerators = new List<IMethodGenerator>();

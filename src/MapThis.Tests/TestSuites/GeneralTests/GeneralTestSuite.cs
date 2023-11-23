@@ -1,16 +1,21 @@
-﻿using MapThis.Tests.Builder;
+﻿using ExperimentalTools.Tests.Infrastructure.Refactoring;
+using MapThis.Tests.Builder;
 using MapThis.Tests.Factories;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeRefactorings;
-using RoslynTestKit;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace MapThis.Tests.TestSuites.GeneralTests
 {
-    public class GeneralTestSuite : CodeRefactoringTestFixture
+    public class GeneralTestSuite : RefactoringTest
     {
+        public GeneralTestSuite(ITestOutputHelper output)
+            : base(output)
+        {
+        }
+
         public static IEnumerable<object[]> GetClients()
         {
             yield return new object[] { "01 Should not exclude additional parameters from first method", true, 0, GetData(Resources.General_01_Before, Resources.General_01_Refactored) };
@@ -44,35 +49,20 @@ namespace MapThis.Tests.TestSuites.GeneralTests
         #region SuppressMessage
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026", Justification = "The name is displayed in test explorer")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "IDE0060", Justification = "The name is displayed in test explorer")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD200", Justification = "The name is displayed in test explorer")]
         #endregion
-        public void Test_Method(string name, bool shouldRefactor, int refactoringIndex, MemberDataSerializer<TestDataDto> dto)
+        public Task Test_Method(string name, bool shouldRefactor, int refactoringIndex, MemberDataSerializer<TestDataDto> dto)
         {
+            var refactoringText = refactoringIndex == 0 ? "Map this" : "Map this with null check";
             if (shouldRefactor)
             {
-                TestCodeRefactoring(dto.Object.Before, dto.Object.Refactored, refactoringIndex);
-                return;
+                return RunMultipleActionsTestAsync(refactoringText, dto.Object.Before, dto.Object.Refactored);
             }
 
-            TestNoCodeRefactoring(dto.Object.Before);
+            return RunNoActionTestAsync(dto.Object.Before);
         }
 
-        protected override string LanguageName => LanguageNames.CSharp;
-
-        protected override CodeRefactoringProvider CreateProvider()
-        {
-            return ProviderFactory.GetCodeRefactoringProvider();
-        }
-
-        protected override IReadOnlyCollection<MetadataReference> References
-        {
-            get
-            {
-                return new MetadataReference[]
-                {
-                    MetadataReference.CreateFromFile(typeof(InvalidEnumArgumentException).Assembly.Location)
-                };
-            }
-        }
+        protected override CodeRefactoringProvider Provider => ProviderFactory.GetCodeRefactoringProvider();
 
         private static MemberDataSerializer<TestDataDto> GetData(string before, string refactored)
         {

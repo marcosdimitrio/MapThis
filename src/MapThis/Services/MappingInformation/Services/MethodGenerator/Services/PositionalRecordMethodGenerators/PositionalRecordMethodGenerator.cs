@@ -1,5 +1,6 @@
 ﻿using MapThis.CommonServices.IdentifierNames.Interfaces;
 using MapThis.CommonServices.UniqueVariableNames.Interfaces;
+using MapThis.CommonServices.UserOptions.Interfaces;
 using MapThis.Dto;
 using MapThis.Helpers;
 using MapThis.Services.MappingInformation.MethodConstructors.Constructors.PositionalRecords.Dto;
@@ -19,12 +20,14 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
     {
         private readonly IIdentifierNameService IdentifierNameService;
         private readonly IUniqueVariableNameGenerator UniqueVariableNameGenerator;
+        private readonly IUserOptionsService UserOptionsService;
 
         [ImportingConstructor]
-        public PositionalRecordMethodGenerator(IIdentifierNameService identifierNameService, IUniqueVariableNameGenerator uniqueVariableNameGenerator)
+        public PositionalRecordMethodGenerator(IIdentifierNameService identifierNameService, IUniqueVariableNameGenerator uniqueVariableNameGenerator, IUserOptionsService userOptionsService)
         {
             IdentifierNameService = identifierNameService;
             UniqueVariableNameGenerator = uniqueVariableNameGenerator;
+            UserOptionsService = userOptionsService;
         }
 
         public MethodDeclarationSyntax Generate(MapInformationForPositionalRecordDto mapInformation, CodeAnalysisDependenciesDto codeAnalysisDependenciesDto, IList<string> existingNamespaces)
@@ -136,13 +139,29 @@ namespace MapThis.Services.MappingInformation.Services.MethodGenerator.Services.
         {
             if (!MapInformationForRecordDto.Options.NullChecking) return null;
 
-            return
-                IfStatement(
+            ExpressionSyntax expressionSyntax;
+            if (UserOptionsService.GeneralOptions.UsePatternMatchingForNullChecking)
+            {
+                expressionSyntax =
+                    IsPatternExpression(
+                        IdentifierName(MapInformationForRecordDto.MethodInformation.FirstParameterName),
+                        ConstantPattern(
+                            LiteralExpression(
+                                SyntaxKind.NullLiteralExpression)));
+            }
+            else
+            {
+                expressionSyntax =
                     BinaryExpression(
                         SyntaxKind.EqualsExpression,
                         IdentifierName(MapInformationForRecordDto.MethodInformation.FirstParameterName),
                         LiteralExpression(
-                            SyntaxKind.NullLiteralExpression)),
+                            SyntaxKind.NullLiteralExpression));
+            }
+
+            return
+                IfStatement(
+                    expressionSyntax,
                     ReturnStatement(
                         LiteralExpression(
                             SyntaxKind.NullLiteralExpression))

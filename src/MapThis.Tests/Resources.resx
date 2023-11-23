@@ -190,6 +190,18 @@
   <data name="General_17_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>testsuites\generaltests\data\general_17_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Options_01_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TestSuites\OptionsTests\Data\Options_01_Before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Options_01_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TestSuites\OptionsTests\Data\Options_01_Refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Options_02_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TestSuites\OptionsTests\Data\Options_02_Before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Options_02_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TestSuites\OptionsTests\Data\Options_02_Refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="PositionalRecord_01_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>testsuites\positionalrecordtests\data\positionalrecord_01_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
