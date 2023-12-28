@@ -1,0 +1,18 @@
+﻿namespace MapThis.Tests
+{
+    public class MyClass
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent(item.Name, item.Id);
+
+            return newItem;
+        }
+    }
+    public record Parent(string Name, int Id);
+    public record ParentDto(int Id, string Name);
+}
+namespace System.Runtime.CompilerServices
+{
+    internal static class IsExternalInit {}
+}

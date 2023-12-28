@@ -235,6 +235,12 @@
   <data name="PositionalRecord_06_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>testsuites\positionalrecordtests\data\positionalrecord_06_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="PositionalRecord_07_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TestSuites\PositionalRecordTests\Data\PositionalRecord_07_Before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="PositionalRecord_07_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>TestSuites\PositionalRecordTests\Data\PositionalRecord_07_Refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="_01_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\01_before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -576,5 +582,11 @@
   </data>
   <data name="_74_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>data\74_refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_75_Before" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Data\75_Before.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="_75_Refactored" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Data\75_Refactored.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

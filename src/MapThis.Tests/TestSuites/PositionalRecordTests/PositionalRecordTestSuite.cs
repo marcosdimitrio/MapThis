@@ -24,6 +24,7 @@ namespace MapThis.Tests.TestSuites.PositionalRecordTests
             yield return new object[] { "04 Should map with null check for positional record", true, 1, GetData(Resources.PositionalRecord_04_Before, Resources.PositionalRecord_04_Refactored) };
             yield return new object[] { "05 Should not map a record when it has a mix of positional properties and normal properties", false, 0, GetData(Resources.PositionalRecord_05_Before, null) };
             yield return new object[] { "06 Should map from a class to a positional record", true, 0, GetData(Resources.PositionalRecord_06_Before, Resources.PositionalRecord_06_Refactored) };
+            yield return new object[] { "07 Should map from a record to a positional record when properties order is different", true, 0, GetData(Resources.PositionalRecord_07_Before, Resources.PositionalRecord_07_Refactored) };
         }
 
         /// <summary>
@@ -50,7 +51,9 @@ namespace MapThis.Tests.TestSuites.PositionalRecordTests
 
             return RunNoActionTestAsync(dto.Object.Before);
         }
+
         protected override CodeRefactoringProvider Provider => ProviderFactory.GetCodeRefactoringProvider();
+
         private static MemberDataSerializer<TestDataDto> GetData(string before, string refactored)
         {
             return new MemberDataSerializer<TestDataDto>(new TestDataDto() { Before = before, Refactored = refactored });

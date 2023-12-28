@@ -75,6 +75,7 @@ namespace MapThis.Tests
             yield return new object[] { "72 Should map a class when it has many list properties", true, 0, GetData(Resources._72_Before, Resources._72_Refactored) };
             yield return new object[] { "73 Should map a class when the child class has many list properties", true, 0, GetData(Resources._73_Before, Resources._73_Refactored) };
             yield return new object[] { "74 Should not map a child class when it is an interface", true, 0, GetData(Resources._74_Before, Resources._74_Refactored) };
+            yield return new object[] { "75 Should map a class when properties order is different", true, 0, GetData(Resources._75_Before, Resources._75_Refactored) };
         }
 
         /// <summary>

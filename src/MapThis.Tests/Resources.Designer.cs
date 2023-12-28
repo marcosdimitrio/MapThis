@@ -3044,6 +3044,54 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public string Name { get; set; } public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } public string Name { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _75_Before {
+            get {
+                return ResourceManager.GetString("_75_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                Name = item.Name,
+        ///                Id = item.Id,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public class Parent { public string Name { get; set; } public int Id { get; set; } }
+        ///    public class ParentDto { public int Id { get; set; } public string Name { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _75_Refactored {
+            get {
+                return ResourceManager.GetString("_75_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
         ///        public Parent [|Map|](ParentDto item, int a)
         ///        {
         ///            throw new System.NotImplementedException();
@@ -4025,6 +4073,58 @@ namespace MapThis.Tests {
         internal static string PositionalRecord_06_Refactored {
             get {
                 return ResourceManager.GetString("PositionalRecord_06_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class MyClass
+        ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public record Parent(string Name, int Id);
+        ///    public record ParentDto(int Id, string Name);
+        ///}
+        ///namespace System.Runtime.CompilerServices
+        ///{
+        ///    internal static class IsExternalInit {}
+        ///}
+        ///.
+        /// </summary>
+        internal static string PositionalRecord_07_Before {
+            get {
+                return ResourceManager.GetString("PositionalRecord_07_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class MyClass
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent(item.Name, item.Id);
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public record Parent(string Name, int Id);
+        ///    public record ParentDto(int Id, string Name);
+        ///}
+        ///namespace System.Runtime.CompilerServices
+        ///{
+        ///    internal static class IsExternalInit {}
+        ///}
+        ///.
+        /// </summary>
+        internal static string PositionalRecord_07_Refactored {
+            get {
+                return ResourceManager.GetString("PositionalRecord_07_Refactored", resourceCulture);
             }
         }
     }
