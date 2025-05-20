@@ -35,6 +35,9 @@ namespace MapThis.Tests.TestSuites.GeneralTests
             yield return new object[] { "15 Should not map when source parameter is an interface", false, 0, GetData(Resources.General_15_Before, null) };
             yield return new object[] { "16 Should not map when destination type is an interface", false, 0, GetData(Resources.General_16_Before, null) };
             yield return new object[] { "17 Should not map method in an interface", false, 0, GetData(Resources.General_17_Before, null) };
+            yield return new object[] { "18 Should map properties from base class when all are equal", true, 0, GetData(Resources.General_18_Before, Resources.General_18_Refactored) };
+            yield return new object[] { "19 Should map properties from base class when destination is different", true, 0, GetData(Resources.General_19_Before, Resources.General_19_Refactored) };
+            yield return new object[] { "20 Should map properties from base class two levels up", true, 0, GetData(Resources.General_20_Before, Resources.General_20_Refactored) };
         }
 
         /// <summary>

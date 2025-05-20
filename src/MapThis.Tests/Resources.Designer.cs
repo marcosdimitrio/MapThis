@@ -3684,6 +3684,197 @@ namespace MapThis.Tests {
         ///{
         ///    public class Class1
         ///    {
+        ///        public ViewModel [|Map|](Person item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Entity
+        ///    {
+        ///        public int Id { get; set; }
+        ///    }
+        ///    public class Person : Entity
+        ///    {
+        ///        public string Name { get; set; }
+        ///    }
+        ///    public class BaseViewModel
+        ///    {
+        ///        public int Id { get; set; }
+        ///    }
+        ///    public class ViewModel : BaseViewModel
+        ///    {
+        ///        public stri [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string General_18_Before {
+            get {
+                return ResourceManager.GetString("General_18_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ViewModel Map(Person item)
+        ///        {
+        ///            var newItem = new ViewModel()
+        ///            {
+        ///                Id = item.Id,
+        ///                Name = item.Name,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public class Entity
+        ///    {
+        ///        public int Id { get; set; }
+        ///    }
+        ///    public class Person : Entity
+        ///    {
+        ///        public string Name { get; set; }
+        ///    }
+        ///    public class BaseViewModel
+        ///    {
+        ///     [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string General_18_Refactored {
+            get {
+                return ResourceManager.GetString("General_18_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ViewModel [|Map|](Person item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Entity
+        ///    {
+        ///        public int SomeOtherProperty { get; set; }
+        ///    }
+        ///    public class Parent : Entity
+        ///    {
+        ///        public string Name { get; set; }
+        ///    }
+        ///    public class BaseViewModel
+        ///    {
+        ///        public int Id { get; set; }
+        ///    }
+        ///    public class ViewModel : BaseViewModel
+        ///    {
+        ///     [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string General_19_Before {
+            get {
+                return ResourceManager.GetString("General_19_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ViewModel Map(Person item)
+        ///        {
+        ///            var newItem = new ViewModel()
+        ///            {
+        ///                Id = item.Id,
+        ///                Name = item.Name,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public class Entity
+        ///    {
+        ///        public int SomeOtherProperty { get; set; }
+        ///    }
+        ///    public class Parent : Entity
+        ///    {
+        ///        public string Name { get; set; }
+        ///    }
+        ///    public class BaseViewMod [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string General_19_Refactored {
+            get {
+                return ResourceManager.GetString("General_19_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ViewModel [|Map|](Person item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Entity
+        ///    {
+        ///        public int SomeOtherProperty { get; set; }
+        ///    }
+        ///    public class Parent : Entity
+        ///    {
+        ///        public string Name { get; set; }
+        ///    }
+        ///    public class SecondLevelOfAbstraction
+        ///    {
+        ///        public int SuperId { get; set; }
+        ///    }
+        ///    public class BaseViewModel : Second [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string General_20_Before {
+            get {
+                return ResourceManager.GetString("General_20_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public ViewModel Map(Person item)
+        ///        {
+        ///            var newItem = new ViewModel()
+        ///            {
+        ///                SuperId = item.SuperId,
+        ///                Id = item.Id,
+        ///                Name = item.Name,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public class Entity
+        ///    {
+        ///        public int SomeOtherProperty { get; set; }
+        ///    }
+        ///    public class Parent : Entity
+        ///    {
+        ///        public string Name { get; se [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string General_20_Refactored {
+            get {
+                return ResourceManager.GetString("General_20_Refactored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
         ///        public Parent [|Map|](ParentDto item)
         ///        {
         ///            throw new System.NotImplementedException();

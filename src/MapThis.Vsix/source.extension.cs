@@ -11,7 +11,7 @@ namespace MapThis.Vsix
         public const string Name = "MapThis for Visual Studio 2022";
         public const string Description = @"Create mapping code in design time automatically.";
         public const string Language = "en-US";
-        public const string Version = "2.3.0";
+        public const string Version = "2.3.1";
         public const string Author = "Marcos Dimitrio";
         public const string Tags = "mapping, mapper, map, automapper, automatic, generate, generator, generation, map this";
     }

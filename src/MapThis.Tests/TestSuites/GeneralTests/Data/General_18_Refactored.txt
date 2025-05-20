@@ -1,0 +1,32 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public ViewModel Map(Person item)
+        {
+            var newItem = new ViewModel()
+            {
+                Id = item.Id,
+                Name = item.Name,
+            };
+
+            return newItem;
+        }
+    }
+    public class Entity
+    {
+        public int Id { get; set; }
+    }
+    public class Person : Entity
+    {
+        public string Name { get; set; }
+    }
+    public class BaseViewModel
+    {
+        public int Id { get; set; }
+    }
+    public class ViewModel : BaseViewModel
+    {
+        public string Name { get; set; }
+    }
+}

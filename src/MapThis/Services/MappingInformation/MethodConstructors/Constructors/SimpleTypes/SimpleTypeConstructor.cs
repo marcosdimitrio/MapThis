@@ -7,6 +7,7 @@ using MapThis.Services.MappingInformation.MethodConstructors.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Factories.Interfaces;
 using MapThis.Services.MappingInformation.Services.MethodGenerator.Interfaces;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -39,8 +40,8 @@ namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Si
 
             var propertiesToMap = new List<PropertyToMapDto>();
 
-            var sourceMembers = currentMethodInformationDto.SourceType.GetPublicProperties();
-            var targetMembers = currentMethodInformationDto.TargetType.GetPublicProperties();
+            var sourceMembers = GetPublicPropertiesRecursively(currentMethodInformationDto.SourceType);
+            var targetMembers = GetPublicPropertiesRecursively(currentMethodInformationDto.TargetType);
 
             foreach (var targetProperty in targetMembers)
             {
@@ -97,6 +98,22 @@ namespace MapThis.Services.MappingInformation.MethodConstructors.Constructors.Si
             var sourceProperty = sourceMembers.FirstOrDefault(x => x.Name == targetProperty.Name);
 
             return sourceProperty;
+        }
+
+        /// <summary>
+        /// Note: The properties from base classes will be listed first.
+        /// </summary>
+        private static IList<IPropertySymbol> GetPublicPropertiesRecursively(ITypeSymbol sourceType)
+        {
+            var properties = sourceType.GetPublicProperties().ToList();
+
+            if (sourceType.BaseType.GetPublicProperties().Count > 0)
+            {
+                var baseTypeProperties = GetPublicPropertiesRecursively(sourceType.BaseType);
+                properties = baseTypeProperties.Concat(properties).ToList();
+            }
+
+            return properties;
         }
 
     }
