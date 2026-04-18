@@ -19,7 +19,7 @@ namespace MapThis.Tests {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -2504,7 +2504,8 @@ namespace MapThis.Tests {
         ///            {
         ///                SomeValue = Map(item.SomeValue),
         ///            };
-        ///        /// [rest of string was truncated]&quot;;.
+        ///
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string _64_Refactored {
             get {
@@ -3086,7 +3087,64 @@ namespace MapThis.Tests {
                 return ResourceManager.GetString("_75_Refactored", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public SharedClass SharedClass { get; set; } }
+        ///    public class ParentDto { public SharedClass SharedClass { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _76_Before
+        {
+            get
+            {
+                return ResourceManager.GetString("_76_Before", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                SharedClass = Map(item.SharedClass),
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///
+        ///        private SharedClass Map(SharedClass item)
+        ///        {
+        ///            var newItem = new SharedClass()
+        ///            {
+        ///                SharedInt = item.SharedInt,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///     [o restante da cadeia de caracteres foi truncado]&quot;;.
+        /// </summary>
+        internal static string _76_Refactored
+        {
+            get
+            {
+                return ResourceManager.GetString("_76_Refactored", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to namespace MapThis.Tests
         ///{

@@ -1,0 +1,12 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent [|Map|](ParentDto item)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+    public class Parent { public SharedClass SharedClass { get; set; } }
+    public class ParentDto { public SharedClass SharedClass { get; set; } }
+}

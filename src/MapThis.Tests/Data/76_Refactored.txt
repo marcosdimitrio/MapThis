@@ -1,0 +1,27 @@
+﻿namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                SharedClass = Map(item.SharedClass),
+            };
+
+            return newItem;
+        }
+
+        private SharedClass Map(SharedClass item)
+        {
+            var newItem = new SharedClass()
+            {
+                SharedInt = item.SharedInt,
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public SharedClass SharedClass { get; set; } }
+    public class ParentDto { public SharedClass SharedClass { get; set; } }
+}

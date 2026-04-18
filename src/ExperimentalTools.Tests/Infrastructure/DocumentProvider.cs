@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using System;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 
@@ -17,14 +18,15 @@ namespace ExperimentalTools.Tests.Infrastructure
         private const string DefaultFilePathPrefix = "Test";
         private const string CSharpDefaultFileExt = "cs";
         private const string TestProjectName = "TestProject";
+        private static string[] PreExistingDocuments = { };
 
-        public static Document[] GetDocuments(string[] sources) => 
+        public static Document[] GetDocuments(string[] sources) =>
             GetDocuments(sources, null);
 
         public static Document[] GetDocuments(string[] sources, string[] filePaths)
         {
             var project = CreateProject(sources, filePaths);
-            var documents = project.Documents.ToArray();
+            var documents = project.Documents.Where(x => !PreExistingDocuments.Contains(x.Name)).ToArray();
 
             if (sources.Length != documents.Length)
             {
@@ -34,7 +36,7 @@ namespace ExperimentalTools.Tests.Infrastructure
             return documents;
         }
 
-        public static Document GetDocument(string source) => 
+        public static Document GetDocument(string source) =>
             CreateProject(new[] { source }, null).Documents.First();
 
         public static Document GetDocument(string source, string filePath) =>
@@ -54,13 +56,62 @@ namespace ExperimentalTools.Tests.Infrastructure
 
             var projectId = ProjectId.CreateNewId(debugName: TestProjectName);
 
+            var globalUsings = new string[] { "SharedNamespace" };
+
+            var projectInfo = ProjectInfo.Create(
+                projectId,
+                VersionStamp.Create(),
+                TestProjectName,
+                TestProjectName,
+                LanguageNames.CSharp,
+                compilationOptions: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                    .WithUsings(globalUsings)
+            );
+
+            var sharedClassDocumentId = DocumentId.CreateNewId(projectId, debugName: TestProjectName);
+            var globalDocumentId = DocumentId.CreateNewId(projectId, debugName: TestProjectName);
+
+            var sharedClassSource = @"
+                namespace SharedNamespace
+                {
+                    public class SharedClass
+                    {
+                        public int SharedInt { get; set; }
+                    }
+                    public class SharedClassDto
+                    {
+                        public int SharedInt { get; set; }
+                    }
+                }
+                ";
+
+            var documents = new[] {
+                DocumentInfo.Create(
+                    globalDocumentId,
+                    "GlobalUsings.cs",
+                    loader: TextLoader.From(
+                        SourceText.From("global using SharedNamespace;").Container,
+                        VersionStamp.Default)
+                ),
+                DocumentInfo.Create(
+                    sharedClassDocumentId,
+                    "SharedClass.cs",
+                    loader: TextLoader.From(
+                        SourceText.From(sharedClassSource).Container,
+                        VersionStamp.Default)
+                )
+            };
+
+            PreExistingDocuments = documents.Select(x => x.Name).ToArray();
+
             var solution = new AdhocWorkspace()
                 .CurrentSolution
-                .AddProject(projectId, TestProjectName, TestProjectName, LanguageNames.CSharp)
+                .AddProject(projectInfo)
                 .AddMetadataReference(projectId, CorlibReference)
                 .AddMetadataReference(projectId, SystemCoreReference)
                 .AddMetadataReference(projectId, CSharpSymbolsReference)
-                .AddMetadataReference(projectId, CodeAnalysisReference);
+                .AddMetadataReference(projectId, CodeAnalysisReference)
+                .AddDocuments(documents.ToImmutableArray());
 
             var count = 0;
             foreach (var source in sources)

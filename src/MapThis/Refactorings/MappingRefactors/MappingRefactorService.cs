@@ -56,7 +56,7 @@ namespace MapThis.Refactorings.MappingRefactors
                 compilationUnitSyntax = compilationUnitSyntax.InsertNodesAfter(methodToInsertAfter, allOtherBlocks);
             }
 
-            compilationUnitSyntax = AddMissingUsings(originalMethodSymbol.ContainingNamespace, compilationUnitSyntax, generatedMethodsDto.Namespaces);
+            compilationUnitSyntax = AddMissingUsings(originalMethodSymbol.ContainingNamespace, compilationUnitSyntax, generatedMethodsDto.Namespaces, semanticModel);
 
             return context.Document.WithSyntaxRoot(compilationUnitSyntax);
         }
@@ -108,17 +108,19 @@ namespace MapThis.Refactorings.MappingRefactors
             return methodDeclarationSyntax;
         }
 
-        private CompilationUnitSyntax AddMissingUsings(INamespaceSymbol originalMethodNamespace, CompilationUnitSyntax compilationUnitSyntax, IList<string> namespaces)
+        private CompilationUnitSyntax AddMissingUsings(INamespaceSymbol originalMethodNamespace, CompilationUnitSyntax compilationUnitSyntax, IList<string> namespaces, SemanticModel semanticModel)
         {
             foreach (var namespaceToInclude in namespaces)
             {
                 var usingAlreadyExists = compilationUnitSyntax.Usings.Any(x => x.Name.ToFullString() == namespaceToInclude);
+                var globalUsingAlreadyExists = ((CSharpCompilationOptions)semanticModel.Compilation.Options)
+                    .Usings.Any(x => x == namespaceToInclude);
 
                 var namespaceIsTheSameAsTheMethod = originalMethodNamespace.ToDisplayString() == namespaceToInclude;
 
                 var currentNamespaceIsDeeperThanBeingMapped = originalMethodNamespace.ToDisplayString().StartsWith(namespaceToInclude);
 
-                if (!usingAlreadyExists && !namespaceIsTheSameAsTheMethod && !currentNamespaceIsDeeperThanBeingMapped)
+                if (!usingAlreadyExists && !globalUsingAlreadyExists && !namespaceIsTheSameAsTheMethod && !currentNamespaceIsDeeperThanBeingMapped)
                 {
                     compilationUnitSyntax = compilationUnitSyntax
                         .AddUsings(UsingDirective(IdentifierName(namespaceToInclude)));
