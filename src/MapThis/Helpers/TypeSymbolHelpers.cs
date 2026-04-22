@@ -150,7 +150,7 @@ namespace MapThis.Helpers
                     return true;
             }
 
-            if (type.Name == "Guid" && type.ContainingNamespace.Name == "System")
+            if (type.TypeKind == TypeKind.Struct && type.ContainingNamespace.Name == "System")
             {
                 return true;
             }

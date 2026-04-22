@@ -77,6 +77,7 @@ namespace MapThis.Tests
             yield return new object[] { "74 Should not map a child class when it is an interface", true, 0, GetData(Resources._74_Before, Resources._74_Refactored) };
             yield return new object[] { "75 Should map a class when properties order is different", true, 0, GetData(Resources._75_Before, Resources._75_Refactored) };
             yield return new object[] { "76 Should not add using when it's available as global using", true, 0, GetData(Resources._76_Before, Resources._76_Refactored) };
+            yield return new object[] { "77 Should map DateOnly directly", true, 0, GetData(Resources._77_Before, Resources._77_Refactored) };
         }
 
         /// <summary>

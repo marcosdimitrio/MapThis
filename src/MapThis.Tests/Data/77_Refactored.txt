@@ -1,0 +1,20 @@
+﻿using System;
+
+namespace MapThis.Tests
+{
+    public class Class1
+    {
+        public Parent Map(ParentDto item)
+        {
+            var newItem = new Parent()
+            {
+                DateOnly = item.DateOnly,
+                Guid = item.Guid,
+            };
+
+            return newItem;
+        }
+    }
+    public class Parent { public DateOnly DateOnly { get; set; } public Guid Guid { get; set; } }
+    public class ParentDto { public DateOnly DateOnly { get; set; } public Guid Guid { get; set; } }
+}

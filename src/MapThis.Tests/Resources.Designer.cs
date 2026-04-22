@@ -3087,7 +3087,7 @@ namespace MapThis.Tests {
                 return ResourceManager.GetString("_75_Refactored", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to namespace MapThis.Tests
         ///{
@@ -3103,14 +3103,12 @@ namespace MapThis.Tests {
         ///}
         ///.
         /// </summary>
-        internal static string _76_Before
-        {
-            get
-            {
+        internal static string _76_Before {
+            get {
                 return ResourceManager.GetString("_76_Before", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to namespace MapThis.Tests
         ///{
@@ -3135,16 +3133,65 @@ namespace MapThis.Tests {
         ///
         ///            return newItem;
         ///        }
-        ///     [o restante da cadeia de caracteres foi truncado]&quot;;.
+        ///     [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string _76_Refactored
-        {
-            get
-            {
+        internal static string _76_Refactored {
+            get {
                 return ResourceManager.GetString("_76_Refactored", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent [|Map|](ParentDto item)
+        ///        {
+        ///            throw new System.NotImplementedException();
+        ///        }
+        ///    }
+        ///    public class Parent { public DateOnly DateOnly { get; set; } }
+        ///    public class ParentDto { public DateOnly DateOnly { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _77_Before {
+            get {
+                return ResourceManager.GetString("_77_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System;
+        ///
+        ///namespace MapThis.Tests
+        ///{
+        ///    public class Class1
+        ///    {
+        ///        public Parent Map(ParentDto item)
+        ///        {
+        ///            var newItem = new Parent()
+        ///            {
+        ///                DateOnly = item.DateOnly,
+        ///            };
+        ///
+        ///            return newItem;
+        ///        }
+        ///    }
+        ///    public class Parent { public DateOnly DateOnly { get; set; } }
+        ///    public class ParentDto { public DateOnly DateOnly { get; set; } }
+        ///}
+        ///.
+        /// </summary>
+        internal static string _77_Refactored {
+            get {
+                return ResourceManager.GetString("_77_Refactored", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to namespace MapThis.Tests
         ///{
@@ -3817,7 +3864,7 @@ namespace MapThis.Tests {
         ///    {
         ///        public int SomeOtherProperty { get; set; }
         ///    }
-        ///    public class Parent : Entity
+        ///    public class Person : Entity
         ///    {
         ///        public string Name { get; set; }
         ///    }
@@ -3855,7 +3902,7 @@ namespace MapThis.Tests {
         ///    {
         ///        public int SomeOtherProperty { get; set; }
         ///    }
-        ///    public class Parent : Entity
+        ///    public class Person : Entity
         ///    {
         ///        public string Name { get; set; }
         ///    }
@@ -3881,7 +3928,7 @@ namespace MapThis.Tests {
         ///    {
         ///        public int SomeOtherProperty { get; set; }
         ///    }
-        ///    public class Parent : Entity
+        ///    public class Person : Entity
         ///    {
         ///        public string Name { get; set; }
         ///    }
@@ -3918,7 +3965,7 @@ namespace MapThis.Tests {
         ///    {
         ///        public int SomeOtherProperty { get; set; }
         ///    }
-        ///    public class Parent : Entity
+        ///    public class Person : Entity
         ///    {
         ///        public string Name { get; se [rest of string was truncated]&quot;;.
         /// </summary>
